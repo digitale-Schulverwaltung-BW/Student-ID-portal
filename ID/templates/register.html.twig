@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Gültiger Schülerausweis der HHS</title>
+        <title>Schülerausweis der HHS</title>
         <link rel='stylesheet' id='spacious_style-css' href='https://www.hhs.karlsruhe.de/wp-content/themes/spacious-pro/style.css?ver=6.5.2' 
             type='text/css' media='all'/>
     </head>
@@ -53,19 +53,25 @@
             <div class="header-post-title-container clearfix">
                 <div class="inner-wrap">
                     <div class="post-title-wrapper">
-                        <h1 class="header-post-title-class entry-title" style="color:{{ color }}">{{ validity }}</h1>
+                        <h1 class="header-post-title-class entry-title">Digitaler Schülerausweis</h1>
                     </div>
                 </div>
             </div>
             <div id="main"><div class="inner-wrap"><div id="content">
                 <article class="post type-post status-publish format-standard">
                 {% if valid == true %}
-                    Der Ausweis mit der ID <b>{{card_ID}}</b> ist gültig und der Inhaber ist
-                    Schüler der Heinrich-Hertz-Schule Karlsruhe im aktuellen Schuljahr.
+                    {% if deploy_error is not empty %}
+                        {{deploy_error}}
+                    {% else %}
+                        <a href="{{base}}&deploy=apple">Hinzufügen zu Apple Wallet</a><br />
+                        <a href="{{base}}&deploy=google">Hinzufügen zu Google Wallet</a><br />
+                        <a href="{{base}}&deploy=pdf">Download als PDF</a><br />
+                    {% endif %}
+                    
                 {% else %}
-                    Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
-                    der Inhaber ist aktuell kein Schüler unserer Schule.
-                {% endif %}
+                    Der eingscannte QR-Code ist mit keiner gültigen Schüler-ID verknüpft. Sollte es sich dabei
+                    um einen Irrtum handeln, wenden Sie sich bitte an unser Sekretariat.
+                {% endif %}                
             </article>
         </div></div></div>
         </div>

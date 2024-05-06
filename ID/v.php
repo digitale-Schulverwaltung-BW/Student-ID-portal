@@ -12,13 +12,13 @@ if (isset($_REQUEST['id'])) $id=$_REQUEST['id']; else $id="";
 $stud = new CStudent($id);
 
 if (!$stud->is_valid()) {
-    echo $twig->render('page.html', array('validity' => 'Ungültiger Ausweis!',
+    echo $twig->render('page.html.twig', array('validity' => 'Ungültiger Ausweis!',
                                             'valid' => FALSE,
                                             'color'    => 'red',
                                             'card_ID' => "0000"));
     exit ();
 }
-echo $twig->render('page.html', array('validity' => 'Gültiger Ausweis!',
+echo $twig->render('page.html.twig', array('validity' => 'Gültiger Ausweis!',
                                         'valid' => TRUE,
                                         'color'    => 'green',
                                         'card_ID' => $stud->get_short_id()));
