@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Schülerausweis der HHS</title>
+        <title>Gültiger Schülerausweis der HHS</title>
         <link rel='stylesheet' id='spacious_style-css' href='https://www.hhs.karlsruhe.de/wp-content/themes/spacious-pro/style.css?ver=6.5.2' 
             type='text/css' media='all'/>
+        <style>
+            h1.red   {color: red;}
+            h1.green {color: green;}
+        </style>
     </head>
     <body class="home page-template page-template-page-templates page-template-business page-template-page-templatesbusiness-php page wp-custom-logo no-sidebar-full-width better-responsive-menu ">
         <div id="page" class="hfeed site">
@@ -50,35 +54,3 @@
                     </div>
                 </div>
             </header>
-            <div class="header-post-title-container clearfix">
-                <div class="inner-wrap">
-                    <div class="post-title-wrapper">
-                        <h1 class="header-post-title-class entry-title">Digitaler Schülerausweis</h1>
-                    </div>
-                </div>
-            </div>
-            <div id="main"><div class="inner-wrap"><div id="content">
-                <article class="post type-post status-publish format-standard">
-                {% if valid == true %}
-                    {% if deploy_error is not empty %}
-                        {{deploy_error}}
-                    {% else %}
-                        <a href="{{base}}&deploy=apple">Hinzufügen zu Apple Wallet</a><br />
-                        <a href="{{base}}&deploy=google">Hinzufügen zu Google Wallet</a><br />
-                        <a href="{{base}}&deploy=pdf">Download als PDF</a><br />
-                    {% endif %}
-                    
-                {% else %}
-                    Der eingscannte QR-Code ist mit keiner gültigen Schüler-ID verknüpft. Sollte es sich dabei
-                    um einen Irrtum handeln, wenden Sie sich bitte an unser Sekretariat.
-                {% endif %}                
-            </article>
-        </div></div></div>
-        </div>
-
-
-
-
-
-    </body>
-</html>

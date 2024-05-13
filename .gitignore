@@ -1,0 +1,4 @@
+external/tmp/
+internal/tmp/
+external/config.php
+internal/config.php

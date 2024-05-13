@@ -1,15 +1,12 @@
 <?php
+require_once('config.php');
 
 class CStudent
 {
     protected $ID="";
-    // URL to request
-    //protected $url = 'http://192.168.255.2:8123/ID/internal-verify.php?id=';
-    protected $url = 'http://10.16.193.229/ID/internal-verify.php?id=';
-
+ 
     function __construct($newID) {
         $this->ID = $this->sanitizeUUID($newID);
-        $this->url=$this->url.$this->ID;
     }
 
     private function sanitizeUUID($string) {
@@ -19,7 +16,7 @@ class CStudent
     }
 
     public function is_valid() {
-        $response = file_get_contents($this->url);
+        $response = file_get_contents(verify_url.$this->ID);
         if (is_null($response)) return FALSE;
         $data = json_decode($response, true); // Passing true as the second argument to decode JSON as associative array
         if (is_null($data)) return FALSE;
@@ -29,5 +26,9 @@ class CStudent
 
     public function get_short_id() {
         return(substr($this->ID,-4));
+    }
+    public function register_pass($wallet_type) {
+        $response = file_get_contents($this->register_url.$this->ID);
+        return($response);
     }
 }

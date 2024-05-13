@@ -28,7 +28,7 @@
         echo json_encode($data);
     } else {
         // invalid student ID
-        sleep(5);
+        sleep(invalid_wait);
         $data = array("id" => 0, "lastname" => "", "firstname" => "");
         header("Content-Type: application/json");
         echo json_encode($data);
