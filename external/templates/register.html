@@ -1,0 +1,32 @@
+
+<include href="templates/head.html" />
+<div class="header-post-title-container clearfix">
+    <div class="inner-wrap">
+        <div class="post-title-wrapper">
+            <h1 class="header-post-title-class entry-title">Digitaler Schülerausweis</h1>
+        </div>
+    </div>
+</div>
+<div id="main"><div class="inner-wrap"><div id="content">
+    <article class="post type-post status-publish format-standard">
+        <check if="{{ @valid=='true' }}">
+            <true>
+                <check if="{{ @deploy_error=='' }}">
+                    <true>
+                        <a href="{{@base}}/apple">Hinzufügen zu Apple Wallet</a><br />
+                        <a href="{{@base}}/google">Hinzufügen zu Google Wallet</a><br />
+                        <a href="{{@base}}/pdf">Download als PDF</a><br />
+                    </true>
+                    <false>
+                        {{deploy_error}}
+                    </false>
+                </check>
+            </true>
+            <false>
+                Der eingscannte QR-Code ist mit keiner gültigen Schüler-ID verknüpft. Sollte es sich dabei
+                um einen Irrtum handeln, wenden Sie sich bitte an unser Sekretariat.
+            </false>
+        </check>
+    </article>
+</div>
+<include href="templates/foot.html" />
