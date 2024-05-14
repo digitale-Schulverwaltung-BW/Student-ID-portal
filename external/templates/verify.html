@@ -2,7 +2,20 @@
     <div class="header-post-title-container clearfix">
         <div class="inner-wrap">
             <div class="post-title-wrapper">
-                <h1 class="header-post-title-class entry-title {{@color}}"> {{@validity}} Nr. <b>{{@card_ID}}</b></h1>
+                <table><tr><td>
+                <h2 class="header-post-title-class entry-title {{@color}}"> 
+                    <check if="{{ @valid=='true' }}">
+                        <true>
+                            gültiger Schülerausweis<br />carte d'étudiant valide<br />valid student ID
+                        </true>
+                        <false>
+                            ungültig<br />invalide<br />invalid
+                        </false>                        
+                    </check>
+                </h2>
+                </td><td>
+                <h1 class="{{@color}}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b></h1>
+            </td></tr></table>
             </div>
         </div>
     </div>
