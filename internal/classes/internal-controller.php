@@ -31,7 +31,6 @@ class InternalController
             $resp = array("id" => $data[2], "lastname" => $data[3], "firstname" => $data[4]);
             header("Content-Type: application/json");
             echo json_encode($resp);
-            $stud=new CStudentPass($f3,$data[2]);
         } else {
             // invalid student ID
             sleep(invalid_wait);

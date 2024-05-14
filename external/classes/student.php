@@ -16,7 +16,7 @@ class CStudent
     }
 
     public function is_valid() {
-        $response = file_get_contents(verify_url.$this->ID);
+        $response = @file_get_contents(verify_url.$this->ID);
         if (is_null($response)) return FALSE;
         $data = json_decode($response, true); // Passing true as the second argument to decode JSON as associative array
         if (is_null($data)) return FALSE;

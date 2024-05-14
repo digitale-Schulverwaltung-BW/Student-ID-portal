@@ -15,7 +15,7 @@ class ExternalController
         if (!$stud->is_valid()) {
             $f3->mset(array(
                 'valid'=>'false',
-                'validity'=>'Ungültiger Ausweis!',
+                'validity'=>'Ungültiger Ausweis',
                 'color'=>'red',
                 'card_ID'=>'0000'
                 )
@@ -31,7 +31,7 @@ class ExternalController
         $this->check($f3, $stud);
         $f3->mset(array(
             'valid'=>'true',
-            'validity'=>'Gültiger Ausweis!',
+            'validity'=>'Gültiger Ausweis',
             'color'=>'green',
             'card_ID'=>$stud->get_short_id()
             )

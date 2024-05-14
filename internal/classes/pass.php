@@ -42,12 +42,16 @@ class CStudentPass {
                 $logger->write("ERROR getting pass info: ".print_r($result));
             } else {
                 $data = json_decode($result['body'], true);
-                if (isset($data['urls']['platforms']['APPLE'])) $this->appleURL=$data['urls']['platforms']['APPLE'];
-                if (isset($data['urls']['platforms']['GOOGLE'])) $this->googleURL=$data['urls']['platforms']['GOOGLE'];
-                if (isset($data['urls']['platforms']['PDF'])) $this->PDFURL=$data['urls']['platforms']['PDF'];
+                $this->extractURLs($data);
             }
         }
 
+    }
+    function extractURLs($data)
+    {
+        if (isset($data['urls']['platforms']['APPLE'])) $this->appleURL=$data['urls']['platforms']['APPLE'];
+        if (isset($data['urls']['platforms']['GOOGLE'])) $this->googleURL=$data['urls']['platforms']['GOOGLE'];
+        if (isset($data['urls']['platforms']['PDF'])) $this->PDFURL=$data['urls']['platforms']['PDF'];
     }
     function getPassID(): String
     {   
@@ -80,10 +84,10 @@ class CStudentPass {
         else $logger->write("INFO: successful deploy: ".$args['id'].'=>'.$data['details']['serialNumber']);
 
         $data = json_decode($result['body'], true);
-        $this->appleURL=$data['urls']['platforms']['APPLE'];
-        $this->googleURL=$data['urls']['platforms']['GOOGLE'];
-        $this->pdfURL=$data['urls']['platforms']['PDF'];
+        $this->extractURLs($data);
         $this->passID=$data['details']['serialNumber'];
+        $db=new DB\SQL('sqlite:'.PASS_DB);
+        $db->exec('INSERT INTO passes VALUES ('.$this->studentID.', '.$this->passID.', '.date('Y-m-d').')');
         return $this->passID;
     }
     function getAppleURL()
