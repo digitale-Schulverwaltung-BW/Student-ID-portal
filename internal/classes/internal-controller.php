@@ -17,6 +17,7 @@ class InternalController
     private function checkID($id): bool
     {
         if (!isset($id) || empty($id) || strlen($id)!=36) return false;
+        // ToDo
         return true;
     }
 
@@ -28,7 +29,8 @@ class InternalController
         if( $studentline !== "") {
             // valid student ID
             $data = str_getcsv($studentline, ";");
-            $resp = array("id" => $data[2], "lastname" => $data[3], "firstname" => $data[4]);
+            $resp = array("id" => $data[CSV_ID], "lastname" => $data[CSV_LAST], 
+                          "firstname" => $data[CSV_FIRST], "birthday" => $data[CSV_BIRTHDAY]);
             header("Content-Type: application/json");
             echo json_encode($resp);
         } else {

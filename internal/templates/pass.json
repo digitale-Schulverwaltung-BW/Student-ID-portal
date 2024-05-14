@@ -17,7 +17,7 @@
     "items": {
         "expirationDate": {
             "update": true,
-            "value": "2024-09-30T08:08:03.118Z"
+            "value": "{{@valid_long}}"
         },
         "relevantDate": {
             "update": true,
@@ -25,7 +25,7 @@
         },
         "barcodeMessage": {
             "update": true,
-            "value": "https://www.hhs.karlsruhe.de/ID/v/{{@id}}"
+            "value": "{{@verify_base}}{{@id}}"
         },
         "barcodeAltText": {
             "update": true,
@@ -37,7 +37,7 @@
         },
         "backField1": {
             "update": true,
-            "value": "9/2024"
+            "value": "{{@valid_short}}"
         },
         "backField1Label": {
             "update": true,
@@ -45,27 +45,27 @@
         },
         "backUrl1Title": {
             "update": true,
-            "value": "Heinrich-Hertz-Schule Karlsruhe"
+            "value": "{{@school}}"
         },
         "backUrl1": {
             "update": true,
-            "value": "https://www.hhs.karlsruhe.de"
+            "value": "{{@school_url}}"
         },
         "logoImageUrlGooglePasses": {
             "update": true,
-            "value": "https://hhs.karlsruhe.de/ID/templates/GoogleLogo-660x660.png"
+            "value": "{{@img_base_url}}GoogleLogo-660x660.png"
         },
         "heroImageUrlGooglePasses": {
             "update": true,
-            "value": "https://hhs.karlsruhe.de/ID/templates/Hero-1030x336.png"
+            "value": "{{@img_base_url}}/Hero-1030x336.png"
         },
         "iconImageUrl3X": {
             "update": true,
-            "value": "https://hhs.karlsruhe.de/ID/templates/AppleLogo-480x150.png"
+            "value": "{{@img_base_url}}/AppleLogo-480x150.png"
         },
         "rewardsTier": {
             "update": true,
-            "value": "03.01.1991"
+            "value": "{{@birthday}}"
         },
         "rewardsTierLabel": {
             "update": true,
@@ -73,7 +73,7 @@
         },
         "accountName": {
             "update": true,
-            "value": "Max Muster"
+            "value": "{{@firstname}} {{@lastname}}"
         },
         "accountNameLabel": {
             "update": true,

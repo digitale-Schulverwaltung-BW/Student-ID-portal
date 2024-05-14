@@ -13,32 +13,20 @@ class ExternalController
     private function check($f3, $stud)
     {
         if (!$stud->is_valid()) {
-            $f3->mset(array(
-                'valid'=>'false',
-                'validity'=>'Ungültiger Ausweis',
-                'color'=>'red',
-                'card_ID'=>'0000'
-                )
-            );
+            $f3->mset(array('valid'=>'false', 'color'=>'red', 'card_ID'=>'0000'));
             echo $this->template->render('templates/verify.html');
             exit ();
         }
-
     }
+
     function v($f3, $args)
     {
         $stud = new CStudent($args['id']);        
         $this->check($f3, $stud);
-        $f3->mset(array(
-            'valid'=>'true',
-            'validity'=>'Gültiger Ausweis',
-            'color'=>'green',
-            'card_ID'=>$stud->get_short_id()
-            )
-        );
+        $f3->mset(array('valid'=>'true', 'color'=>'green', 'card_ID'=>$stud->get_short_id()));
         echo $this->template->render('templates/verify.html');
-                //echo "Gültiger Ausweis! Nachname: $data[lastname], Vorname: $data[firstname]";
     }
+
     function r($f3, $args)
     {
         $stud = new CStudent($args['id']);
@@ -53,6 +41,7 @@ class ExternalController
         
         echo $this->template->render('templates/register.html');
     }
+
     function deploy($f3, $args)
     {
         $stud = new CStudent($args['id']);
@@ -64,17 +53,17 @@ class ExternalController
             case 'google':
                 if (isset($data['google']) && $data['google']!='null')
                     header ('Location: '.$data['google']);
-                    exit();
+                exit();
                 break;
             case 'apple':
                 if (isset($data['apple']) && $data['apple']!='null')
                     header ('Location: '.$data['apple']);
-                    exit();
+                exit();
                 break;
             case 'pdf':
                 if (isset($data['pdf']) && $data['pdf']!='null')
                     header ('Location: '.$data['pdf']);
-                    exit();
+                exit();
                 break;
             default:
                 // unknown deploy type        

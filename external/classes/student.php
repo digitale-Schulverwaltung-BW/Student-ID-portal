@@ -12,7 +12,7 @@ class CStudent
     private function sanitizeUUID($string) {
         // Remove any characters that are not hex digits or slashes
         $sanitizedString = preg_replace('/[^-0-9A-F]/i', '', $string);
-        return $sanitizedString;
+        return substr($sanitizedString, 0, 36);
     }
 
     public function is_valid() {
@@ -27,6 +27,7 @@ class CStudent
     public function get_short_id() {
         return(substr($this->ID,-4));
     }
+
     public function register_pass() {
         $response = file_get_contents(register_url.$this->ID);
         return($response);
