@@ -1,22 +1,22 @@
-
-            <div class="header-post-title-container clearfix">
-                <div class="inner-wrap">
-                    <div class="post-title-wrapper">
-                        <h1 class="header-post-title-class entry-title {{@color}}"> {{@validity}} </h1>
-                    </div>
-                </div>
+<include href="templates/head.html" />
+    <div class="header-post-title-container clearfix">
+        <div class="inner-wrap">
+            <div class="post-title-wrapper">
+                <h1 class="header-post-title-class entry-title {{@color}}"> {{@validity}} </h1>
             </div>
-            <div id="main"><div class="inner-wrap"><div id="content">
-                <article class="post type-post status-publish format-standard">
-                    <check if="{{ @valid=='true' }}">
-                        <true>
-                            Der Ausweis mit der ID <b>{{@card_ID}}</b> ist gültig und der Inhaber ist
-                            Schüler der Heinrich-Hertz-Schule Karlsruhe im aktuellen Schuljahr.
-                        </true>
-                        <false>
-                            Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
-                            der Inhaber ist aktuell kein Schüler unserer Schule.
-                        </false>
-                    </check>
-            </article>
-        
+        </div>
+    </div>
+    <div id="main"><div class="inner-wrap"><div id="content">
+        <article class="post type-post status-publish format-standard">
+            <check if="{{ @valid=='true' }}">
+                <true>
+                    Der Ausweis mit der ID <b>{{@card_ID}}</b> ist gültig und der Inhaber ist
+                    Schüler der Heinrich-Hertz-Schule Karlsruhe im aktuellen Schuljahr.
+                </true>
+                <false>
+                    Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
+                    der Inhaber ist aktuell kein Schüler unserer Schule.
+                </false>
+            </check>
+    </article>
+<include href="templates/foot.html" />

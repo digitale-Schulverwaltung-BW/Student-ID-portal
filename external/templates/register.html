@@ -1,5 +1,6 @@
 
 <include href="templates/head.html" />
+
 <div class="header-post-title-container clearfix">
     <div class="inner-wrap">
         <div class="post-title-wrapper">
@@ -13,12 +14,29 @@
             <true>
                 <check if="{{ @deploy_error=='' }}">
                     <true>
-                        <a href="{{@base}}/apple">Hinzufügen zu Apple Wallet</a><br />
-                        <a href="{{@base}}/google">Hinzufügen zu Google Wallet</a><br />
-                        <a href="{{@base}}/pdf">Download als PDF</a><br />
+                        <p>Mit den folgenden Links können Sie den Schülerausweis zu einem Wallet hinzufügen
+                        oder ein PDF des Ausweises auf Ihr mobiles Gerät herunterladen.<br />
+                        <div class="datenschutz">Bitte beachten Sie, dass Sie mit dem Klicken auf einen der Links den der 
+                            Übertragung Ihrer 
+                            <span class="tooltip">Daten
+                                <span class="tooltiptext">
+                                    Name, Vorname, Gültigkeitsdauer, Geburtsdatum, Zugehörigkeit zur Schule
+                                </span>
+                            </span> gemäß den <a href="https://kortpress.io/datenschutz">Datenschutzbestimmungen</a> 
+                            unseres Auftragsdatenverarbeiters <b>let's dev</b> in Karlsruhe zustimmen. Für die Nutzung des Google Wallet
+                            gelten weitere <a href="https://support.google.com/wallet/answer/12205617?hl=de">Bedingungen und Datenschutzerklärungen</a>.
+                        </div></p>
+                        <a href="{{@base}}/apple"><img src="../templates/add-to-apple-wallet-logo.png" alt="zur Apple Wallet hinzufügen"
+                            style="height: 48px;" /><br />
+                            Hinzufügen zu Apple Wallet</a><br /><br />
+                        <a href="{{@base}}/google"><img src="../templates/save_to_google_pay_dark_de.svg" alt="zur Google Wallet hinzufügen"
+                            style="height: 48px;" /><br />
+                            Hinzufügen zu Google Wallet</a><br /><br />
+                        <a href="{{@base}}/pdf"><img src="../templates/pdf-icon.png" alt="als PDF herunterladen"
+                            style="height: 48px;" /><br />Download als PDF</a><br />
                     </true>
                     <false>
-                        {{deploy_error}}
+                        {{@deploy_error}}
                     </false>
                 </check>
             </true>

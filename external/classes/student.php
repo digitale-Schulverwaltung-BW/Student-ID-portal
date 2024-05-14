@@ -27,8 +27,8 @@ class CStudent
     public function get_short_id() {
         return(substr($this->ID,-4));
     }
-    public function register_pass($wallet_type) {
-        $response = file_get_contents($this->register_url.$this->ID);
+    public function register_pass() {
+        $response = file_get_contents(register_url.$this->ID);
         return($response);
     }
 }
