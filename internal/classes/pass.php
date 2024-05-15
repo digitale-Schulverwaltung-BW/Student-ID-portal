@@ -78,7 +78,7 @@ class CStudentPass {
         
         // not in DB: create pass
         $logger = new Log('deploy.log');
-        if (!$this->checkID($this->student->getID())) return "";
+        if ($this->student->getID()=="") return "";
         $template=new Template;
         $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
         $f3->mset(array('id'=>$this->studentID,

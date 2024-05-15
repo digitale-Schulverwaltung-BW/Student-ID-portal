@@ -29,7 +29,7 @@ class CStudent
     }
 
     public function register_pass() {
-        $response = file_get_contents(register_url.$this->ID);
+        $response = @file_get_contents(register_url.$this->ID);
         return($response);
     }
 }
