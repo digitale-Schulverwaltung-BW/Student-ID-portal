@@ -2,35 +2,38 @@
 // Ubuntu package: php-sqlite3
 
 require_once('config.php');
+require_once('student.php');
 
 class CStudentPass {
 
-    protected $studentID;
-    protected $passID;
+    protected String $passID;
 
-    protected $appleURL;
-    protected $googleURL;
-    protected $pdfURL;
+    protected String $appleURL;
+    protected String $googleURL;
+    protected String $pdfURL;
 
-    function __construct($f3, $studentID) {
-        $this->studentID=$studentID;
+    protected CStudent $stud;
+
+    function __construct($f3, CStudent $student) {
+        $this->student=$student;
+        $this->appleURL="";
+        $this->googleURL="";
+        $this->pdfURL="";
         $db=new DB\SQL('sqlite:'.PASS_DB);
         $db->exec('CREATE TABLE IF NOT EXISTS "passes" (
             "studID" VARCHAR PRIMARY KEY NOT NULL, "passID" VARCHAR, "created" DATE
         )');
-        $results = $db->exec('SELECT passID FROM passes WHERE studID="'.$studentID.'"');
+        $results = $db->exec('SELECT passID FROM passes WHERE studID="'.$student->getID().'"');
         if (empty($results))
             $this->passID="";
         else {
             $this->passID=$results[0]['passID'];
             $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
             $options = array(
-                'method' => 'GET',
-                'follow_redirects' => TRUE,
+                'method' => 'GET', 'follow_redirects' => TRUE,
                 'header' => [
                     'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
-                    'Content-Type: application/json',
-                    'Authorization: Bearer '. KORTPRESS_TOKEN
+                    'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
                 ]
             );
             $result = \Web::instance()->request($url, $options);
@@ -47,9 +50,9 @@ class CStudentPass {
 
     function extractURLs($data)
     {
-        if (isset($data['urls']['platforms']['APPLE'])) $this->appleURL=$data['urls']['platforms']['APPLE'];
-        if (isset($data['urls']['platforms']['GOOGLE'])) $this->googleURL=$data['urls']['platforms']['GOOGLE'];
-        if (isset($data['urls']['platforms']['PDF'])) $this->PDFURL=$data['urls']['platforms']['PDF'];
+        if (isset($data['urls']['platforms']['APPLE']))  $this->appleURL=$data['urls']['platforms']['APPLE'];
+        if (isset($data['urls']['platforms']['GOOGLE'])) $this->googleURL=$data['urls']['platforms']['GOOGLE']; 
+        if (isset($data['urls']['platforms']['PDF']))    $this->pdfURL=$data['urls']['platforms']['PDF'];
     }
 
     function validShort(): String
@@ -75,30 +78,27 @@ class CStudentPass {
         
         // not in DB: create pass
         $logger = new Log('deploy.log');
-        if (!$this->checkID($this->studentID)) return "";
+        if (!$this->checkID($this->student->getID())) return "";
         $template=new Template;
         $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
         $f3->mset(array('id'=>$this->studentID,
-                        'short_id'=>substr($this->studentID,-4),
+                        'short_id'=>substr($this->student->getID(),-4),
                         'valid_short'=>$this->validShort(),
                         'valid_long'=>$this->validLong(),
                         'verify_base'=> VERIFY_BASE_URL,
                         'school'=>SCHOOL,
                         'school_url'=>SCHOOL_URL,
                         'img_base_url'=>IMG_BASE_URL,
-                        'birthday'=> '01.01.1990', // ToDo
-                        'firstname'=> 'Max', // ToDo
-                        'lastname'=>'Mustermann', //ToDo
+                        'birthday'=> $this->student->getBirthday(), 
+                        'firstname'=> $this->student->getFirstname(), 
+                        'lastname'=> $this->student->getLastname() 
                     ));
         $postdata=$template->render('templates/pass.json');
         $options = array(
-            'method' => 'POST',
-            'follow_redirects' => TRUE,
-            'content' => $postdata,
+            'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
             'header' => [
                 'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
-                'Content-Type: application/json',
-                'Authorization: Bearer '. KORTPRESS_TOKEN
+                'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
             ]
         );
             
