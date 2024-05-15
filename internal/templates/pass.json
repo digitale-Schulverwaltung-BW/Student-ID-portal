@@ -35,6 +35,14 @@
             "update": true,
             "value": "PKBarcodeFormatQR"
         },
+        "programName": {
+            "update": true,
+            "value": "{{@firstname}} {{@lastname}}"
+          },
+          "programNameLabel": {
+            "update": true,
+            "value": "Name"
+          },
         "backField1": {
             "update": true,
             "value": "{{@valid_short}}"

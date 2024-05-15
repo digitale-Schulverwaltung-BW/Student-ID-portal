@@ -111,14 +111,14 @@ class CStudentPass {
         
         if ((!isset($data['details']) || (!isset($data['details']['serialNumber']))) || empty($data['details']['serialNumber'])) {
              $logger->write("ERROR extrating deploy data: ".$postdata);
-             $logger->write("...result body leaging to ERROR: ".print_r($result, true));
+             $logger->write("...result body leading to ERROR: ".print_r($result, true));
              return "";
-        } else $logger->write("INFO: successful deploy: ".$args['id'].'=>'.$data['details']['serialNumber']);
+        } else $logger->write("INFO: successful deploy: ".$this->student->getID().'=>'.$data['details']['serialNumber']);
 
         $this->extractURLs($data);
         $this->passID=$data['details']['serialNumber'];
         $db=new DB\SQL('sqlite:'.PASS_DB);
-        $db->exec('INSERT INTO passes VALUES ('.$this->studentID.', '.$this->passID.', '.date('Y-m-d').')');
+        $db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'")');
         return $this->passID;
     }
 
