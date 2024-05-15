@@ -57,11 +57,11 @@
         },
         "heroImageUrlGooglePasses": {
             "update": true,
-            "value": "{{@img_base_url}}/Hero-1030x336.png"
+            "value": "{{@img_base_url}}Hero-1030x336.png"
         },
         "iconImageUrl3X": {
             "update": true,
-            "value": "{{@img_base_url}}/AppleLogo-480x150.png"
+            "value": "{{@img_base_url}}AppleLogo-480x150.png"
         },
         "rewardsTier": {
             "update": true,

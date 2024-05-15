@@ -68,10 +68,10 @@ class CStudentPass {
         $month=date("m");
         $year=date("Y");
         if ($month>8) return ($year+1)."-09-30T12:00:00.118Z";
-        return "$year.-09-30T12:00:00.118Z";
+        return "$year-09-30T12:00:00.118Z";
     }
 
-    function getPassID(): String
+    function getPassID($f3): String
     {   
         // already registered, return stored passID
         if ($this->passID!="") return $this->passID;
@@ -81,7 +81,7 @@ class CStudentPass {
         if ($this->student->getID()=="") return "";
         $template=new Template;
         $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
-        $f3->mset(array('id'=>$this->studentID,
+        $f3->mset(array('id'=>$this->student->getID(),
                         'short_id'=>substr($this->student->getID(),-4),
                         'valid_short'=>$this->validShort(),
                         'valid_long'=>$this->validLong(),
@@ -103,12 +103,18 @@ class CStudentPass {
         );
             
         $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($data['details'])|| 
-            (!isset($data['details']['serialNumber']))) || empty($data['details']['serialNumber']))
-             $logger->write("ERROR deploy data: ".$postdata);
-        else $logger->write("INFO: successful deploy: ".$args['id'].'=>'.$data['details']['serialNumber']);
-
+        if (!isset($result) || empty($result) || !isset($result['body'])) {
+            $logger->write("ERROR deploy result: $result, postdata: $postdata");
+            return "";
+        }
         $data = json_decode($result['body'], true);
+        
+        if ((!isset($data['details']) || (!isset($data['details']['serialNumber']))) || empty($data['details']['serialNumber'])) {
+             $logger->write("ERROR extrating deploy data: ".$postdata);
+             $logger->write("...result body leaging to ERROR: ".print_r($result, true));
+             return "";
+        } else $logger->write("INFO: successful deploy: ".$args['id'].'=>'.$data['details']['serialNumber']);
+
         $this->extractURLs($data);
         $this->passID=$data['details']['serialNumber'];
         $db=new DB\SQL('sqlite:'.PASS_DB);

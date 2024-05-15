@@ -31,7 +31,7 @@ class InternalController
         $stud   = new CStudent($id);
         if ($stud->getID()=="") return;
         $pass   = new CStudentPass($f3, $stud);
-        $passID = $pass->getPassID();
+        $passID = $pass->getPassID($f3);
         $data = array("id" => $passID, "apple" => $pass->getAppleURL(), "google" => $pass->getGoogleURL(), "pdf" => $pass->getPDFURL());
         header("Content-Type: application/json");
         echo json_encode($data);
