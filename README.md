@@ -2,6 +2,8 @@
 
 Dieses Projekt stellt eine Schnittstelle zwischen der Schule/dem Schulverwaltungsprogramm und dem Kortpress-System zur Ausgabe von Apple/Google-Wallets oder PDF-Schülerausweisen dar.
 
+Installation und Benutzeranleitung finden sich im [Wiki](https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress/-/wikis/home).
+
 Die folgenden Schaubilder stellen die unterstützten Vorgänge schematisch dar:
 
 ## Registrierung
@@ -10,7 +12,7 @@ Die Schülerausweise können über eine ID, welche etwa aus dem Schulverwaltungs
 ![Registierung: 1. Abscannen QR-Code, 2. Auswahl Wallet-Typ, 3. Ausweis in Wallet](https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress/-/wikis/uploads/4ae4d830696a7067f01ae05e869696f7/Registrierung.png)
 
 ## Verifizierung
-Eine Überprüfung des Ausweises erfolgt über die Schulhomepage anhand einer aktuellen Schülerliste aus dem Schulverwaltungsprogramm.
+Eine Überprüfung des Ausweises erfolgt über die Schulhomepage durch einen nachgelagerten Server, auf dem eine aktuelle Schülerliste aus dem Schulverwaltungsprogramm hinterlegt ist. Es werden hierbei keinerlei Schülerdaten über das Internet übertragen.
 
 ![Verifizierung: 1. Abscannen QR-Code Ausweis, 2. Bestätigungsseite auf Schul-Homepage](https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress/-/wikis/uploads/a14fa7a27770a0d1e8d014108b9a3585/Verifizierung.png)
 
