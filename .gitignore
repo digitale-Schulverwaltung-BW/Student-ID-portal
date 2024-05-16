@@ -1,7 +1,6 @@
 external/tmp/
-internal/tmp/
 external/config.php
+internal/tmp/
+internal/deploy.log
 internal/config.php
 passes.sqlite
-internal/deploy.log
-deploy.log

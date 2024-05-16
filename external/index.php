@@ -4,13 +4,13 @@ require_once 'classes/external-controller.php';
 
 $f3 = require('lib/base.php');
 
-$f3->set('AUTOLOAD','classes/');
 $f3->set('DEBUG',0);
 
-$f3->route('GET /@action/@id','ExternalController->@action');
+$f3->route('GET  /v/@id','ExternalController->v');
+$f3->route('GET  /r/@id','ExternalController->r');
 $f3->route('POST /r/@id','ExternalController->authReg');
-$f3->route('GET /r/@id/@deploy','ExternalController->deploy');
-$f3->route('GET /r/@id/@hash/@deploy','ExternalController->deployAuth');
+$f3->route('GET  /r/@id/@deploy','ExternalController->deploy');
+$f3->route('GET  /r/@id/@hash/@deploy','ExternalController->deployAuth');
 
 $f3->run();
 ?>

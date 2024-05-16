@@ -1,6 +1,5 @@
 <?php
 
-require_once 'config.php';
 require_once 'classes/internal-controller.php';
 
 $f3 = require('lib/base.php');
