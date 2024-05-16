@@ -79,7 +79,7 @@ class ExternalController
     function deployAuth()
     {
         $stud = new CStudent($this->f3->get('PARAMS.id'));
-        if ($args['hash']==hash_hmac('sha256', $stud->get_bday(), 'bday-transfer'))
+        if ($this->f3->get('PARAMS.hash')==hash_hmac('sha256', $stud->get_bday(), 'bday-transfer'))
             return $this->deploy_pass($this->f3, $this->f3->get('PARAMS.id'), $this->f3->get('PARAMS.deploy'));
         $this->f3->set('valid', 'true');
         $this->f3->set('deploy_error', 'Fehlende Authentifizierung. Bitte scannen Sie den QR-Code erneut.');
@@ -97,7 +97,7 @@ class ExternalController
             $this->deploy_pass($f3, $this->f3->get('PARAMS.id'), $this->f3->get('PARAMS.deploy'));
         }
     }
-    
+
     function deploy_pass($f3, $id, $deploy)
     {
         $stud = new CStudent($id);
