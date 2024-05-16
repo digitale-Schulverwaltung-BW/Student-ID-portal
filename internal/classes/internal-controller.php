@@ -12,8 +12,10 @@ class InternalController
         $stud=new CStudent($id);
         if( $stud->getID() !== "") {
             // valid student ID
-            $resp = array("id" => $stud->getID(), "lastname" => $stud->getLastname(), 
-                          "firstname" => $stud->getFirstname(), "birthday" => $stud->getBirthday());
+            $resp = array("id" => $stud->getID(), 
+                          "lastname" => $stud->getLastname(), 
+                          "firstname" => $stud->getFirstname(), 
+                          "birthday" => $stud->getBirthday());
             header("Content-Type: application/json");
             echo json_encode($resp);
         } else {
@@ -32,7 +34,10 @@ class InternalController
         if ($stud->getID()=="") return;
         $pass   = new CStudentPass($f3, $stud);
         $passID = $pass->getPassID($f3);
-        $data = array("id" => $passID, "apple" => $pass->getAppleURL(), "google" => $pass->getGoogleURL(), "pdf" => $pass->getPDFURL());
+        $data = array("id" => $passID, 
+                      "apple" => $pass->getAppleURL(), 
+                      "google" => $pass->getGoogleURL(), 
+                      "pdf" => $pass->getPDFURL());
         header("Content-Type: application/json");
         echo json_encode($data);
     }
