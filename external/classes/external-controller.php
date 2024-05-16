@@ -35,21 +35,68 @@ class ExternalController
             echo $this->template->render('templates/register.html');
             exit ();
         }
+        if (require_birthday) {
+            $f3->set('auth', $_SERVER['REQUEST_URI']);
+            echo $this->template->render('templates/register-auth.html');
+            exit ();
+        }
+        // no auth requested, proceed:
+        $this->authReg($f3, $args);
+    }
+    function authReg($f3, $args)
+    {
+        $stud = new CStudent($args['id']);
+        $bday_hash='';
+        if (!$stud->is_valid()) {
+            $f3->set('valid', 'false');
+            echo $this->template->render('templates/register.html');
+            exit ();
+        }
+        if (require_birthday) {
+            $bday = str_pad($f3->get('POST.day'), 2, "0", STR_PAD_LEFT).".".
+                    str_pad($f3->get('POST.month'), 2, "0", STR_PAD_LEFT).".".
+                    $f3->get('POST.year');
+            if ($stud->get_bday()!=$bday){
+                $f3->set('valid', 'true');
+                $f3->set('deploy_error', 'Geburtsdatum nicht korrekt. Korrigieren Sie Ihre Eingabe und wenden Sie sich ggf. an unser Sekretariat.');
+                echo $this->template->render('templates/register.html');
+            }
+            $bday_hash='/'.hash_hmac('sha256', $bday, 'bday-transfer');
+        }
         $f3->set('valid', 'true');
-        $f3->set('base', $_SERVER['REQUEST_URI']);
+        $f3->set('base', $_SERVER['REQUEST_URI'].$bday_hash);
         $f3->set('deploy_error', '');
         
         echo $this->template->render('templates/register.html');
     }
-
-    function deploy($f3, $args)
+    function deployAuth($f3, $args)
     {
         $stud = new CStudent($args['id']);
+        if ($args['hash']==hash_hmac('sha256', $stud->get_bday(), 'bday-transfer'))
+            return $this->deploy_pass($f3, $args['id'], $args['deploy']);
+        $f3->set('valid', 'true');
+        $f3->set('deploy_error', 'Fehlende Authentifizierung. Bitte scannen Sie den QR-Code erneut.');
+        echo $this->template->render('templates/register.html');
+    }
+    function deploy($f3, $args)
+    {
+        if (require_birthday) {
+            $f3->set('valid', 'true');
+            $f3->set('deploy_error', 'Fehlende Authentifizierung. Bitte scannen Sie den QR-Code erneut.');
+            echo $this->template->render('templates/register.html');
+            
+        } else { 
+            $this->deploy_pass($f3, $args['id'], $args['deploy']);
+        }
+    }
+    function deploy_pass($f3, $id, $deploy)
+    {
+        $stud = new CStudent($id);
         $f3->set('deploy_error', '');
         $this->check($f3, $stud);
         $pass=$stud->register_pass();
         $data=json_decode($pass, true);
-        switch ($args['deploy']) {
+        switch ($deploy) {
             case 'google':
                 if (isset($data['google']) && $data['google']!='null')
                     header ('Location: '.$data['google']);
@@ -71,7 +118,7 @@ class ExternalController
                 $f3->set('deploy_error', 'Fehler: Unbekannter Wallet-Typ oder Ausweis im gewählten Format nicht verfügbar.');
                 echo $this->template->render('templates/register.html');
                 break;
-            }        
+            }    
     }
 }
 ?>

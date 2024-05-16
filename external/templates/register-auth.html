@@ -1,0 +1,23 @@
+
+<include href="templates/head.html" />
+
+<div class="header-post-title-container clearfix">
+    <div class="inner-wrap">
+        <div class="post-title-wrapper">
+            <h1 class="header-post-title-class entry-title">Digitaler Schülerausweis</h1>
+        </div>
+    </div>
+</div>
+<div id="main"><div class="inner-wrap"><div id="content">
+    <article class="post type-post status-publish format-standard">
+        <form class="form-signin" method="post" action="{{@auth}}">
+            <h2 class="form-signin-heading">Abruf Schülerausweis</h2>
+            <p>Bitte authentifizieren Sie sich mit Ihrem Geburtsdatum:</p>
+            <input type="number" name="day" min="01" max="31" autofocus="autofocus" required="required" placeholder="01" class="form-twodigits" id="day">
+            <input type="number" name="month" min="01" max="12" autofocus="autofocus" required="required" placeholder="01" class="form-twodigits" id="month">
+            <input type="number" name="year" min="1900" max="2050" autofocus="autofocus" required="required" placeholder="2000" class="form-fourdigits" id="year">
+            <button type="submit" class="btn btn-lg btn-primary btn-block">Absenden</button>
+        </form>
+    </article>
+</div>
+<include href="templates/foot.html" />

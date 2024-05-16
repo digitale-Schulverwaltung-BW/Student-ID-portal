@@ -8,7 +8,9 @@ $f3->set('AUTOLOAD','classes/');
 $f3->set('DEBUG',0);
 
 $f3->route('GET /@action/@id','ExternalController->@action');
-$f3->route('GET /@action/@id/@deploy','ExternalController->deploy');
+$f3->route('POST /r/@id','ExternalController->authReg');
+$f3->route('GET /r/@id/@deploy','ExternalController->deploy');
+$f3->route('GET /r/@id/@hash/@deploy','ExternalController->deployAuth');
 
 $f3->run();
 ?>
