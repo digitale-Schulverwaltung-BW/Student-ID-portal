@@ -2,20 +2,22 @@
     <div class="header-post-title-container clearfix">
         <div class="inner-wrap">
             <div class="post-title-wrapper">
-                <table><tr><td style="text-align: right; border-right: 2px solid green">
-                <h2 class="header-post-title-class entry-title {{@color}}"> 
+                <table><tr><td style="text-align: right; border-right: 2px solid">
                     <check if="{{ @valid=='true' }}">
                         <true>
-                            gültiger Schülerausweis<br />carte d'étudiant valide<br />valid student ID
+                            <h2 class="header-post-title-class entry-title green"> 
+                                gültiger Schülerausweis<br />carte d'étudiant valide<br />valid student ID
+                            </h2>
                         </true>
                         <false>
-                            ungültig<br />invalide<br />invalid
+                            <h2 class="header-post-title-class entry-title red"> 
+                                ungültig<br />invalide<br />invalid
+                            </h2>
                         </false>                        
                     </check>
-                </h2>
                 </td><td>
-                <h1 class="{{@color}}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b></h1>
-            </td></tr></table>
+                    <h1 class="{{ @valid?'green':'red' }}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b></h1>
+                </td></tr></table>
             </div>
         </div>
     </div>
@@ -24,7 +26,7 @@
             <check if="{{ @valid=='true' }}">
                 <true>
                     Der Ausweis mit der ID <b>{{@card_ID}}</b> ist gültig und der Inhaber ist
-                    Schüler der Heinrich-Hertz-Schule Karlsruhe im aktuellen Schuljahr.
+                    Schüler der {{ @school }} im aktuellen Schuljahr.
                 </true>
                 <false>
                     Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
