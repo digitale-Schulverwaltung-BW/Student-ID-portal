@@ -43,6 +43,7 @@ class ExternalController
         }
         if (require_birthday) {
             $this->f3->set('auth', $_SERVER['REQUEST_URI']);
+            $this->f3->set('shortid', $stud->get_short_id());
             echo $this->template->render('templates/register-auth.html');
             exit ();
         }
@@ -79,6 +80,7 @@ class ExternalController
     function deployAuth()
     {
         $stud = new CStudent($this->f3->get('PARAMS.id'));
+        // passing this hash as GET param is not the prettiest solution, but we want to keep this process session-less
         if ($this->f3->get('PARAMS.hash')==hash_hmac('sha256', $stud->get_bday(), 'bday-transfer'))
             return $this->deploy_pass($this->f3, $this->f3->get('PARAMS.id'), $this->f3->get('PARAMS.deploy'));
         $this->f3->set('valid', 'true');
