@@ -13,10 +13,10 @@
         <form class="form-signin" method="post" action="{{@auth}}">
             <h2 class="form-signin-heading">Abruf Schülerausweis</h2>
             <p>Bitte authentifizieren Sie sich mit Ihrem Geburtsdatum:</p>
-            <input type="number" name="day" min="01" max="31" autofocus="autofocus" required="required" inputmode="numeric" pattern="[0-9]*" placeholder="01" class="form-twodigits" id="day">
+            <div><input type="number" name="day" min="01" max="31" autofocus="autofocus" required="required" inputmode="numeric" pattern="[0-9]*" placeholder="01" class="form-twodigits" id="day">
             <input type="number" name="month" min="01" max="12" autofocus="autofocus" required="required" inputmode="numeric" pattern="[0-9]*" placeholder="01" class="form-twodigits" id="month">
             <input type="number" name="year" min="1900" max="2050" autofocus="autofocus" required="required" inputmode="numeric" pattern="[0-9]*" placeholder="2000" class="form-fourdigits" id="year">
-            <button type="submit" class="btn btn-lg btn-primary btn-block">Absenden</button>
+            </div><div style="margin-top: 8px;"><button type="submit" class="btn btn-lg btn-primary btn-block">Absenden</button></div>
         </form>
     </article>
 </div>
