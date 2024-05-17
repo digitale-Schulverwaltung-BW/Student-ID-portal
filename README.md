@@ -25,3 +25,5 @@ Die verify-Funktion stellt einen weiteren Vorteil für eine bessere Akzeptanz de
 Um möglichst keine Schülerdaten auf exponierten Servern lagern zu müssen, ist die Architektur des Registrierungssystems so aufgebaut, dass ein nachgelagerter Server die Schülerliste verwaltet und dem Frontend auf der Homepage lediglich Informationen über die Schulzugehörigkeit mitteilt. Ebenso erfolgt die Registrierung eines Wallet-Passes in Kortpress aus dem nachgelagerten System.
 
 ![Systemarchitektur](https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress/-/wikis/uploads/f364f8768044c4841c524a7b73b89253/Architektur.svg)
+
+*Performance:* ein erfolgreicher Verify-Aufruf benötigt 22ms ohne Webserver-Overhead. Verify-Aufrufe auf nicht existierende IDs werden per rate limit gedrosselt. Neue Registrierungs-Aufrufe sind durch den nachgelagerten Web-Request auf die Kortpress-Server langsamer. Registierungs-Aufrufe auf bereits ausgestellte Passes werden durch den Datenbank-Abruf auch innerhalb von 22ms bereit gestellt. Der Abruf der Download-URLs beinhaltet dann wieder einen nachgelagerten Web-Request.

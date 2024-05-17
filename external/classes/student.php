@@ -1,21 +1,25 @@
 <?php
 require_once('config.php');
 
+// publicly exposed representation of a student.
+// provides check if valid, short ID string, birthday and pass registration JSON array
 class CStudent
 {
-    protected $ID="";
-    protected $valid=FALSE;
+    protected String $ID="";
+    protected bool $valid=FALSE;
 
+    // constructor. Can only be used with a student ID
     function __construct($newID) {
         $this->ID = $this->sanitizeUUID($newID);
     }
 
+    // Remove any characters that are not hex digits or slashes, cut to 36 chars
     private function sanitizeUUID($string): String {
-        // Remove any characters that are not hex digits or slashes
         $sanitizedString = preg_replace('/[^-0-9A-F]/i', '', $string);
         return substr($sanitizedString, 0, 36);
     }
 
+    // get student's birthday from student data file
     public function get_bday() : String{
         $response = @file_get_contents(verify_url.$this->ID);
         if (is_null($response) || empty($response)  || $response === false) return "";
@@ -27,6 +31,7 @@ class CStudent
         return $data['birthday'];
     }
 
+    // does the obvious
     public function is_valid(): bool {
         if ($this->valid) return TRUE;
         $response = @file_get_contents(verify_url.$this->ID);
@@ -37,10 +42,14 @@ class CStudent
         return TRUE;
     }
 
+    // Student ID cards have a 4-digit ID string which can be obtained from here
     public function get_short_id(): String {
         return(substr($this->ID,-4));
     }
 
+    // if pass already issued, retrieve download URLs.
+    // if not, register pass and retrieve download URLs.
+    // returns JSON containing the fields id, apple, google and pdf.
     public function register_pass(): String {
         $response = @file_get_contents(register_url.$this->ID);
         if (is_null($response) || empty($response)  || $response === false) return "";

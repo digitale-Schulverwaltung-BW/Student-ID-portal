@@ -3,10 +3,10 @@ require_once('config.php');
 
 class CStudent
 {
-    protected $ID;
-    protected $firstname;
-    protected $lastname;
-    protected $birthday;
+    protected String $ID;
+    protected String $firstname;
+    protected String $lastname;
+    protected String $birthday;
 
     function __construct($id) {
         if (!isset($id) || empty($id) || strlen($id)!=36)

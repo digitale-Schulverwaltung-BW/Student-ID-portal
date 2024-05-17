@@ -6,6 +6,8 @@ require_once('student.php');
 
 class CStudentPass {
 
+    protected Base $f3;
+    protected $db;
     protected String $passID;
 
     protected String $appleURL;
@@ -14,16 +16,18 @@ class CStudentPass {
 
     protected CStudent $stud;
 
-    function __construct($f3, CStudent $student) {
+    function __construct(Base $f3, CStudent $student) {
+        $this->f3 = $f3;
         $this->student=$student;
         $this->appleURL="";
         $this->googleURL="";
         $this->pdfURL="";
-        $db=new DB\SQL('sqlite:'.PASS_DB);
-        $db->exec('CREATE TABLE IF NOT EXISTS "passes" (
+
+        $this->db=new DB\SQL('sqlite:'.PASS_DB);
+        $this->db->exec('CREATE TABLE IF NOT EXISTS "passes" (
             "studID" VARCHAR PRIMARY KEY NOT NULL, "passID" VARCHAR, "created" DATE
         )');
-        $results = $db->exec('SELECT passID FROM passes WHERE studID="'.$student->getID().'"');
+        $results = $this->db->exec('SELECT passID FROM passes WHERE studID="'.$student->getID().'"');
         if (empty($results))
             $this->passID="";
         else {
@@ -55,6 +59,8 @@ class CStudentPass {
         if (isset($data['urls']['platforms']['PDF']))    $this->pdfURL=$data['urls']['platforms']['PDF'];
     }
 
+    // generate validity date String (human readable)
+    // adjust end date here
     function validShort(): String
     {
         $month=date("m");
@@ -63,6 +69,8 @@ class CStudentPass {
         return "9/$year";
     }
 
+    // generate validity date String (machine readable).
+    // adjust end date here
     function validLong(): String
     {
         $month=date("m");
@@ -71,7 +79,7 @@ class CStudentPass {
         return "$year-09-30T12:00:00.118Z";
     }
 
-    function getPassID($f3): String
+    function getPassID(): String
     {   
         // already registered, return stored passID
         if ($this->passID!="") return $this->passID;
@@ -81,7 +89,7 @@ class CStudentPass {
         if ($this->student->getID()=="") return "";
         $template=new Template;
         $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
-        $f3->mset(array('id'=>$this->student->getID(),
+        $this->f3->mset(array('id'=>$this->student->getID(),
                         'short_id'=>substr($this->student->getID(),-4),
                         'valid_short'=>$this->validShort(),
                         'valid_long'=>$this->validLong(),
@@ -101,7 +109,6 @@ class CStudentPass {
                 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
             ]
         );
-            
         $result = \Web::instance()->request($url, $options);
         if (!isset($result) || empty($result) || !isset($result['body'])) {
             $logger->write("ERROR deploy result: $result, postdata: $postdata");
@@ -117,8 +124,7 @@ class CStudentPass {
 
         $this->extractURLs($data);
         $this->passID=$data['details']['serialNumber'];
-        $db=new DB\SQL('sqlite:'.PASS_DB);
-        $db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'")');
+        $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'")');
         return $this->passID;
     }
 

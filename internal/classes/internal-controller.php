@@ -5,7 +5,7 @@ require_once('student.php');
 
 class InternalController
 {
-
+    // route handler for verify. Returns JSON array with student name+birthday
     function verify($f3, $args): void
     {
         $id=(isset($args['id']))?$args['id']:"";
@@ -16,29 +16,34 @@ class InternalController
                           "lastname" => $stud->getLastname(), 
                           "firstname" => $stud->getFirstname(), 
                           "birthday" => $stud->getBirthday());
-            header("Content-Type: application/json");
-            echo json_encode($resp);
         } else {
             // invalid student ID
-            sleep(invalid_wait);
-            $data = array("id" => 0, "lastname" => "", "firstname" => "");
-            header("Content-Type: application/json");
-            echo json_encode($data);
+            sleep(invalid_wait); // rate limiting to keep brute forcing ID attempts at bay
+            $resp = array("id" => 0, "lastname" => "", "firstname" => "");
         }
+        header("Content-Type: application/json");
+        echo json_encode($resp);
     }
 
+    // route handler for deploy. Will create a pass if not alreday registered
+    // or retrieve the remote download URLs for existing passes. Returns JSON
+    // array with passID and the three download URLs.
     function deploy($f3, $args): void
     {
         $id=(isset($args['id']))?$args['id']:"";
         $stud   = new CStudent($id);
         if ($stud->getID()=="") return;
         $pass   = new CStudentPass($f3, $stud);
-        $passID = $pass->getPassID($f3);
-        $data = array("id" => $passID, 
-                      "apple" => $pass->getAppleURL(), 
-                      "google" => $pass->getGoogleURL(), 
-                      "pdf" => $pass->getPDFURL());
-        header("Content-Type: application/json");
-        echo json_encode($data);
+        $passID = $pass->getPassID();
+        if (!empty($passID))
+        {
+            $data = array("id" => $passID, 
+                           "apple" => $pass->getAppleURL(), 
+                           "google" => $pass->getGoogleURL(), 
+                           "pdf" => $pass->getPDFURL());
+            header("Content-Type: application/json");
+            echo json_encode($data);
+        }
+        else echo "";
     }
 }

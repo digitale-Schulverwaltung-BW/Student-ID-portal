@@ -4,7 +4,8 @@ require_once 'classes/external-controller.php';
 
 $f3 = require('lib/base.php');
 
-$f3->set('DEBUG',0);
+// change this only temporarily for debugging. Leave at 0 for production!
+$f3->set('DEBUG',3);
 
 $f3->route('GET  /v/@id','ExternalController->v');
 $f3->route('GET  /r/@id','ExternalController->r');
