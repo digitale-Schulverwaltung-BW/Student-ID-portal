@@ -1,0 +1,1 @@
+Pull requests sind jederzeit willkommen. Nach dem Test und dem offiziellen Rollout 2024/2025 ist geplant, dieses Repository auch auf GitHub zu duplizieren, um diesen Prozess auch für Personen, welche nicht der Heinrich-Hertz-Schule Karlsruhe angehören, zu vereinfachen.
