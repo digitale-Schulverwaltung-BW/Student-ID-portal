@@ -33,10 +33,10 @@ class CStudentPass {
         else {
             $this->passID=$results[0]['passID'];
             $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
-            $options = array(
+            $options = array( // ToDo handle fixed PostMan cookies - needed at all?
                 'method' => 'GET', 'follow_redirects' => TRUE,
                 'header' => [
-                    'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
+//                    'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
                     'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
                 ]
             );
@@ -104,8 +104,8 @@ class CStudentPass {
         $postdata=$template->render('templates/pass.json');
         $options = array(
             'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
-            'header' => [
-                'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
+            'header' => [ // ToDo
+//                'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
                 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
             ]
         );

@@ -14,7 +14,9 @@ class CStudent
             $this->ID="";
         } else {
             $this->ID = $this->sanitizeUUID($id);
-            $studentline=$this->getLineWithString(STUDENTS_CVS, $id);
+            $studentline=$this->getLineWithString(STUDENTS_CVS, $this->ID);
+            if ($studentline=="" && defined('DEMO_CVS')) 
+                $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
             if( $studentline !== "") {
                 // valid student ID
                 $data = str_getcsv($studentline, ";");

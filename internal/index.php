@@ -1,6 +1,7 @@
 <?php
 
 require_once 'classes/internal-controller.php';
+require_once 'classes/admin-controller.php';
 
 $f3 = require('lib/base.php');
 

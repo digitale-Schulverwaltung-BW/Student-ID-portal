@@ -48,7 +48,8 @@ class ExternalController
         $stud = new CStudent($this->f3->get('PARAMS.id'));
         $this->exit_if_invalid($stud);
         $this->f3->set('title', 'Gültiger Schülerausweis');
-        $this->f3->mset(array('valid'=>true, 'card_ID'=>$stud->get_short_id(), 'school'=>'Heinrich-Hertz-Schule Karlsruhe'));
+        $this->f3->mset(array('valid'=>true, 'card_ID'=>$stud->get_short_id(), 'school'=>'Heinrich-Hertz-Schule Karlsruhe',
+                        'birthday'=>$stud->get_birthday(), 'fn'=>$stud->get_firstname(),'sn'=>$stud->get_lastname()));
         echo $this->template->render('templates/verify.html');
     }
 

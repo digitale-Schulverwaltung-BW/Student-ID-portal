@@ -8,6 +8,7 @@
                             <h2 class="header-post-title-class entry-title green"> 
                                 gültiger Schülerausweis<br />carte d'étudiant valide<br />valid student ID
                             </h2>
+                            </div>
                         </true>
                         <false>
                             <h2 class="header-post-title-class entry-title red"> 
@@ -16,7 +17,13 @@
                         </false>                        
                     </check>
                 </td><td>
-                    <h1 class="{{ @valid?'green':'red' }}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b></h1>
+                    <div class="green">
+                        <h1 class="{{ @valid?'green':'red' }}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b><br /></h1>
+                        <check if="{{ @valid=='true' }}">
+                            <b>Geburtsdatum:</b> {{ @birthday }}<br />
+                            <b>Initialen Schüler/in:</b> {{ @fn }}.&nbsp;{{ @sn }}.
+                        </check>
+                    </div>
                 </td></tr></table>
             </div>
         </div>
