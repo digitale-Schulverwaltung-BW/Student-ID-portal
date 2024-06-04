@@ -5,6 +5,7 @@
         "passType": "pass.type.loyalty.card",
         "thirdPartyId": "{{@id}}",
         "platformTypeList": [
+            "APPLE",
             "GOOGLE",
             "PDF"
         ],
@@ -73,11 +74,11 @@
         },
         "rewardsTier": {
             "update": true,
-            "value": "{{@birthday}}"
+            "value": "{{@short_id}}"
         },
         "rewardsTierLabel": {
             "update": true,
-            "value": "Geburtsdatum"
+            "value": "ID"
         },
         "accountName": {
             "update": true,
@@ -89,11 +90,11 @@
         },
         "accountId": {
             "update": true,
-            "value": "{{@short_id}}"
+            "value": "{{@birthday}}"
         },
         "accountIdLabel": {
             "update": true,
-            "value": "Ausweis ID"
+            "value": "Geburtsdatum"
         }
     }
 }

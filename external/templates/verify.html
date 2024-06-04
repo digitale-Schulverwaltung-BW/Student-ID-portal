@@ -32,12 +32,12 @@
         <article class="post type-post status-publish format-standard">
             <check if="{{ @valid=='true' }}">
                 <true>
-                    Der Ausweis mit der ID <b>{{@card_ID}}</b> ist gültig und der Inhaber ist
-                    Schüler der {{ @school }} im aktuellen Schuljahr.
+                    Die Schülerin bzw. der Schüler mit der Ausweis ID <b>{{@card_ID}}</b> 
+                    besucht im aktuellen Schuljahr die {{ @school }}.
                 </true>
                 <false>
                     Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
-                    der Inhaber ist aktuell kein Schüler unserer Schule.
+                    der Inhaber ist aktuell keine Schülerin bzw. Schüler unserer Schule.
                 </false>
             </check>
     </article>

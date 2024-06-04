@@ -36,7 +36,7 @@ class CStudentPass {
             $options = array( // ToDo handle fixed PostMan cookies - needed at all?
                 'method' => 'GET', 'follow_redirects' => TRUE,
                 'header' => [
-//                    'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
+//                    'Cookie: INGRESSCOOKIE=...
                     'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
                 ]
             );
@@ -44,7 +44,7 @@ class CStudentPass {
             if (!isset($result) || empty($result) || (!isset($result['body'])))
             {
                 $logger = new Log('deploy.log');
-                $logger->write("ERROR getting pass info: ".print_r($result));
+                $logger->write("ERROR getting pass info: ".print_r($result, true));
             } else {
                 $data = json_decode($result['body'], true);
                 $this->extractURLs($data);
@@ -105,7 +105,7 @@ class CStudentPass {
         $options = array(
             'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
             'header' => [ // ToDo
-//                'Cookie: INGRESSCOOKIE=e04b23e90c3fcb130cc9f602b360d97f; SESSION=YWM4OTk3MTctZTEzOC00NjMyLTkyMTYtZjBlNDAwMmRmMmIw',
+//                'Cookie: INGRESSCOOKIE=...
                 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
             ]
         );

@@ -105,6 +105,7 @@ class ExternalController
         // passing this hash as GET param is not the prettiest solution, but we want to keep this process session-less
         if ($this->f3->get('PARAMS.hash')==hash_hmac('sha256', $stud->get_bday(), 'bday-transfer'))
             $this->deploy_pass( $this->f3->get('PARAMS.id'), $this->f3->get('PARAMS.deploy'));
+        else
             $this->exit_with_error('Fehlende Authentifizierung. Bitte scannen Sie den QR-Code erneut.');
     }
 
