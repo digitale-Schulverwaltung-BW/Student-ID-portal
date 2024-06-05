@@ -52,7 +52,7 @@ class CStudentPass {
         }
     }
 
-    function extractURLs($data)
+    function extractURLs(array $data): void
     {
         if (isset($data['urls']['platforms']['APPLE']))  $this->appleURL=$data['urls']['platforms']['APPLE'];
         if (isset($data['urls']['platforms']['GOOGLE'])) $this->googleURL=$data['urls']['platforms']['GOOGLE']; 
@@ -128,17 +128,17 @@ class CStudentPass {
         return $this->passID;
     }
 
-    function getAppleURL()
+    function getAppleURL(): String
     {
         return $this->appleURL;
     }
 
-    function getGoogleURL()
+    function getGoogleURL(): String
     {
         return $this->googleURL;
     }
 
-    function getPDFURL()
+    function getPDFURL(): String
     {
         return $this->pdfURL;
     }

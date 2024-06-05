@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kortpress-Student-ID admin panel</title>
+        <style>
+            body { font-family: Arial, Helvetica, sans-serif; padding: 10px;}
+        </style>
+    </head>
+    <body>
+        <h1>digitale Schülerausweise</h1>
+        <h2>Administrations-Bereich</h2>
+        <div>
+            <table><tr>
+            <td><b>Datenabgleich</b></td>
+            <td><button onclick="document.location='{{@BASE}}/admin/check'">Ausgetretene löschen</button><br /></td>
+            </tr><tr>
+            <td><b>Verlängern</b></td>
+            <td><button onclick="document.location='{{@BASE}}/admin/renew'">gültige Ausweise um aktuelles Schuljahr verlängern</button></td>
+            </table>
+        </div>
+        <div>Ausgegebene Ausweise: {{@numPasses}}<br />
+        {{@message}}</div>
+    </body>
+</html>
