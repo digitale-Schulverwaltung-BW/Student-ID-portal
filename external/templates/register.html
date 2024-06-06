@@ -26,14 +26,17 @@
                             unseres Auftragsdatenverarbeiters <b>let's dev</b> in Karlsruhe zustimmen. Für die Nutzung des Google Wallet
                             gelten weitere <a href="https://support.google.com/wallet/answer/12205617?hl=de">Bedingungen und Datenschutzerklärungen</a>.
                         </div></p>
-                        <a href="{{@base}}/apple"><img src="../templates/add-to-apple-wallet-logo.png" alt="zur Apple Wallet hinzufügen"
+                        <check if="{{ @apple }}"><a href="{{@base}}/apple"><img src="../templates/add-to-apple-wallet-logo.png" alt="zur Apple Wallet hinzufügen"
                             style="height: 48px;" /><br />
                             Hinzufügen zu Apple Wallet</a><br /><br />
-                        <a href="{{@base}}/google"><img src="../templates/save_to_google_pay_dark_de.svg" alt="zur Google Wallet hinzufügen"
+                        </check>
+                        <check if="{{ @google }}"><a href="{{@base}}/google"><img src="../templates/save_to_google_pay_dark_de.svg" alt="zur Google Wallet hinzufügen"
                             style="height: 48px;" /><br />
                             Hinzufügen zu Google Wallet</a><br /><br />
-                        <a href="{{@base}}/pdf"><img src="../templates/pdf-icon.png" alt="als PDF herunterladen"
+                        </check>
+                        <check if="{{ @pdf }}"><a href="{{@base}}/pdf"><img src="../templates/pdf-icon.png" alt="als PDF herunterladen"
                             style="height: 48px;" /><br />Download als PDF</a><br />
+                        </check>
                     </true>
                     <false>
                         {{@deploy_error}}

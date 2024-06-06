@@ -91,9 +91,13 @@ class ExternalController
             }
             $bday_hash='/'.hash_hmac('sha256', $bday, 'bday-transfer');
         }
-        $this->f3->set('valid', true);
-        $this->f3->set('base', $_SERVER['REQUEST_URI'].$bday_hash);
-        $this->f3->set('deploy_error', '');
+        $this->f3->mset(array('valid'=>true,
+                              'base'=>$_SERVER['REQUEST_URI'].$bday_hash,
+                              'deploy_error'=>'',
+                              'apple'=>KORTPRESS_USE_APPLE,
+                              'google'=>KORTPRESS_USE_GOOGLE,
+                              'pdf'=>KORTPRESS_USE_PDF
+        ));
         
         echo $this->template->render('templates/register.html');
     }

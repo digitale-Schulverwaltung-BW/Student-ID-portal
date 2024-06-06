@@ -3,8 +3,9 @@
 
 require_once('config.php');
 require_once('student.php');
+require_once('utility.php');
 
-class CStudentPass {
+class CStudentPass extends Utility {
 
     protected Base $f3;
     protected $db;
@@ -59,25 +60,7 @@ class CStudentPass {
         if (isset($data['urls']['platforms']['PDF']))    $this->pdfURL=$data['urls']['platforms']['PDF'];
     }
 
-    // generate validity date String (human readable)
-    // adjust end date here
-    function validShort(): String
-    {
-        $month=date("m");
-        $year=date("Y");
-        if ($month>8) return "9/".$year+1;
-        return "9/$year";
-    }
 
-    // generate validity date String (machine readable).
-    // adjust end date here
-    function validLong(): String
-    {
-        $month=date("m");
-        $year=date("Y");
-        if ($month>8) return ($year+1)."-09-30T12:00:00.118Z";
-        return "$year-09-30T12:00:00.118Z";
-    }
 
     function getPassID(): String
     {   
@@ -99,9 +82,12 @@ class CStudentPass {
                         'img_base_url'=>IMG_BASE_URL,
                         'birthday'=> $this->student->getBirthday(), 
                         'firstname'=> $this->student->getFirstname(), 
-                        'lastname'=> $this->student->getLastname() 
+                        'lastname'=> $this->student->getLastname(),
+                        'apple' => KORTPRESS_USE_APPLE,
+                        'google' => KORTPRESS_USE_GOOGLE,
+                        'pdf' => KORTPRESS_USE_PDF
                     ));
-        $postdata=$template->render('templates/pass.json');
+        $postdata=$template->render('templates/pass.txt');
         $options = array(
             'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
             'header' => [ // ToDo

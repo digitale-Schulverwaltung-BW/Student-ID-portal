@@ -5,9 +5,9 @@
         "passType": "pass.type.loyalty.card",
         "thirdPartyId": "{{@id}}",
         "platformTypeList": [
-            "APPLE",
-            "GOOGLE",
-            "PDF"
+            <check if="{{ @apple }}">"APPLE",</check>
+            <check if="{{ @google }}">"GOOGLE",</check>
+            <check if="{{ @pdf }}">"PDF",</check>
         ],
         "scanEventWebhookUrl": "https://cmp.letsdev.de/letsdev/webhook-test/?PHPSESSID=9b3e0d071138b22bf770ab2dc7d8b7f7",
         "scanEventWebhookAuthentication": "string",
@@ -24,13 +24,17 @@
             "update": true,
             "value": "2050-01-20T13:05:10+01:00"
         },
+        "description": {
+            "update": true,
+            "value": "Schülerausweis"
+        },        
         "barcodeMessage": {
             "update": true,
             "value": "{{@verify_base}}{{@id}}"
         },
         "barcodeAltText": {
             "update": true,
-            "value": "Gültigkeitsprüfung"
+            "value": "Gültig? Scan mich!"
         },
         "barcodeFormat": {
             "update": true,
@@ -44,14 +48,22 @@
             "update": true,
             "value": "Name"
           },
-        "backField1": {
+        "backField2": {
             "update": true,
             "value": "{{@valid_short}}"
         },
-        "backField1Label": {
+        "backField2Label": {
             "update": true,
             "value": "Gültig bis:"
         },
+        "balance": {
+            "update": true,
+            "value": "{{@valid_short}}"
+        },        
+        "balanceLabel": {
+            "update": true,
+            "value": "Gültig bis:"
+        },        
         "backUrl1Title": {
             "update": true,
             "value": "{{@school}}"

@@ -1,8 +1,8 @@
 <?php
 require_once('config.php');
+require_once('utility.php');
 
-
-class CAdminController {
+class CAdminController extends Utility{
     protected $db;
     protected Base $f3;
 
@@ -48,14 +48,39 @@ class CAdminController {
                     break;
                 case 'renew':
                     $renewed=0;
-                    foreach ($results as $pass ) {
-                        $stud=new CStudent($pass['studID']);
-                        if ($stud->getID()!=="") {
+                    $msg="";
+                    $csv='"thirdPartyIdentifier";"backField2-value";"object.balance-value";"expirationDate"'.PHP_EOL;
+                    $list=$this->getExpiryDates();
+                    $lines=explode("\n", $list);
+                    foreach ($lines as $line){
+                        $entry=str_getcsv($line, ";");
+                        
+                        $stud=new CStudent($entry[1]);
+                        if ($stud->getID()=="") continue;                        
+                        if ($entry[3]!=$this->validShort()) {
                             $renewed++;
-                            // update in Kortpress
+                            $csv.='"'.$entry[1].'";"'.$this->validShort().'";"'.$this->validShort().'";"'.$this->validLong().'"'.PHP_EOL;
                         }
                     }
-                    $f3->set('message', "$renewed Ausweise verlängert");
+                    $url='https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId='.KORTPRESS_TEMPLATE_ID;
+                    $options = array( 'method' => 'POST', 'follow_redirects' => TRUE,
+                                      'header' => [
+                                        'Content-Type: text/csv', 'Authorization: Bearer '. KORTPRESS_TOKEN,
+                                      'data' => $csv
+                                    ]
+                    );
+                    $result = \Web::instance()->request($url, $options);
+                    if (!isset($result) || empty($result) || (!isset($result['body'])))
+                    {
+                        $logger = new Log('admin.log');
+                        $logger->write("ERROR Updating pass: ".print_r($result, true));
+                        $errors++;
+                        return;
+                    } 
+                    $logger = new Log('update.log');
+                    $logger->write("Update status after POST: ".print_r($result, true));
+                    $msg="$renewed Ausweise verlängert ".$msg.";".$csv;
+                    $f3->set('message', $msg);
                     break;
                 }
             }
@@ -85,9 +110,25 @@ class CAdminController {
         return true;
     }
 
-    function getExpiryDates(): array
+    function getExpiryDates(): String
     {
-        
+        $url='https://cloud.kortpress.io/rest/v1/pass/csv?templateId='.KORTPRESS_TEMPLATE_ID.'&passItemCSV='.urlencode('"serialNumber";"thirdPartyIdentifier";"expirationDate";"object.balance-value";"backField2-value"');
+        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
+                            'header' => [
+                            'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
+                        ]
+        );
+        $result = \Web::instance()->request($url, $options);
+        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        {
+            $logger = new Log('update.log');
+            $logger->write("ERROR getting expiry date list: ".print_r($result, true));
+            return "";
+        }
+        $logger = new Log('update.log');
+        $logger->write("Update status: ".print_r($result, true));
+        return $result['body'];
     }
+
 }
 ?>

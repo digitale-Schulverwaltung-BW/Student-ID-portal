@@ -16,9 +16,12 @@
             </tr><tr>
             <td><b>Verlängern</b></td>
             <td><button onclick="document.location='{{@BASE}}/admin/renew'">gültige Ausweise um aktuelles Schuljahr verlängern</button></td>
+            </tr><tr>
+            <td><input type="text" placeholder="Schüler-ID"/></td>
+            <td><button onclick="document.location='{{@BASE}}/admin/reissue'">Ausweis neu ausstellen</button></td>
             </table>
         </div>
-        <div>Ausgegebene Ausweise: {{@numPasses}}<br />
+        <div style="margin-top: 10px"><b>Status:</b><br />Ausgegebene Ausweise: {{@numPasses}}<br />
         {{@message}}</div>
     </body>
 </html>

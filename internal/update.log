@@ -1,0 +1,180 @@
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] Update status: Array
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [request] => Array
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [0] => GET https://cloud.kortpress.io/rest/v1/pass/csv?templateId=1649&passItemCSV=%22serialNumber%22%3B%22thirdPartyIdentifier%22%3B%22expirationDate%22%3B%22object.balance-value%22%3B%22backField2-value%22
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [1] => Content-Type: application/json
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [2] => Authorization: Bearer eyJraWQiOiJzc28ta2V5LWlkIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIxYTA0YWQ2Yi0xMmI5LTExZWYtYjI2Ny05NjVhOWNiMDk3MmMiLCJhdWQiOiJrb3J0cHJlc3NDbG91ZCIsIm5iZiI6MTcxNzM5ODU2OCwic2NvcGUiOlsiYXBpOndyaXRlIiwiYXBpOmRlbGV0ZSIsImFwaTpyZWFkIl0sImlzcyI6Imh0dHBzOi8vc3NvLmxldHNkZXYuZGUiLCJleHAiOjE3NDg5Mzg1NjgsImlhdCI6MTcxNzM5ODU2OCwianRpIjoiNmMzNTU4ZWUtYjdiZi00YjQzLTljMjQtYmU2NGYyMjE3NDI4In0.CUK5tp65RYPSd-_frC37m80531XqVrTIty_H6_yBRpA2E3FckaiIWr5-9DWirmV1Pof0iRxdEIEwhCcV1w_lbjvkif7U5LR0K7Jqr28T0TR9NEDon7xX6_ZCt5E3e999OiQjsDV9w7AvyS-V57PG8ZStJRxHutlvQBGYEUpT2uf9kvc9OBV3rDAuKc13Y6VNbZ-Bl622BfLE_FgvmQBiF2-u6AaL-dVUm4fXyTrUqXtzobggsRYPXS_8LddMIfMkudou6bc39GzVOprRYvq2SRPP-WHOAu085Jvx-nwHLge7JBAtqOqI3PtRJzvA820sL1ZnjnFqpvzq1y-cqTkSIg
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [3] => Host: cloud.kortpress.io
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [4] => Accept-Encoding: gzip,deflate
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [5] => User-Agent: Mozilla/5.0 (compatible; Linux)
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [6] => Connection: close
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [body] => serialNumber-serialNumber;thirdPartyIdentifier;expirationDate;object.balance-value;backField2-value
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] "464166d9-bd2a-4aac-a944-719bf42fa328";"01234567-89abcdef-0123-456789ab-1234";"2025-07-30T12:00:00.118Z";"07/2024";"07/2024"
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] "8e7f0114-aa26-4a67-87ad-50f1dd9c67a9";"01234567-89abcdef-0123-456789ab-1237";"2024-09-30T12:00:00.118";"09/2024";"09/2024"
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] "7757a313-9c40-4617-8320-288ee307f913";"01234567-89abcdef-0123-456789ab-1236";"2024-09-30T10:00Z";"09/2024";"09/2024"
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] "f2d56611-f855-470f-b2fd-8f8e46d18e79";"01234567-89abcdef-0123-456789ab-1235";"2024-09-30T12:00:00.118";"9/2024";"09/2024"
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [headers] => Array
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [0] => HTTP/2 200
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [1] => date: Thu, 06 Jun 2024 06:45:04 GMT
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [2] => content-type: text/csv;charset=UTF-8
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [3] => content-length: 589
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [4] => set-cookie: INGRESSCOOKIE=f40d577f6357f0cfdeb8f707b47ba683; Expires=Thu, 06-Jun-24 06:50:00 GMT; Max-Age=300; Path=/; Secure; HttpOnly
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [5] => vary: Origin
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [6] => vary: Access-Control-Request-Method
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [7] => vary: Access-Control-Request-Headers
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [8] => x-content-type-options: nosniff
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [9] => x-xss-protection: 0
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [10] => cache-control: no-cache, no-store, max-age=0, must-revalidate
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [11] => pragma: no-cache
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [12] => expires: 0
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [13] => strict-transport-security: max-age=15724800; includeSubDomains
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [14] => x-frame-options: DENY
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [15] => set-cookie: SESSION=NGUxNTI2NTgtOWRlNC00MmYwLTkwN2ItODA2NzI3NmQxNWZh; Path=/; Secure; HttpOnly; SameSite=Lax
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [engine] => cURL
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [cached] =>
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] [error] =>
+Thu, 06 Jun 2024 08:45:03 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] Update status: Array
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [request] => Array
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [0] => GET https://cloud.kortpress.io/rest/v1/pass/csv?templateId=1649&passItemCSV=%22serialNumber%22%3B%22thirdPartyIdentifier%22%3B%22expirationDate%22%3B%22object.balance-value%22%3B%22backField2-value%22
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [1] => Content-Type: application/json
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [2] => Authorization: Bearer eyJraWQiOiJzc28ta2V5LWlkIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIxYTA0YWQ2Yi0xMmI5LTExZWYtYjI2Ny05NjVhOWNiMDk3MmMiLCJhdWQiOiJrb3J0cHJlc3NDbG91ZCIsIm5iZiI6MTcxNzM5ODU2OCwic2NvcGUiOlsiYXBpOndyaXRlIiwiYXBpOmRlbGV0ZSIsImFwaTpyZWFkIl0sImlzcyI6Imh0dHBzOi8vc3NvLmxldHNkZXYuZGUiLCJleHAiOjE3NDg5Mzg1NjgsImlhdCI6MTcxNzM5ODU2OCwianRpIjoiNmMzNTU4ZWUtYjdiZi00YjQzLTljMjQtYmU2NGYyMjE3NDI4In0.CUK5tp65RYPSd-_frC37m80531XqVrTIty_H6_yBRpA2E3FckaiIWr5-9DWirmV1Pof0iRxdEIEwhCcV1w_lbjvkif7U5LR0K7Jqr28T0TR9NEDon7xX6_ZCt5E3e999OiQjsDV9w7AvyS-V57PG8ZStJRxHutlvQBGYEUpT2uf9kvc9OBV3rDAuKc13Y6VNbZ-Bl622BfLE_FgvmQBiF2-u6AaL-dVUm4fXyTrUqXtzobggsRYPXS_8LddMIfMkudou6bc39GzVOprRYvq2SRPP-WHOAu085Jvx-nwHLge7JBAtqOqI3PtRJzvA820sL1ZnjnFqpvzq1y-cqTkSIg
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [3] => Host: cloud.kortpress.io
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [4] => Accept-Encoding: gzip,deflate
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [5] => User-Agent: Mozilla/5.0 (compatible; Linux)
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [6] => Connection: close
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [body] => serialNumber-serialNumber;thirdPartyIdentifier;expirationDate;object.balance-value;backField2-value
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] "464166d9-bd2a-4aac-a944-719bf42fa328";"01234567-89abcdef-0123-456789ab-1234";"2025-07-30T12:00:00.118Z";"07/2024";"07/2024"
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] "8e7f0114-aa26-4a67-87ad-50f1dd9c67a9";"01234567-89abcdef-0123-456789ab-1237";"2024-09-30T12:00:00.118";"09/2024";"09/2024"
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] "7757a313-9c40-4617-8320-288ee307f913";"01234567-89abcdef-0123-456789ab-1236";"2024-09-30T10:00Z";"09/2024";"09/2024"
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] "f2d56611-f855-470f-b2fd-8f8e46d18e79";"01234567-89abcdef-0123-456789ab-1235";"2024-09-30T12:00:00.118";"9/2024";"09/2024"
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [headers] => Array
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [0] => HTTP/2 200
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [1] => date: Thu, 06 Jun 2024 06:48:48 GMT
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [2] => content-type: text/csv;charset=UTF-8
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [3] => content-length: 589
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [4] => set-cookie: INGRESSCOOKIE=f40d577f6357f0cfdeb8f707b47ba683; Expires=Thu, 06-Jun-24 06:53:39 GMT; Max-Age=300; Path=/; Secure; HttpOnly
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [5] => vary: Origin
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [6] => vary: Access-Control-Request-Method
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [7] => vary: Access-Control-Request-Headers
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [8] => x-content-type-options: nosniff
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [9] => x-xss-protection: 0
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [10] => cache-control: no-cache, no-store, max-age=0, must-revalidate
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [11] => pragma: no-cache
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [12] => expires: 0
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [13] => strict-transport-security: max-age=15724800; includeSubDomains
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [14] => x-frame-options: DENY
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [15] => set-cookie: SESSION=OTg4NmI2OGEtNWJiZS00Y2NlLTljMmYtZDI4NjljNGViZTdi; Path=/; Secure; HttpOnly; SameSite=Lax
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [engine] => cURL
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [cached] =>
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] [error] =>
+Thu, 06 Jun 2024 08:48:46 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] Update status after POST: Array
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [request] => Array
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [0] => POST https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId=1649
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [1] => Content-Type: application/json
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [2] => Authorization: Bearer eyJraWQiOiJzc28ta2V5LWlkIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIxYTA0YWQ2Yi0xMmI5LTExZWYtYjI2Ny05NjVhOWNiMDk3MmMiLCJhdWQiOiJrb3J0cHJlc3NDbG91ZCIsIm5iZiI6MTcxNzM5ODU2OCwic2NvcGUiOlsiYXBpOndyaXRlIiwiYXBpOmRlbGV0ZSIsImFwaTpyZWFkIl0sImlzcyI6Imh0dHBzOi8vc3NvLmxldHNkZXYuZGUiLCJleHAiOjE3NDg5Mzg1NjgsImlhdCI6MTcxNzM5ODU2OCwianRpIjoiNmMzNTU4ZWUtYjdiZi00YjQzLTljMjQtYmU2NGYyMjE3NDI4In0.CUK5tp65RYPSd-_frC37m80531XqVrTIty_H6_yBRpA2E3FckaiIWr5-9DWirmV1Pof0iRxdEIEwhCcV1w_lbjvkif7U5LR0K7Jqr28T0TR9NEDon7xX6_ZCt5E3e999OiQjsDV9w7AvyS-V57PG8ZStJRxHutlvQBGYEUpT2uf9kvc9OBV3rDAuKc13Y6VNbZ-Bl622BfLE_FgvmQBiF2-u6AaL-dVUm4fXyTrUqXtzobggsRYPXS_8LddMIfMkudou6bc39GzVOprRYvq2SRPP-WHOAu085Jvx-nwHLge7JBAtqOqI3PtRJzvA820sL1ZnjnFqpvzq1y-cqTkSIg
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [3] => "thirdPartyIdentifier";"backField2-value";"object.balance-value";"expirationDate"
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] "01234567-89abcdef-0123-456789ab-1234";"7/2024";"7/2024";"2024-07-30T12:00:00.118Z"
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] "01234567-89abcdef-0123-456789ab-1237";"7/2024";"7/2024";"2024-07-30T12:00:00.118Z"
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] "01234567-89abcdef-0123-456789ab-1236";"7/2024";"7/2024";"2024-07-30T12:00:00.118Z"
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] "01234567-89abcdef-0123-456789ab-1235";"7/2024";"7/2024";"2024-07-30T12:00:00.118Z"
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [4] => Host: cloud.kortpress.io
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [5] => Accept-Encoding: gzip,deflate
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [6] => User-Agent: Mozilla/5.0 (compatible; Linux)
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [7] => Connection: close
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [body] =>
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [headers] => Array
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [engine] => cURL
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [cached] =>
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] [error] => HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
+Thu, 06 Jun 2024 08:48:47 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] Update status: Array
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [request] => Array
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [0] => GET https://cloud.kortpress.io/rest/v1/pass/csv?templateId=1649&passItemCSV=%22serialNumber%22%3B%22thirdPartyIdentifier%22%3B%22expirationDate%22%3B%22object.balance-value%22%3B%22backField2-value%22
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [1] => Content-Type: application/json
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [2] => Authorization: Bearer eyJraWQiOiJzc28ta2V5LWlkIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIxYTA0YWQ2Yi0xMmI5LTExZWYtYjI2Ny05NjVhOWNiMDk3MmMiLCJhdWQiOiJrb3J0cHJlc3NDbG91ZCIsIm5iZiI6MTcxNzM5ODU2OCwic2NvcGUiOlsiYXBpOndyaXRlIiwiYXBpOmRlbGV0ZSIsImFwaTpyZWFkIl0sImlzcyI6Imh0dHBzOi8vc3NvLmxldHNkZXYuZGUiLCJleHAiOjE3NDg5Mzg1NjgsImlhdCI6MTcxNzM5ODU2OCwianRpIjoiNmMzNTU4ZWUtYjdiZi00YjQzLTljMjQtYmU2NGYyMjE3NDI4In0.CUK5tp65RYPSd-_frC37m80531XqVrTIty_H6_yBRpA2E3FckaiIWr5-9DWirmV1Pof0iRxdEIEwhCcV1w_lbjvkif7U5LR0K7Jqr28T0TR9NEDon7xX6_ZCt5E3e999OiQjsDV9w7AvyS-V57PG8ZStJRxHutlvQBGYEUpT2uf9kvc9OBV3rDAuKc13Y6VNbZ-Bl622BfLE_FgvmQBiF2-u6AaL-dVUm4fXyTrUqXtzobggsRYPXS_8LddMIfMkudou6bc39GzVOprRYvq2SRPP-WHOAu085Jvx-nwHLge7JBAtqOqI3PtRJzvA820sL1ZnjnFqpvzq1y-cqTkSIg
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [3] => Host: cloud.kortpress.io
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [4] => Accept-Encoding: gzip,deflate
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [5] => User-Agent: Mozilla/5.0 (compatible; Linux)
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [6] => Connection: close
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [body] => serialNumber-serialNumber;thirdPartyIdentifier;expirationDate;object.balance-value;backField2-value
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] "464166d9-bd2a-4aac-a944-719bf42fa328";"01234567-89abcdef-0123-456789ab-1234";"2025-08-30T12:00:00.118Z";"08/2024";"08/2024"
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] "8e7f0114-aa26-4a67-87ad-50f1dd9c67a9";"01234567-89abcdef-0123-456789ab-1237";"2024-09-30T12:00:00.118";"09/2024";"09/2024"
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] "7757a313-9c40-4617-8320-288ee307f913";"01234567-89abcdef-0123-456789ab-1236";"2024-07-30T12:00:00.118Z";"7/2024";"7/2024"
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] "f2d56611-f855-470f-b2fd-8f8e46d18e79";"01234567-89abcdef-0123-456789ab-1235";"2024-07-30T12:00:00.118Z";"7/2024";"7/2024"
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [headers] => Array
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [0] => HTTP/2 200
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [1] => date: Thu, 06 Jun 2024 06:59:18 GMT
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [2] => content-type: text/csv;charset=UTF-8
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [3] => content-length: 594
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [4] => set-cookie: INGRESSCOOKIE=f40d577f6357f0cfdeb8f707b47ba683; Expires=Thu, 06-Jun-24 07:04:14 GMT; Max-Age=300; Path=/; Secure; HttpOnly
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [5] => vary: Origin
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [6] => vary: Access-Control-Request-Method
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [7] => vary: Access-Control-Request-Headers
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [8] => x-content-type-options: nosniff
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [9] => x-xss-protection: 0
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [10] => cache-control: no-cache, no-store, max-age=0, must-revalidate
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [11] => pragma: no-cache
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [12] => expires: 0
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [13] => strict-transport-security: max-age=15724800; includeSubDomains
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [14] => x-frame-options: DENY
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [15] => set-cookie: SESSION=YWIwMzRhNzEtMTFmNC00MWM3LThlODQtYjY4NTZhMzA4NGM0; Path=/; Secure; HttpOnly; SameSite=Lax
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [engine] => cURL
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [cached] =>
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] [error] =>
+Thu, 06 Jun 2024 08:59:16 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] Update status after POST: Array
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [request] => Array
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [0] => POST https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId=1649
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [1] => Content-Type: text/csv
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [2] => Authorization: Bearer eyJraWQiOiJzc28ta2V5LWlkIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIxYTA0YWQ2Yi0xMmI5LTExZWYtYjI2Ny05NjVhOWNiMDk3MmMiLCJhdWQiOiJrb3J0cHJlc3NDbG91ZCIsIm5iZiI6MTcxNzM5ODU2OCwic2NvcGUiOlsiYXBpOndyaXRlIiwiYXBpOmRlbGV0ZSIsImFwaTpyZWFkIl0sImlzcyI6Imh0dHBzOi8vc3NvLmxldHNkZXYuZGUiLCJleHAiOjE3NDg5Mzg1NjgsImlhdCI6MTcxNzM5ODU2OCwianRpIjoiNmMzNTU4ZWUtYjdiZi00YjQzLTljMjQtYmU2NGYyMjE3NDI4In0.CUK5tp65RYPSd-_frC37m80531XqVrTIty_H6_yBRpA2E3FckaiIWr5-9DWirmV1Pof0iRxdEIEwhCcV1w_lbjvkif7U5LR0K7Jqr28T0TR9NEDon7xX6_ZCt5E3e999OiQjsDV9w7AvyS-V57PG8ZStJRxHutlvQBGYEUpT2uf9kvc9OBV3rDAuKc13Y6VNbZ-Bl622BfLE_FgvmQBiF2-u6AaL-dVUm4fXyTrUqXtzobggsRYPXS_8LddMIfMkudou6bc39GzVOprRYvq2SRPP-WHOAu085Jvx-nwHLge7JBAtqOqI3PtRJzvA820sL1ZnjnFqpvzq1y-cqTkSIg
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [3] => "thirdPartyIdentifier";"backField2-value";"object.balance-value";"expirationDate"
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] "01234567-89abcdef-0123-456789ab-1234";"7/2024";"7/2024";"2024-07-30T12:00:00.118Z"
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] "01234567-89abcdef-0123-456789ab-1237";"7/2024";"7/2024";"2024-07-30T12:00:00.118Z"
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [4] => Host: cloud.kortpress.io
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [5] => Accept-Encoding: gzip,deflate
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [6] => User-Agent: Mozilla/5.0 (compatible; Linux)
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [7] => Connection: close
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [body] =>
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [headers] => Array
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] (
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] )
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] 
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [engine] => cURL
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [cached] =>
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] [error] => HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
+Thu, 06 Jun 2024 08:59:17 +0200 [10.16.193.254] )
