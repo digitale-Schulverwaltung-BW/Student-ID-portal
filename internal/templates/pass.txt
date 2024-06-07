@@ -1,13 +1,13 @@
 {
     "details": {
-        "name": "Schülerausweis",
+        "name": "{{@pass_name}}",
         "tags": "student ID card",
         "passType": "pass.type.loyalty.card",
         "thirdPartyId": "{{@id}}",
         "platformTypeList": [
-            <check if="{{ @apple }}">"APPLE",</check>
-            <check if="{{ @google }}">"GOOGLE",</check>
-            <check if="{{ @pdf }}">"PDF",</check>
+            <check if="{{ @apple }}">"APPLE"<check if="{{ @pdf or @google }}">,</check></check>
+            <check if="{{ @google }}">"GOOGLE"<check if="{{ @pdf }}">,</check></check>
+            <check if="{{ @pdf }}">"PDF"</check>
         ],
         "scanEventWebhookUrl": "https://cmp.letsdev.de/letsdev/webhook-test/?PHPSESSID=9b3e0d071138b22bf770ab2dc7d8b7f7",
         "scanEventWebhookAuthentication": "string",

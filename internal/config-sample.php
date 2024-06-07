@@ -20,6 +20,7 @@
   // login;shortname;idnumber;lastname;firstname;email;Klasse;birthday;Austrittsdatum;Eintrittsdatum
   //
   define('CSV_ID', 2);
+  define('CSV_LOGIN', 0);  // unique login identifier used to identify passes in backend
   define('CSV_LAST', 3);
   define('CSV_FIRST', 4);
   define('CSV_BIRTHDAY', 7);

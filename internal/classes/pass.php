@@ -60,19 +60,25 @@ class CStudentPass extends Utility {
         if (isset($data['urls']['platforms']['PDF']))    $this->pdfURL=$data['urls']['platforms']['PDF'];
     }
 
-
-
     function getPassID(): String
     {   
         // already registered, return stored passID
         if ($this->passID!="") return $this->passID;
         
         // not in DB: create pass
+        return registerPass();
+    }
+
+    function registerPass(): String 
+    {       
         $logger = new Log('deploy.log');
         if ($this->student->getID()=="") return "";
         $template=new Template;
-        $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
+        if (empty($this->passID))
+             $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
+        else $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID.'&serialNumber='.$this->passID;
         $this->f3->mset(array('id'=>$this->student->getID(),
+                        'pass_name'=>$this->student->getLogin(),
                         'short_id'=>substr($this->student->getID(),-4),
                         'valid_short'=>$this->validShort(),
                         'valid_long'=>$this->validLong(),
@@ -87,7 +93,7 @@ class CStudentPass extends Utility {
                         'google' => KORTPRESS_USE_GOOGLE,
                         'pdf' => KORTPRESS_USE_PDF
                     ));
-        $postdata=$template->render('templates/pass.txt');
+        $postdata=$template->render('templates/pass.txt', 'application/json');
         $options = array(
             'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
             'header' => [ // ToDo
@@ -109,8 +115,11 @@ class CStudentPass extends Utility {
         } else $logger->write("INFO: successful deploy: ".$this->student->getID().'=>'.$data['details']['serialNumber']);
 
         $this->extractURLs($data);
-        $this->passID=$data['details']['serialNumber'];
-        $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'")');
+        if (empty($this->passID))
+        {
+            $this->passID=$data['details']['serialNumber'];
+            $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'")');
+        }
         return $this->passID;
     }
 

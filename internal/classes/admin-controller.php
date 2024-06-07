@@ -71,16 +71,24 @@ class CAdminController extends Utility{
                     );
                     $result = \Web::instance()->request($url, $options);
                     if (!isset($result) || empty($result) || (!isset($result['body'])))
-                    {
-                        $logger = new Log('admin.log');
-                        $logger->write("ERROR Updating pass: ".print_r($result, true));
-                        $errors++;
-                        return;
-                    } 
+                        $msg='- es sind Fehler aufgetreten, bitte das update.log prüfen.';
                     $logger = new Log('update.log');
                     $logger->write("Update status after POST: ".print_r($result, true));
-                    $msg="$renewed Ausweise verlängert ".$msg.";".$csv;
+                    $msg="$renewed Ausweise verlängert ".$msg;
                     $f3->set('message', $msg);
+                    break;
+                case 'reissue':
+                    $sid=$f3->get('POST.ID');
+                    $stud=new CStudent($sid);
+                    if ($stud->getID()=="") $stud->lookupStudent($sid);
+                    if ($stud->getID()=="") {
+                        $f3->set('message', "Schüler ID nicht gefunden");
+                    } else {
+                        if ($stud->reissuePass())
+                             $f3->set('message', "Ausweis neu erstellt. Schüler muss im Wallet ggf. aktualisieren.");
+                        else $f3->set('message', "Fehler beim Pass-Update. Log-Dateien überprüfen!");
+                    }
+                    header ('Location: '.$f3->get('BASE').'/admin/'); // Bug: template render does not work here? Redirect as workaround
                     break;
                 }
             }
@@ -101,7 +109,6 @@ class CAdminController extends Utility{
         {
             $logger = new Log('admin.log');
             $logger->write("ERROR deleting pass: ".print_r($result, true));
-            $errors++;
             return false;
         } else {
             // delete from DB

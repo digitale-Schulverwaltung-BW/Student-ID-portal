@@ -44,6 +44,19 @@ class InternalController
             header("Content-Type: application/json");
             echo json_encode($data);
         }
-        else echo "";
+        else {
+            header("Content-Type: application/json");
+            echo "";
+        }
     }
+
+    // route handler for verify. Returns JSON array with student name+birthday
+    function lookup($f3, $args): void
+    {
+        $login=(isset($args['login']))?$args['login']:"";
+        $stud   = new CStudent("");
+        $stud.lookup($login);
+        echo $stud->getID();
+    }
+
 }

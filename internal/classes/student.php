@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('pass.php');
 
 class CStudent
 {
@@ -7,6 +8,7 @@ class CStudent
     protected String $firstname;
     protected String $lastname;
     protected String $birthday;
+    protected String $login;
 
     function __construct($id) {
         if (!isset($id) || empty($id) || strlen($id)!=36)
@@ -23,6 +25,7 @@ class CStudent
                 $this->lastname=$data[CSV_LAST];
                 $this->firstname=$data[CSV_FIRST];
                 $this->birthday=$data[CSV_BIRTHDAY];
+                $this->login=$data[CSV_LOGIN];
             } else {
                 $this->ID="";
             }
@@ -34,6 +37,26 @@ class CStudent
         $sanitizedString = preg_replace('/[^-0-9A-F]/i', '', $string);
         return substr($sanitizedString, 0, 36);
     }
+
+    // try to look up a student from backend DB with a human-readable login name
+    public function lookupStudent(String $username)
+    {
+        $studentline=$this->getLineWithString(STUDENTS_CVS, $username);
+        if ($studentline=="" && defined('DEMO_CVS')) 
+            $studentline=$this->getLineWithString(DEMO_CVS, $username);
+        if( $studentline !== "") {
+            // valid student ID
+            $data = str_getcsv($studentline, ";");
+            $this->lastname=$data[CSV_LAST];
+            $this->firstname=$data[CSV_FIRST];
+            $this->birthday=$data[CSV_BIRTHDAY];
+            $this->ID=$data[CSV_ID];
+            $this->login=$data[CSV_LOGIN];
+        } else {
+            $this->ID="";
+        }
+    }
+    
 
     private function getLineWithString($fileName, $str): String {
         $lines = file($fileName);
@@ -49,6 +72,10 @@ class CStudent
     {
         return $this->ID;
     }
+    public function getLogin(): String
+    {
+        return $this->login;
+    }
     public function getFirstname(): String
     {
         return $this->firstname;
@@ -61,6 +88,12 @@ class CStudent
     {
         return $this->birthday;
     }
+    public function reissuePass(): bool
+    {
+        $pass=new CStudentPass(Base::instance(), $this);
+        return ($pass->registerPass()!="");
+    }
+
 }
 
 ?>
