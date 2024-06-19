@@ -66,7 +66,7 @@ class CStudentPass extends Utility {
         if ($this->passID!="") return $this->passID;
         
         // not in DB: create pass
-        return registerPass();
+        return $this->registerPass();
     }
 
     function registerPass(): String 
