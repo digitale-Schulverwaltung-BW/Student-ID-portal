@@ -14,6 +14,9 @@ define('KORTPRESS_USE_PDF', 0);
 // internal URLs to request
 define('internal_server', '<your internal server URL>');
 
+// set to false on production
+define('logging', false); 
+
 // no configuration needed below
 define('verify_url',      internal_server.'/ID/internal/verify/');
 define('register_url',    internal_server.'/ID/internal/register/');

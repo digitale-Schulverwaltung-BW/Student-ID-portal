@@ -68,6 +68,10 @@ class CStudent
     // returns JSON containing the fields id, apple, google and pdf.
     public function register_pass(): String {
         $response = @file_get_contents(register_url.$this->ID);
+        if (logging) {$logger = new Log('extdeploy.log');
+            $logger->write("fetched: ".register_url.$this->ID);
+            $logger->write("result: ".print_r($response, true));
+        }
         if (is_null($response) || empty($response)  || $response === false) return "";
         return ($response);
     }

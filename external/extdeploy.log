@@ -1,0 +1,4 @@
+Wed, 19 Jun 2024 10:46:08 +0200 [10.16.193.254] fetched: http://10.16.193.229:81/internal/register/8a9041a4-859a7a71-0185-9b0f1532-0167
+Wed, 19 Jun 2024 10:46:08 +0200 [10.16.193.254] result:
+Wed, 19 Jun 2024 10:47:12 +0200 [10.16.193.254] fetched: http://10.16.193.229:81/internal/register/8a9041a4-859a7a71-0185-9b0f1532-0167
+Wed, 19 Jun 2024 10:47:12 +0200 [10.16.193.254] result: {"id":"253b3497-faff-49e5-b99d-bcef472e5114","apple":"https:\/\/cloud.kortpress.io\/rest\/consumer\/download?downloadToken=4871b1a6-1a83-4f2f-b70b-836f0e919405","google":"https:\/\/cloud.kortpress.io\/rest\/consumer\/download?downloadToken=fa0ff438-afe4-453f-bcc4-7378c4a6280a","pdf":"null"}
