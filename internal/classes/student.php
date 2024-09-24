@@ -19,6 +19,8 @@ class CStudent
             $studentline=$this->getLineWithString(STUDENTS_CVS, $this->ID);
             if ($studentline=="" && defined('DEMO_CVS')) 
                 $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
+            if ($this->getLineWithString(BLACKLIST, $this->ID)!="")
+                $studentline="";
             if( $studentline !== "") {
                 // valid student ID
                 $data = str_getcsv($studentline, ";");
