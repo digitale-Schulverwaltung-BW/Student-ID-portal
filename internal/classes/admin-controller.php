@@ -78,7 +78,7 @@ class CAdminController extends Utility{
                     $f3->set('message', $msg);
                     break;
                 case 'reissue':
-                    $sid=$f3->get('POST.ID');
+                    $sid=$f3->get('POST.searchID');
                     $stud=new CStudent($sid);
                     if ($stud->getID()=="") $stud->lookupStudent($sid);
                     if ($stud->getID()=="") {

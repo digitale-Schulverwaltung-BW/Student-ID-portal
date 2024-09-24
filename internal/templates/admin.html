@@ -17,7 +17,8 @@
             <td><b>Verlängern</b></td>
             <td><button onclick="document.location='{{@BASE}}/admin/renew'">gültige Ausweise um aktuelles Schuljahr verlängern</button></td>
             </tr><tr>
-            <form method="POST" action="{{@BASE}}/admin/reissue"><td><input type="text" placeholder="Schüler-ID/login" name="ID"/></td>
+            <form method="POST" action="{{@BASE}}/admin/reissue" autocomplete="off"><td>
+                <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
             <td><button type="submit">Ausweis neu ausstellen</button></td>
             </form></tr>
             </table>

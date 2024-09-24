@@ -5,3 +5,5 @@ internal/deploy.log
 internal/config.php
 passes.sqlite
 internal/pass.log
+internal/update.log
+blacklist.csv
