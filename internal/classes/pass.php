@@ -26,7 +26,7 @@ class CStudentPass extends Utility {
 
         $this->db=new DB\SQL('sqlite:'.PASS_DB);
         $this->db->exec('CREATE TABLE IF NOT EXISTS "passes" (
-            "studID" VARCHAR PRIMARY KEY NOT NULL, "passID" VARCHAR, "created" DATE
+            "studID" VARCHAR PRIMARY KEY NOT NULL, "passID" VARCHAR, "created" DATE, "valid" VARCHAR
         )');
         $results = $this->db->exec('SELECT passID FROM passes WHERE studID="'.$student->getID().'"');
         if (empty($results))
@@ -118,7 +118,7 @@ class CStudentPass extends Utility {
         if (empty($this->passID))
         {
             $this->passID=$data['details']['serialNumber'];
-            $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'")');
+            $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'", "'.$this->validShort().'")');
         }
         return $this->passID;
     }

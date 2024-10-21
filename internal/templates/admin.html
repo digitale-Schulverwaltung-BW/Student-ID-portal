@@ -12,10 +12,12 @@
         <div>
             <table><tr>
             <td><b>Datenabgleich</b></td>
-            <td><button onclick="document.location='{{@BASE}}/admin/check'">Ausgetretene löschen</button><br /></td>
+            <td><button onclick="document.location='{{@BASE}}/admin/check'">Ausgetretene löschen</button><br /></td></tr><tr ><td></td>
+            <td><button onclick="document.location='{{@BASE}}/admin/double'">Doppelt ausgestellte löschen</button><br /></td>
             </tr><tr>
             <td><b>Verlängern</b></td>
             <td><button onclick="document.location='{{@BASE}}/admin/renew'">gültige Ausweise um aktuelles Schuljahr verlängern</button></td>
+            <td><button onclick="document.location='{{@BASE}}/admin/reissue-all'">alle Ausweise neu ausstellen (Vorsicht)</button></td>
             </tr><tr>
             <form method="POST" action="{{@BASE}}/admin/reissue" autocomplete="off"><td>
                 <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
@@ -24,6 +26,9 @@
             </table>
         </div>
         <div style="margin-top: 10px"><b>Status:</b><br />Ausgegebene Ausweise: {{@numPasses}}<br />
-        {{@message}}</div>
+        <!-- p style="white-space: pre-line" -->
+            {{@message | nl2br,raw}}
+
+        </div>
     </body>
 </html>

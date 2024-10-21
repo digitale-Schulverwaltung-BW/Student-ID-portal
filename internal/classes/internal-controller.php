@@ -10,7 +10,7 @@ class InternalController
     {
         $id=(isset($args['id']))?$args['id']:"";
         $stud=new CStudent($id);
-        if( $stud->getID() !== "") {
+        if (($stud->getID() !== "")/* && (!$stud->isBlacklisted())*/){
             // valid student ID
             $resp = array("id" => $stud->getID(), 
                           "lastname" => $stud->getLastname(), 
@@ -32,6 +32,7 @@ class InternalController
     {
         $id=(isset($args['id']))?$args['id']:"";
         $stud   = new CStudent($id);
+        if ($stud->isBlacklisted()) return;
         if ($stud->getID()=="") return;
         $pass   = new CStudentPass($f3, $stud);
         $passID = $pass->getPassID();
