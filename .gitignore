@@ -7,3 +7,5 @@ passes.sqlite
 internal/pass.log
 internal/update.log
 blacklist.csv
+passes.sqlite.bak
+internal/update.log

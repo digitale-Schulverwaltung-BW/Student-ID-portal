@@ -7,10 +7,11 @@ class Utility{
     // adjust end date here
     function validShort(): String
     {
-        $month=date("m");
+        //$month=date("m");
         $year=date("Y");
-        if ($month>8) return SCHOOLYEAR_START.$year+1;
-        return SCHOOLYEAR_START."/$year";
+        $month=(SCHOOLYEAR_START<10)?"0".SCHOOLYEAR_START:SCHOOLYEAR_START;
+        if ($month>8) return $month.'/'.$year+1;
+        return $month."/$year";
     }
 
     // generate validity date String (machine readable).
@@ -21,7 +22,16 @@ class Utility{
         $year=date("Y");
         $m=(SCHOOLYEAR_START<10)?"0".SCHOOLYEAR_START:SCHOOLYEAR_START;
         if ($month>8) return ($year+1)."-$m-30T12:00:00.118Z";
-        return "$year-$m-30T12:00:00.118Z";
+        return "$year-$m-30T12:00:00.118";
+    }
+    protected function getLineWithString($fileName, $str): String {
+        $lines = file($fileName);
+        foreach ($lines as $lineNumber => $line) {
+            if (strpos($line, $str) !== false) {
+                return $line;
+            }
+        }
+        return "";
     }
 }
 ?>

@@ -31,50 +31,74 @@ class CAdminController extends Utility{
         } else {
             switch ($action) {
                 case 'check':
+                    $msg='';
                     $deleted=0;
                     $errors=0;
                     foreach ($results as $pass ) {
                         $stud=new CStudent($pass['studID']);
                         if ($stud->getID()=="") {
-                            if ($this->deletePass($pass['studID'], $pass['passID']))
-                                $deleted++;
+                            $msg .= "deleted: $pass[studID]".PHP_EOL;
+                            /*if ($this->deletePass($pass['studID'], $pass['passID']))*/
+                                $deleted++;/*
                             else
-                                $errors++;
+                                $errors++;*/
                         }
                     }
-                    $msg="$deleted Ausweise gelöscht";
+                    $msg.="$deleted Ausweise gelöscht";
                     if ($errors>0) $msg.=", $errors Fehler beim Löschen";
                     $f3->set('message', $msg);
                     break;
                 case 'renew':
+                    $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid!='.$this->validShort());
+                    //$results=$this->db->exec('SELECT studID, passID FROM passes WHERE studID="8a9041f7-8f4c3ee4-018f-4cc3331e-044a"');
                     $renewed=0;
                     $msg="";
-                    $csv='"thirdPartyIdentifier";"backField2-value";"object.balance-value";"expirationDate"'.PHP_EOL;
-                    $list=$this->getExpiryDates();
-                    $lines=explode("\n", $list);
-                    foreach ($lines as $line){
-                        $entry=str_getcsv($line, ";");
-                        
-                        $stud=new CStudent($entry[1]);
-                        if ($stud->getID()=="") continue;                        
-                        if ($entry[3]!=$this->validShort()) {
+                    $csv='thirdPartyIdentifier;backField2-value;object.balance-value;expirationDate'.PHP_EOL;
+                    if (empty($results)){
+                        $msg="keine zu verlängernden Ausweise in Datenbank";
+                    } else {                        
+                        foreach ($results as $pass)
+                        {
+                            $stud=new CStudent($pass['studID']);
+                            if ($stud->getID()=="") continue;                        
                             $renewed++;
-                            $csv.='"'.$entry[1].'";"'.$this->validShort().'";"'.$this->validShort().'";"'.$this->validLong().'"'.PHP_EOL;
+                            $csv.=$pass['studID'].';'.$this->validShort().';'.$this->validShort().';'.$this->validLong().';'.PHP_EOL;
+                            //$csv.='"'.$pass['studID'].'";"'."10/2025".'";"'."10/2025".'";"'.$this->validLong().'";'.PHP_EOL;
+                            $msg.="erneuert: $pass[studID]".PHP_EOL;
+                            $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
                         }
                     }
                     $url='https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId='.KORTPRESS_TEMPLATE_ID;
                     $options = array( 'method' => 'POST', 'follow_redirects' => TRUE,
                                       'header' => [
                                         'Content-Type: text/csv', 'Authorization: Bearer '. KORTPRESS_TOKEN,
-                                      'data' => $csv
-                                    ]
+                                      ],
+                                      'content' => $csv
                     );
                     $result = \Web::instance()->request($url, $options);
                     if (!isset($result) || empty($result) || (!isset($result['body'])))
                         $msg='- es sind Fehler aufgetreten, bitte das update.log prüfen.';
                     $logger = new Log('update.log');
+                    $logger->write("CSV: ".PHP_EOL.$csv);
                     $logger->write("Update status after POST: ".print_r($result, true));
-                    $msg="$renewed Ausweise verlängert ".$msg;
+                    $msg="$renewed Ausweise verlängert ".PHP_EOL.PHP_EOL.$msg;
+
+                    $f3->set('message', $msg);
+                    break;
+                case 'double':
+                    $msg="Doppelt ausgestellte zu löschen: ".PHP_EOL;
+                    $count=0;
+                    foreach ($results as $pass ) {
+                        $double='';
+                        $stud=new CStudent($pass['studID']);
+                        $double=$this->getLineWithString(BLACKLIST, $pass['studID']);
+                        if ($double) {
+                            $dbl=explode(';', $double);
+                            $msg=$msg.trim($dbl[1]).'->'.$dbl[0].PHP_EOL; //$pass['studID'];
+                            $count++;
+                        }
+                    }
+                    $msg.="insg.: ".$count;
                     $f3->set('message', $msg);
                     break;
                 case 'reissue':
@@ -89,6 +113,24 @@ class CAdminController extends Utility{
                         else $f3->set('message', "Fehler beim Pass-Update. Log-Dateien überprüfen!");
                     }
                     header ('Location: '.$f3->get('BASE').'/admin/'); // Bug: template render does not work here? Redirect as workaround
+                    break;
+                case 'reissue-all':
+                    $msg=".";
+                    $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid!="09/2025" AND created>"2024-09-01" LIMIT 100');
+                    foreach ($results as $pass) {
+                        $stud=new CStudent($pass['studID']);
+                        if ($stud->getID()!="") {
+                            if ($stud->reissuePass()) { 
+                                $msg.=$pass['studID'].PHP_EOL; 
+                                $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
+                            }
+                            else 
+                            {
+                                $msg.="Error: $pass[studID]".PHP_EOL;
+                            }
+                        }
+                    }
+                    $f3->set('message', $msg);
                     break;
                 }
             }
@@ -117,7 +159,7 @@ class CAdminController extends Utility{
         return true;
     }
 
-    function getExpiryDates(): String
+    function getExpiryDates(): String // deprecation warning: this method times out when retrieving a large amount of passes.
     {
         $url='https://cloud.kortpress.io/rest/v1/pass/csv?templateId='.KORTPRESS_TEMPLATE_ID.'&passItemCSV='.urlencode('"serialNumber";"thirdPartyIdentifier";"expirationDate";"object.balance-value";"backField2-value"');
         $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
@@ -137,5 +179,26 @@ class CAdminController extends Utility{
         return $result['body'];
     }
 
+    function getExpiryDate($pass): String
+    {
+        $url='https://cloud.kortpress.io/rest/v1/pass/csv?templateId='.KORTPRESS_TEMPLATE_ID.'&serialNumber='.$pass['passID'].
+             '&passItemCSV='.urlencode('"serialNumber";"thirdPartyIdentifier";"expirationDate";"object.balance-value";"backField2-value"');
+        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
+                            'header' => [
+                            'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
+                        ]
+        );
+        $result = \Web::instance()->request($url, $options);
+        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        {
+            $logger = new Log('update.log');
+            $logger->write("ERROR getting expiry date for single pass: ".print_r($result, true));
+            return "";
+        }
+        $logger = new Log('update.log');
+        $logger->write("Update status: ".print_r($result, true));
+        return $result['body'];
+
+    }
 }
 ?>

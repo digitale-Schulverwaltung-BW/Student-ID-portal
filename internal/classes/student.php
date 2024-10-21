@@ -19,8 +19,6 @@ class CStudent
             $studentline=$this->getLineWithString(STUDENTS_CVS, $this->ID);
             if ($studentline=="" && defined('DEMO_CVS')) 
                 $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
-            if ($this->getLineWithString(BLACKLIST, $this->ID)!="")
-                $studentline="";
             if( $studentline !== "") {
                 // valid student ID
                 $data = str_getcsv($studentline, ";");
@@ -32,6 +30,13 @@ class CStudent
                 $this->ID="";
             }
         }
+    }
+
+    public function isBlacklisted()
+    {
+        if ($this->getLineWithString(BLACKLIST, $this->ID)!="")
+            return true;
+        return false;
     }
 
     private function sanitizeUUID($string) {
@@ -49,11 +54,18 @@ class CStudent
         if( $studentline !== "") {
             // valid student ID
             $data = str_getcsv($studentline, ";");
-            $this->lastname=$data[CSV_LAST];
-            $this->firstname=$data[CSV_FIRST];
-            $this->birthday=$data[CSV_BIRTHDAY];
-            $this->ID=$data[CSV_ID];
-            $this->login=$data[CSV_LOGIN];
+            $today=new DateTime();
+            $exitd=new DateTime($data[CSV_EXITD]);
+            if ($today>$exitd)
+                $this->ID="";
+            else
+            {
+                $this->lastname=$data[CSV_LAST];
+                $this->firstname=$data[CSV_FIRST];
+                $this->birthday=$data[CSV_BIRTHDAY];
+                $this->ID=$data[CSV_ID];
+                $this->login=$data[CSV_LOGIN];
+            }
         } else {
             $this->ID="";
         }
