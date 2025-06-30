@@ -1,13 +1,9 @@
 external/tmp/
 external/config.php
-external/update.log
-external/extdeploy.log
+external/*.log
 internal/tmp/
-internal/deploy.log
 internal/config.php
-internal/pass.log
-internal/update.log
-internal/admin.log
+internal/*.log
 internal/passes.sqlite.2
 passes.sqlite
 passes.sqlite.bak
