@@ -9,3 +9,12 @@ internal/update.log
 blacklist.csv
 passes.sqlite.bak
 internal/update.log
+passes
+.gitignore
+external/extdeploy.log
+internal/admin.log
+internal/passes.sqlite.2
+external/extdeploy.log
+passes.sqlite.2
+external/extdeploy.log
+external/extdeploy.log
