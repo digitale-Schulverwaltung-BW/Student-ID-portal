@@ -15,7 +15,7 @@ class CStudentPass extends Utility {
     protected String $googleURL;
     protected String $pdfURL;
 
-    protected CStudent $stud;
+    protected CStudent $student;
 
     function __construct(Base $f3, CStudent $student) {
         $this->f3 = $f3;

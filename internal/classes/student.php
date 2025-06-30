@@ -48,6 +48,16 @@ class CStudent
     // try to look up a student from backend DB with a human-readable login name
     public function lookupStudent(String $username)
     {
+        $this->intLookupStudent($username, false);
+    }
+    // try to look up a current or former student from backend DB with a human-readable login name
+    public function lookupFormerStudent(String $username)
+    {
+        $this->intLookupStudent($username, true);
+    }
+    // try to look up a student from backend DB with a human-readable login name
+    private function intLookupStudent(String $username, bool $former)
+    {
         $studentline=$this->getLineWithString(STUDENTS_CVS, $username);
         if ($studentline=="" && defined('DEMO_CVS')) 
             $studentline=$this->getLineWithString(DEMO_CVS, $username);
@@ -56,7 +66,7 @@ class CStudent
             $data = str_getcsv($studentline, ";");
             $today=new DateTime();
             $exitd=new DateTime($data[CSV_EXITD]);
-            if ($today>$exitd)
+            if (!($former) && $today>$exitd)
                 $this->ID="";
             else
             {
@@ -104,7 +114,7 @@ class CStudent
     }
     public function reissuePass(): bool
     {
-        $pass=new CStudentPass(Base::instance(), $this);
+        $pass=new CStudentPass(Base::instance(), $this);        
         return ($pass->registerPass()!="");
     }
 

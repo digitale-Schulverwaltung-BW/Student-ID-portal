@@ -104,9 +104,9 @@ class CAdminController extends Utility{
                 case 'reissue':
                     $sid=$f3->get('POST.searchID');
                     $stud=new CStudent($sid);
-                    if ($stud->getID()=="") $stud->lookupStudent($sid);
+                    if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
                     if ($stud->getID()=="") {
-                        $f3->set('message', "Schüler ID nicht gefunden");
+                        $f3->set('message', "Schüler ID nicht gefunden $sid");
                     } else {
                         if ($stud->reissuePass())
                              $f3->set('message', "Ausweis neu erstellt. Schüler muss im Wallet ggf. aktualisieren.");
@@ -132,6 +132,25 @@ class CAdminController extends Utility{
                     }
                     $f3->set('message', $msg);
                     break;
+                case 'delete':
+                    $sid=$f3->get('POST.dsearchID');
+                    if (!isset($sid) || empty($sid))
+                    {
+                        $f3->set('message', 'ID darf nicht leer sein.');
+                        break;
+                    }
+                    $stud=new CStudent($sid);
+                    if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
+                    if ($stud->getID()=="") {
+                        $f3->set('message', "Schüler ID $sid nicht gefunden");
+                    } else {
+                        $pass=new CStudentPass($f3, $stud);
+                        if ($this->deletePass($stud->getID(), $pass->getPassID()))
+                             $f3->set('message', "Ausweis gelöscht.");
+                        else $f3->set('message', "Fehler beim Pass-Update. Log-Dateien überprüfen!");
+                    }
+                    //header ('Location: '.$f3->get('BASE').'/admin/'); // Bug: template render does not work here? Redirect as workaround
+                    break;
                 }
             }
         echo $template->render('templates/admin.html');
@@ -155,6 +174,8 @@ class CAdminController extends Utility{
         } else {
             // delete from DB
             $this->db->exec('DELETE FROM "passes" WHERE studID="'.$stud.'"');
+            $logger = new Log('admin.log');
+            $logger->write("Deleted pass: ".print_r($result, true));
         }
         return true;
     }
