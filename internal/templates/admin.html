@@ -23,6 +23,11 @@
                 <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
             <td><button type="submit">Ausweis neu ausstellen</button></td>
             </form></tr>
+            <tr>
+                <form method="POST" action="{{@BASE}}/admin/delete" autocomplete="off"><td>
+                    <input type="text" placeholder="Schüler-ID/login" name="dsearchID" autocomplete="nothanks" /></td>
+                <td><button type="submit">Einzelnen Ausweis löschen</button></td>
+                </form></tr>
             </table>
         </div>
         <div style="margin-top: 10px"><b>Status:</b><br />Ausgegebene Ausweise: {{@numPasses}}<br />

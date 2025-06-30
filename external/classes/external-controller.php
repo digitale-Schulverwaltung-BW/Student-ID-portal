@@ -132,6 +132,7 @@ class ExternalController
         $pass=$stud->register_pass();
         if (isset($pass) && !empty($pass)) $data=json_decode($pass, true);
         else $this->exit_with_error('Fehler beim Abruf der Ausweisdaten.');
+        if (isset($data['error'])) $deploy="error";
         switch ($deploy) {
             case 'google':
                 if ($this->is_valid($data['google']))
@@ -152,7 +153,10 @@ class ExternalController
                 exit();
                 break;
             default:
-                // unknown deploy type        
+                // unknown deploy type or deply error
+                if (isset($data['error']) && !empty($data['error'])) {
+                    $this->exit_with_error($data['error']);
+                }
                 $this->exit_with_error('Fehler: Unbekannter Wallet-Typ oder Ausweis im gewählten Format nicht verfügbar.');
                 break;
             }    

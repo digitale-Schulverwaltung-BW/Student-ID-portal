@@ -31,8 +31,13 @@ class InternalController
     function deploy($f3, $args): void
     {
         $id=(isset($args['id']))?$args['id']:"";
-        $stud   = new CStudent($id);
-        if ($stud->isBlacklisted()) return;
+        $stud = new CStudent($id);
+        if ($stud->isBlacklisted()) {
+            $data = array("error" => "Fehler: bereits Papierausweis ausgestellt, kein digitaler Ausweis möglich.");
+            header("Content-Type: application/json");
+            echo json_encode($data);
+            return;
+        }
         if ($stud->getID()=="") return;
         $pass   = new CStudentPass($f3, $stud);
         $passID = $pass->getPassID();
