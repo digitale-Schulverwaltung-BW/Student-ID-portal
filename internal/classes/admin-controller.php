@@ -34,14 +34,14 @@ class CAdminController extends Utility{
                     $msg='';
                     $deleted=0;
                     $errors=0;
-                    foreach ($results as $pass ) {
+                    foreach ($results as $pass) {
                         $stud=new CStudent($pass['studID']);
                         if ($stud->getID()=="") {
                             $msg .= "deleted: $pass[studID]".PHP_EOL;
-                            /*if ($this->deletePass($pass['studID'], $pass['passID']))*/
-                                $deleted++;/*
+                            if ($this->deletePass($pass['studID'], $pass['passID']))
+                                $deleted++;
                             else
-                                $errors++;*/
+                                $errors++;
                         }
                     }
                     $msg.="$deleted Ausweise gelöscht";
@@ -88,6 +88,8 @@ class CAdminController extends Utility{
                 case 'double':
                     $msg="Doppelt ausgestellte zu löschen: ".PHP_EOL;
                     $count=0;
+                    $deleted=0;
+                    $errors=0;
                     foreach ($results as $pass ) {
                         $double='';
                         $stud=new CStudent($pass['studID']);
@@ -96,9 +98,13 @@ class CAdminController extends Utility{
                             $dbl=explode(';', $double);
                             $msg=$msg.trim($dbl[1]).'->'.$dbl[0].PHP_EOL; //$pass['studID'];
                             $count++;
+                            if ($this->deletePass($pass['studID'], $pass['passID']))
+                                $deleted++;
+                            else
+                                $errors++;
                         }
                     }
-                    $msg.="insg.: ".$count;
+                    $msg.="insg.: ".$count.", $deleted gelöscht, $errors Fehler beim Löschen";
                     $f3->set('message', $msg);
                     break;
                 case 'reissue':
