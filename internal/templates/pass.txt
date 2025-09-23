@@ -9,9 +9,7 @@
             <check if="{{ @google }}">"GOOGLE"<check if="{{ @pdf }}">,</check></check>
             <check if="{{ @pdf }}">"PDF"</check>
         ],
-        "scanEventWebhookUrl": "https://cmp.letsdev.de/letsdev/webhook-test/?PHPSESSID=9b3e0d071138b22bf770ab2dc7d8b7f7",
         "scanEventWebhookAuthentication": "string",
-        "transactionWebhookUrl": "https://cmp.letsdev.de/letsdev/webhook-test/?PHPSESSID=9b3e0d071138b22bf770ab2dc7d8b7f7",
         "transactionWebhookAuthentication": "string",
         "plannedVoidedDate": "2050-01-01T13:30:45.678Z"
     },

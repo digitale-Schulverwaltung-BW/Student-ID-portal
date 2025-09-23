@@ -18,15 +18,24 @@
             <td><b>Verlängern</b></td>
             <td><button onclick="document.location='{{@BASE}}/admin/renew'">gültige Ausweise um aktuelles Schuljahr verlängern</button></td>
             <td><button onclick="document.location='{{@BASE}}/admin/reissue-all'">alle Ausweise neu ausstellen (Vorsicht)</button></td>
-            </tr><tr>
-            <form method="POST" action="{{@BASE}}/admin/reissue" autocomplete="off"><td>
-                <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
-            <td><button type="submit">Ausweis neu ausstellen</button></td>
-            </form></tr>
+            </tr>
+            <tr>
+                <form method="POST" action="{{@BASE}}/admin/reissue" autocomplete="off"><td>
+                    <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
+                <td><button type="submit">Ausweis neu ausstellen</button></td>
+                </form>
+            </tr>
+            <tr>
+                <form method="POST" action="{{@BASE}}/admin/update" autocomplete="off"><td>
+                    <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
+                <td><button type="submit">Ausweis aktualisieren</button></td>
+                </form>
+            </tr>
             <tr>
                 <form method="POST" action="{{@BASE}}/admin/delete" autocomplete="off"><td>
-                    <input type="text" placeholder="Schüler-ID/login" name="dsearchID" autocomplete="nothanks" /></td>
-                <td><button type="submit">Einzelnen Ausweis löschen</button></td>
+                    <input type="text" placeholder="Schüler-ID/login" name="dsearchID" autocomplete="nothanks" 
+                     style="border-color: #f88; background-color:#fdd" /></td>
+                <td><button type="submit" style="background-color: #fdd;">Einzelnen Ausweis löschen</button></td>
                 </form></tr>
             </table>
         </div>

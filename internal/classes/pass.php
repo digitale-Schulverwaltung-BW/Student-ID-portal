@@ -109,7 +109,7 @@ class CStudentPass extends Utility {
         $data = json_decode($result['body'], true);
         
         if ((!isset($data['details']) || (!isset($data['details']['serialNumber']))) || empty($data['details']['serialNumber'])) {
-             $logger->write("ERROR extrating deploy data: ".$postdata);
+             $logger->write("ERROR extracting deploy data: ".$postdata);
              $logger->write("...result body leading to ERROR: ".print_r($result, true));
              return "";
         } else $logger->write("INFO: successful deploy: ".$this->student->getID().'=>'.$data['details']['serialNumber']);

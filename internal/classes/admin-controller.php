@@ -49,40 +49,22 @@ class CAdminController extends Utility{
                     $f3->set('message', $msg);
                     break;
                 case 'renew':
-                    $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid!='.$this->validShort());
-                    //$results=$this->db->exec('SELECT studID, passID FROM passes WHERE studID="8a9041f7-8f4c3ee4-018f-4cc3331e-044a"');
-                    $renewed=0;
-                    $msg="";
-                    $csv='thirdPartyIdentifier;backField2-value;object.balance-value;expirationDate'.PHP_EOL;
+                    $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid<>'.$this->validShort());
                     if (empty($results)){
                         $msg="keine zu verlängernden Ausweise in Datenbank";
-                    } else {                        
-                        foreach ($results as $pass)
-                        {
-                            $stud=new CStudent($pass['studID']);
-                            if ($stud->getID()=="") continue;                        
-                            $renewed++;
-                            $csv.=$pass['studID'].';'.$this->validShort().';'.$this->validShort().';'.$this->validLong().';'.PHP_EOL;
-                            //$csv.='"'.$pass['studID'].'";"'."10/2025".'";"'."10/2025".'";"'.$this->validLong().'";'.PHP_EOL;
-                            $msg.="erneuert: $pass[studID]".PHP_EOL;
-                            $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
-                        }
+                    } else {      
+                        $msg=$this->updatePasses($results);                  
                     }
-                    $url='https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId='.KORTPRESS_TEMPLATE_ID;
-                    $options = array( 'method' => 'POST', 'follow_redirects' => TRUE,
-                                      'header' => [
-                                        'Content-Type: text/csv', 'Authorization: Bearer '. KORTPRESS_TOKEN,
-                                      ],
-                                      'content' => $csv
-                    );
-                    $result = \Web::instance()->request($url, $options);
-                    if (!isset($result) || empty($result) || (!isset($result['body'])))
-                        $msg='- es sind Fehler aufgetreten, bitte das update.log prüfen.';
-                    $logger = new Log('update.log');
-                    $logger->write("CSV: ".PHP_EOL.$csv);
-                    $logger->write("Update status after POST: ".print_r($result, true));
-                    $msg="$renewed Ausweise verlängert ".PHP_EOL.PHP_EOL.$msg;
-
+                    $f3->set('message', $msg);
+                    break;
+                case 'update':
+                    $sid=$f3->get('POST.searchID');
+                    $results=$this->db->exec('SELECT studID, passID FROM passes WHERE studID="'.$sid.'"');
+                    if (empty($results)){
+                        $msg="Ausweis in Datenbank nicht gefunden";
+                    } else {      
+                        $msg=$this->updatePasses($results);                  
+                    }
                     $f3->set('message', $msg);
                     break;
                 case 'double':
@@ -226,6 +208,42 @@ class CAdminController extends Utility{
         $logger->write("Update status: ".print_r($result, true));
         return $result['body'];
 
+    }
+    function updatePasses($passes): String
+    {
+        $msg="";
+        $csv='"thirdPartyIdentifier";"backField2-value";"object.balance-value";"expirationDate";"class.accountName-value";"class.accountId-value";"class.rewardsTier-value";"class.programName-value";"barcode1-message";"name"'.PHP_EOL;
+        $renewed=0;
+
+        foreach ($passes as $pass)
+        {
+            $stud=new CStudent($pass['studID']);
+            if ($stud->getID()=="") continue;                        
+            $renewed++;
+            $csv.='"'.$pass['studID'].'";"'.$this->validShort().'";"'.$this->validShort().'";"'.$this->validLong().'";"'.
+            $stud->getFirstname().' '.$stud->getLastname().'";"'.$stud->getBirthday().'";"'.
+            substr($stud->getID(),-4).'";"'.$stud->getFirstname().' '.$stud->getLastname().'";"'.
+            VERIFY_BASE_URL.$stud->getID().'";"'.$stud->getID().'"'.PHP_EOL;
+            $msg.="erneuert: $pass[studID]".PHP_EOL;
+            $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
+        }
+
+        $url='https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId='.KORTPRESS_TEMPLATE_ID;
+        $options = array( 'method' => 'POST', 'follow_redirects' => TRUE,
+                    'header' => [
+                    'Content-Type: text/csv', 'Authorization: Bearer '. KORTPRESS_TOKEN,
+                    ],
+                    'content' => $csv
+        );
+        $result = \Web::instance()->request($url, $options);
+        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        $msg='- es sind Fehler aufgetreten, bitte das update.log prüfen.';
+        $logger = new Log('update.log');
+        $logger->write("CSV: ".PHP_EOL.$csv);
+        $logger->write("Update status after POST: ".print_r($result, true));
+        $msg="$renewed Ausweise verlängert ".PHP_EOL.PHP_EOL.$msg;
+        
+        return $msg;
     }
 }
 ?>
