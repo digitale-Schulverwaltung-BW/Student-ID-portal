@@ -49,7 +49,7 @@ class CAdminController extends Utility{
                     $f3->set('message', $msg);
                     break;
                 case 'renew':
-                    $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid<>'.$this->validShort());
+                    $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid<>"'.$this->validShort().'"');
                     if (empty($results)){
                         $msg="keine zu verlängernden Ausweise in Datenbank";
                     } else {      
@@ -223,7 +223,7 @@ class CAdminController extends Utility{
             $csv.='"'.$pass['studID'].'";"'.$this->validShort().'";"'.$this->validShort().'";"'.$this->validLong().'";"'.
             $stud->getFirstname().' '.$stud->getLastname().'";"'.$stud->getBirthday().'";"'.
             substr($stud->getID(),-4).'";"'.$stud->getFirstname().' '.$stud->getLastname().'";"'.
-            VERIFY_BASE_URL.$stud->getID().'";"'.$stud->getID().'"'.PHP_EOL;
+            VERIFY_BASE_URL.$stud->getID().'";"'.$stud->getLogin().'"'.PHP_EOL;
             $msg.="erneuert: $pass[studID]".PHP_EOL;
             $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
         }
