@@ -39,7 +39,7 @@ class InternalController
             return;
         }
         if ($stud->getID()=="") return;
-        $pass   = new CStudentPass($f3, $stud);
+        $pass   = new CStudentPass($stud);
         $passID = $pass->getPassID();
         if (!empty($passID))
         {

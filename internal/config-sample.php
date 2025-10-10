@@ -23,6 +23,7 @@
   define('CSV_LOGIN', 0);  // unique login identifier used to identify passes in backend
   define('CSV_LAST', 3);
   define('CSV_FIRST', 4);
+  define('CSV_CLASS', 6);
   define('CSV_BIRTHDAY', 7);
   
   define('invalid_wait', 3); //seconds to wait after an invalid UUID request for rate limiting

@@ -4,11 +4,14 @@ require_once('pass.php');
 
 class CStudent
 {
+    protected Base $f3;
+    protected $db;    
     protected String $ID;
     protected String $firstname;
     protected String $lastname;
     protected String $birthday;
     protected String $login;
+    protected String $class;
 
     function __construct($id) {
         if (!isset($id) || empty($id) || strlen($id)!=36)
@@ -25,6 +28,7 @@ class CStudent
                 $this->lastname=$data[CSV_LAST];
                 $this->firstname=$data[CSV_FIRST];
                 $this->birthday=$data[CSV_BIRTHDAY];
+                $this->class=$data[CSV_CLASS];
                 $this->login=$data[CSV_LOGIN];
             } else {
                 $this->ID="";
@@ -96,6 +100,14 @@ class CStudent
     {
         return $this->ID;
     }
+    public function getPassID(): String
+    {
+        $this->db=new DB\SQL('sqlite:'.PASS_DB);
+        $results = $this->db->exec('SELECT passID FROM passes WHERE studID="'.$this->ID.'"');
+        if (empty($results))
+            return "";
+        return $results[0]['passID'];
+    }
     public function getLogin(): String
     {
         return $this->login;
@@ -111,6 +123,10 @@ class CStudent
     public function getBirthday(): String
     {
         return $this->birthday;
+    }
+    public function getClass(): String
+    {
+        return $this->class;
     }
     public function reissuePass(): bool
     {

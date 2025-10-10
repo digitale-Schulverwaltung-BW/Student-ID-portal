@@ -17,8 +17,8 @@ class CStudentPass extends Utility {
 
     protected CStudent $student;
 
-    function __construct(Base $f3, CStudent $student) {
-        $this->f3 = $f3;
+    function __construct(CStudent $student) {
+        $this->f3 = Base::instance();
         $this->student=$student;
         $this->appleURL="";
         $this->googleURL="";
@@ -28,27 +28,39 @@ class CStudentPass extends Utility {
         $this->db->exec('CREATE TABLE IF NOT EXISTS "passes" (
             "studID" VARCHAR PRIMARY KEY NOT NULL, "passID" VARCHAR, "created" DATE, "valid" VARCHAR
         )');
-        $results = $this->db->exec('SELECT passID FROM passes WHERE studID="'.$student->getID().'"');
-        if (empty($results))
+        $logger = new Log('deploy.log');
+        $results = $this->db->exec('SELECT passID, created FROM passes WHERE studID="'.$student->getID().'"');
+        if (empty($results)) { // create transaction record to prevent double registrations from the impatient
+            $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "0000", "'.date(DATE_ATOM).'", "00/0000")');
             $this->passID="";
-        else {
+        } else {
+            $logger->write("DEBUG: ".$results[0]['passID']);
+
             $this->passID=$results[0]['passID'];
-            $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
-            $options = array( // ToDo handle fixed PostMan cookies - needed at all?
-                'method' => 'GET', 'follow_redirects' => TRUE,
-                'header' => [
-//                    'Cookie: INGRESSCOOKIE=...
-                    'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-                ]
-            );
-            $result = \Web::instance()->request($url, $options);
-            if (!isset($result) || empty($result) || (!isset($result['body'])))
+            if ($this->passID=="0000") 
             {
-                $logger = new Log('deploy.log');
-                $logger->write("ERROR getting pass info: ".print_r($result, true));
+                $regdate=strtotime($results[0]['created']);
+                $delay=time()-$regdate;
+                if ($delay>300) // more than 5 minutes ago, reset to allow registration
+                {
+                    $this->db->exec('UPDATE passes SET passID="0000", created="'.date(DATE_ATOM).'" WHERE studID="'.$student->getID().'"');
+                    $logger->write("TIMEOUT getting pass info, resetting: ".print_r($result, true));
+                    $this->passID=""; 
+                } 
             } else {
-                $data = json_decode($result['body'], true);
-                $this->extractURLs($data);
+                $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
+                $options = array( 
+                    'method' => 'GET', 'follow_redirects' => TRUE,
+                    'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN ]
+                );
+                $result = \Web::instance()->request($url, $options);
+                if (!isset($result) || empty($result) || (!isset($result['body'])))
+                {
+                    $logger->write("ERROR getting pass info: ".print_r($result, true));
+                } else {
+                    $data = json_decode($result['body'], true);
+                    $this->extractURLs($data);
+                }
             }
         }
     }
@@ -60,18 +72,55 @@ class CStudentPass extends Utility {
         if (isset($data['urls']['platforms']['PDF']))    $this->pdfURL=$data['urls']['platforms']['PDF'];
     }
 
+    function setPassID(String $ID): String
+    {
+        $this->db->exec('UPDATE passes SET passID="'.$ID.'" WHERE studID="'.$this->student->getID().'"');
+        $this->passID=$ID;
+        return $this->passID;
+    }
+    function refetchPass(String $passID): String
+    {
+        $this->passID=$passID;
+        $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
+        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
+            'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN ]
+        );
+        $logger = new Log('update.log');
+        $result = \Web::instance()->request($url, $options);
+        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        {
+            $logger->write("ERROR getting missing pass: ".print_r($result, true));
+            return [];
+        }
+        $logger->write("Getting missing pass from Kortpress: ".print_r($result, true));
+        $data=json_decode($result['body'], true);
+        $cdate=$data['details']['createdDate'];
+        $vdate=$data['details']['balance'];
+        // last sanity check before DB update
+        if (($this->passID!=$data['details']['serialNumber']) || 
+            ($this->student->getID()!=$data['details']['thirdPartyId']) ||
+            (empty($this->passID)) || (empty($this->student->getID()))||
+            (empty($cdate)) || (empty($vdate))) 
+            {
+                $logger->write("ERROR sanity check failed getting missing pass: ".print_r($result, true));
+                return "";
+        }
+        $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.$cdate.'", "'.$vdate.'")');
+        return $this->passID;
+    }
+
     function getPassID(): String
     {   
         // already registered, return stored passID
+        if ($this->passID=="0000") return ""; // registration in progress
         if ($this->passID!="") return $this->passID;
-        
         // not in DB: create pass
         return $this->registerPass();
     }
 
     function registerPass(): String 
     {       
-        $logger = new Log('deploy.log');
+        $logger = new Log('deploy.log');        
         if ($this->student->getID()=="") return "";
         $template=new Template;
         if (empty($this->passID))
@@ -96,9 +145,7 @@ class CStudentPass extends Utility {
         $postdata=$template->render('templates/pass.txt', 'application/json');
         $options = array(
             'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
-            'header' => [ // ToDo
-//                'Cookie: INGRESSCOOKIE=...
-                'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
+            'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
             ]
         );
         $result = \Web::instance()->request($url, $options);
@@ -118,7 +165,7 @@ class CStudentPass extends Utility {
         if (empty($this->passID))
         {
             $this->passID=$data['details']['serialNumber'];
-            $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.date('Y-m-d').'", "'.$this->validShort().'")');
+            $this->db->exec('UPDATE passes SET passID="'.$this->passID.'", created="'.date('Y-m-d').'", valid="'.$this->validShort().'" WHERE studID="'.$this->student->getID().'"');
         }
         return $this->passID;
     }
