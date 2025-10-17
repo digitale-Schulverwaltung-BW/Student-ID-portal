@@ -1,82 +1,197 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Kortpress-Student-ID admin panel</title>
-        <style>
-            body { font-family: Arial, Helvetica, sans-serif; padding: 10px;}
-        </style>
-    </head>
-    <body>
-        <h1>digitale Schülerausweise</h1>
-        <h2>Administrations-Bereich</h2>
-        <div>
-            <table><tr>
-            <td><b>Datenabgleich</b></td>
-            <td><button onclick="document.location='{{@BASE}}/admin/check'">Ausgetretene auflisten</button><br /></td>
-            <td><button onclick="start('cleanup')">Ausgetretene löschen</button><br /></td></tr><tr ><td></td>
-            <td><button onclick="document.location='{{@BASE}}/admin/doubleList'">Doppelt ausgestellte anzeigen</button><br /></td>
-            <td><button onclick="document.location='{{@BASE}}/admin/double'">Doppelt ausgestellte löschen</button><br /></td></tr><tr ><td></td>
-            <td><button onclick="start('expungeList')">Gelöschte anzeigen</button><br /></td>
-            <td><button onclick="start('expunge')">Gelöschte Passes entfernen</button><br /></td></tr><tr ><td></td>
-            <td><button onclick="start('checkDBstart')">IDs abgleichen</button><br /></td>
-            
-            </tr><tr>
-            <td><b>Verlängern</b></td>
-            <td><button onclick="document.location='{{@BASE}}/admin/renew'">gültige um aktuelles Schuljahr verlängern</button></td>
-            <td><button onclick="document.location='{{@BASE}}/admin/reissue-all'">alle Ausweise neu ausstellen (Vorsicht)</button></td>
-            </tr>
-            <tr>
-                <form method="POST" action="{{@BASE}}/admin/reissue" autocomplete="off"><td>
-                    <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
-                <td><button type="submit">Ausweis neu ausstellen</button></td>
-                </form>
-            </tr>
-            <tr>
-                <form method="POST" action="{{@BASE}}/admin/update" autocomplete="off"><td>
-                    <input type="text" placeholder="Schüler-ID/login" name="searchID" autocomplete="nothanks" /></td>
-                <td><button type="submit">Ausweis aktualisieren</button></td>
-                </form>
-            </tr>
-            <tr>
-                <form method="POST" action="{{@BASE}}/admin/delete" autocomplete="off"><td>
-                    <input type="text" placeholder="Schüler-ID/login" name="dsearchID" autocomplete="nothanks" 
-                     style="border-color: #f88; background-color:#fdd" /></td>
-                <td><button type="submit" style="background-color: #fdd;">Einzelnen Ausweis löschen</button></td>
-                </form></tr>
-            </table>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kortpress-Student-ID Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container my-4">
+    <h1 class="mb-1"><i class="bi bi-person-badge"></i> Digitale Schülerausweise</h1>
+    <h5 class="text-secondary mb-4">Administrationsbereich</h5>
+
+    <!-- Aktionen -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3"><i class="bi bi-arrow-repeat"></i> Datenabgleich</h5>
+            <div class="row g-2">
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-outline-primary" onclick="document.location='{{@BASE}}/admin/check'">
+                        <i class="bi bi-list-ul"></i> Ausgetretene auflisten
+                    </button>
+                </div>
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-primary" onclick="start('cleanup')">
+                        <i class="bi bi-trash"></i> Ausgetretene löschen
+                    </button>
+                </div>
+
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-outline-primary" onclick="document.location='{{@BASE}}/admin/doubleList'">
+                        <i class="bi bi-files"></i> Doppelt ausgestellte anzeigen
+                    </button>
+                </div>
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-primary" onclick="document.location='{{@BASE}}/admin/double'">
+                        <i class="bi bi-trash2"></i> Doppelt ausgestellte löschen
+                    </button>
+                </div>
+
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-outline-primary" onclick="start('expungeList')">
+                        <i class="bi bi-eye"></i> Gelöschte anzeigen
+                    </button>
+                </div>
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-primary" onclick="start('expunge')">
+                        <i class="bi bi-eraser"></i> Gelöschte Passes entfernen
+                    </button>
+                </div>
+
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-outline-primary" onclick="start('checkDBstart')">
+                        <i class="bi bi-database-check"></i> IDs abgleichen
+                    </button>
+                </div>
+            </div>
         </div>
-        <div style="margin-top: 10px;"><b>Status:</b><br />Ausgegebene Ausweise: {{@numPasses}}<br />
-        <!-- p style="white-space: pre-line" -->
-            {{@message | nl2br,raw}}
+    </div>
+
+    <!-- Verlängern -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3"><i class="bi bi-arrow-clockwise"></i> Verlängern</h5>
+            <div class="row g-2 mb-3">
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-outline-success" onclick="document.location='{{@BASE}}/admin/renew'">
+                        <i class="bi bi-calendar-check"></i> gültige um aktuelles Schuljahr verlängern
+                    </button>
+                </div>
+                <div class="col-md-6 d-grid">
+                    <button class="btn btn-success" onclick="document.location='{{@BASE}}/admin/reissue-all'">
+                        <i class="bi bi-exclamation-triangle"></i> alle Ausweise neu ausstellen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Einzelaktionen -->
+            <form class="input-group mb-2" method="POST" action="{{@BASE}}/admin/reissue" autocomplete="off">
+                <input id="firstInput" type="text" class="form-control" 
+                    placeholder="Schüler-ID oder Kennung" name="searchID" autocomplete="off">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="bi bi-arrow-repeat"></i> Ausweis neu ausstellen
+                </button>
+            </form>
+
+            <form class="input-group mb-2" method="POST" action="{{@BASE}}/admin/update" autocomplete="off">
+                <input type="text" class="form-control" 
+                    placeholder="Schüler-ID oder Kennung" name="searchID" autocomplete="off">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="bi bi-arrow-up-circle"></i> Ausweis aktualisieren
+                </button>
+            </form>
+
+            <form class="input-group" method="POST" action="{{@BASE}}/admin/delete" autocomplete="off">
+                <input type="text" class="form-control border-danger bg-light"
+                    placeholder="Schüler-ID oder Kennung zum Löschen" name="dsearchID" autocomplete="off">
+                <button class="btn btn-outline-danger" type="submit">
+                    <i class="bi bi-trash"></i> Einzelnen Ausweis löschen
+                </button>
+            </form>
 
         </div>
-        <pre id="status" style="margin-top: 10px; font-weight: bold; border: 1px solid #ddd; background-color:#eee;"></pre>
-        <script>
+    </div>
 
-        function start(action) {
-            const evtSource = new EventSource("{{@BASE}}/admin/" + action);
-            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
-            evtSource.onmessage = (e) => {
-                const data = JSON.parse(e.data);
-                document.getElementById("status").textContent = data.msg;
+    <!-- Status -->
+    <div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-info-circle"></i> Status
+        </h5>
+        <div id="spinner" class="d-none align-items-center">
+            <div class="spinner-border text-primary me-2" role="status"></div>
+            <small id="spinnerText" class="text-muted">läuft&nbsp;…</small>
+        </div>
+        </div>
 
-                if (data.done) {
-                    evtSource.close(); // Verbindung beenden
-                    document.querySelectorAll('button').forEach(btn => btn.disabled = false);
-                }
-            };
+        <p class="mt-2 mb-1">
+        <strong>Ausgegebene Ausweise:</strong> {{@numPasses}}
+        </p>
+        <p class="text-muted" style="white-space: pre-line;">{{@message | nl2br, raw}}</p>
 
-            evtSource.onerror = (e) => {
-                document.querySelectorAll('button').forEach(btn => btn.disabled = false);
-                console.error("SSE Error Event:", e);
-                let msg = "Fehler bei der Verbindung";
-                if (e.readyState === EventSource.CLOSED) {
-                    msg += " (Verbindung geschlossen)";
-                }
-                document.getElementById("status").textContent = msg;
-                evtSource.close();
-            };
+        <pre id="status" class="p-3 border rounded bg-body-tertiary text-dark"
+            style="font-weight:bold; transition: background-color 1s ease, color 1s ease;"></pre>
+    </div>
+    </div>
+
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function start(action) {
+    const evtSource = new EventSource("{{@BASE}}/admin/" + action);
+    const buttons = document.querySelectorAll('button');
+    const statusBox = document.getElementById('status');
+    const spinner = document.getElementById('spinner');
+    const spinnerIcon = spinner.querySelector('.spinner-border');
+    const spinnerText = document.getElementById('spinnerText');
+
+    buttons.forEach(btn => btn.disabled = true);
+    spinner.classList.remove('d-none');
+    spinner.classList.add('d-flex');
+    spinnerText.textContent = "läuft …";
+
+    // 🔄 Safari-Spinner-Workaround: kurz Animation neu triggern
+    spinnerIcon.classList.remove('spinner-border');
+    void spinnerIcon.offsetWidth; // reflow erzwingt redraw
+    spinnerIcon.classList.add('spinner-border');
+
+    statusBox.textContent = "";
+    statusBox.className = "p-3 border rounded bg-body-tertiary text-dark";
+
+    evtSource.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        statusBox.textContent = data.msg || "";
+
+        if (data.done) {
+            evtSource.close();
+            buttons.forEach(btn => btn.disabled = false);
+
+            statusBox.classList.remove('bg-body-tertiary', 'bg-danger', 'text-dark');
+            statusBox.classList.add('bg-success', 'text-white');
+
+            spinnerText.textContent = "Fertig! ✅";
+            setTimeout(() => spinner.classList.replace('d-flex', 'd-none'), 2000);
+            setTimeout(() => {
+                statusBox.classList.remove('bg-success', 'text-white');
+                statusBox.classList.add('bg-body-tertiary', 'text-dark');
+            }, 5000);
         }
-        </script>
-    </body>
+    };
+
+    evtSource.onerror = (e) => {
+        buttons.forEach(btn => btn.disabled = false);
+        spinner.classList.replace('d-flex', 'd-none');
+        console.error("SSE Error Event:", e);
+
+        let msg = "Fehler bei der Verbindung";
+        if (e.readyState === EventSource.CLOSED) msg += " (Verbindung geschlossen)";
+        statusBox.textContent = msg;
+
+        statusBox.classList.remove('bg-body-tertiary', 'bg-success', 'text-dark');
+        statusBox.classList.add('bg-danger', 'text-white');
+        evtSource.close();
+    };
+}
+
+
+</script>
+</body>
 </html>
