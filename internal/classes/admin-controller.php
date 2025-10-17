@@ -115,7 +115,8 @@ class CAdminController extends Runner{
                                 $errors++;
                         }
                     }
-                    $msg.="insg.: ".$count.", $deleted gelöscht, $errors Fehler beim Löschen";
+                    $msg.="insg.: ".$count;
+                    if ($delete) $msg.=", $deleted gelöscht, $errors Fehler beim Löschen";
                     $f3->set('message', $msg);
                     break;
                 case 'expunge':

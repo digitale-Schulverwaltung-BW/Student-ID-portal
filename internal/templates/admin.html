@@ -45,27 +45,29 @@
                 </form></tr>
             </table>
         </div>
-        <div style="margin-top: 10px"><b>Status:</b><br />Ausgegebene Ausweise: {{@numPasses}}<br />
+        <div style="margin-top: 10px;"><b>Status:</b><br />Ausgegebene Ausweise: {{@numPasses}}<br />
         <!-- p style="white-space: pre-line" -->
             {{@message | nl2br,raw}}
 
         </div>
-        <pre id="status" style="margin-top: 10px; font-weight: bold;"></pre>
+        <pre id="status" style="margin-top: 10px; font-weight: bold; border: 1px solid #ddd; background-color:#eee;"></pre>
         <script>
 
         function start(action) {
             const evtSource = new EventSource("{{@BASE}}/admin/" + action);
-
+            document.querySelectorAll('button').forEach(btn => btn.disabled = true);
             evtSource.onmessage = (e) => {
                 const data = JSON.parse(e.data);
                 document.getElementById("status").textContent = data.msg;
 
                 if (data.done) {
                     evtSource.close(); // Verbindung beenden
+                    document.querySelectorAll('button').forEach(btn => btn.disabled = false);
                 }
             };
 
             evtSource.onerror = (e) => {
+                document.querySelectorAll('button').forEach(btn => btn.disabled = false);
                 console.error("SSE Error Event:", e);
                 let msg = "Fehler bei der Verbindung";
                 if (e.readyState === EventSource.CLOSED) {
