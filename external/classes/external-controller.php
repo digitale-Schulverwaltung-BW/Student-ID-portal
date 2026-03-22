@@ -94,9 +94,8 @@ class ExternalController
         $this->f3->mset(array('valid'=>true,
                               'base'=>$_SERVER['REQUEST_URI'].$bday_hash,
                               'deploy_error'=>'',
-                              'apple'=>KORTPRESS_USE_APPLE,
-                              'google'=>KORTPRESS_USE_GOOGLE,
-                              'pdf'=>KORTPRESS_USE_PDF
+                              'apple'=>WALLET_USE_APPLE,
+                              'google'=>WALLET_USE_GOOGLE
         ));
         
         echo $this->template->render('templates/register.html');
@@ -145,12 +144,6 @@ class ExternalController
                     header ('Location: '.$data['apple']);
                 else $this->exit_with_error('Fehler beim Abruf der externen Wallet-Daten.');
                     exit();
-                break;
-            case 'pdf':
-                if ($this->is_valid($data['pdf']))
-                    header ('Location: '.$data['pdf']);
-                else $this->exit_with_error('Fehler beim Abruf der externen Wallet-Daten.');                
-                exit();
                 break;
             default:
                 // unknown deploy type or deply error

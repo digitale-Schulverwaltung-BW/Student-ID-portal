@@ -25,9 +25,9 @@ class InternalController
         echo json_encode($resp);
     }
 
-    // route handler for deploy. Will create a pass if not alreday registered
+    // route handler for deploy. Will create a pass if not already registered
     // or retrieve the remote download URLs for existing passes. Returns JSON
-    // array with passID and the three download URLs.
+    // array with passID and the download URLs.
     function deploy($f3, $args): void
     {
         $id=(isset($args['id']))?$args['id']:"";
@@ -43,10 +43,9 @@ class InternalController
         $passID = $pass->getPassID();
         if (!empty($passID))
         {
-            $data = array("id" => $passID, 
-                           "apple" => $pass->getAppleURL(), 
-                           "google" => $pass->getGoogleURL(), 
-                           "pdf" => $pass->getPDFURL());
+            $data = array("id" => $passID,
+                           "apple" => $pass->getAppleURL(),
+                           "google" => $pass->getGoogleURL());
             header("Content-Type: application/json");
             echo json_encode($data);
         }

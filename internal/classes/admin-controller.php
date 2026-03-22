@@ -12,7 +12,7 @@ class CAdminController extends Runner{
 
         CREATE TABLE users ('user_id' VARCHAR, 'password' VARCHAR);
         INSERT INTO users VALUES ('admin', '123ausweis');
- 
+
         */
         if (!isset($this->f3)) $this->f3=$f3;
         $this->db=new DB\SQL('sqlite:'.PASS_DB);
@@ -45,14 +45,14 @@ class CAdminController extends Runner{
                                 $deleted++;
                         }
                     }
-                    $msg.="$deleted Ausweise zu löschen";                    
+                    $msg.="$deleted Ausweise zu löschen";
                     $f3->set('message', $msg);
                     break;
                 case 'cleanup':
                     $this->startRun();
                     $msg='Lösche ausgetretene Passes.';
                     $this->sendMessage($msg);
-                    
+
                     foreach ($results as $pass) {
                         $stud=new CStudent($pass['studID']);
                         if ($stud->getID()=="") {
@@ -73,8 +73,8 @@ class CAdminController extends Runner{
                     $results = $this->db->exec('SELECT studID, passID FROM passes WHERE valid<>"'.$this->validShort().'"');
                     if (empty($results)){
                         $msg="keine zu verlängernden Ausweise in Datenbank";
-                    } else {      
-                        $msg=$this->updatePasses($results);                  
+                    } else {
+                        $msg=$this->updatePasses($results);
                     }
                     $f3->set('message', $msg);
                     break;
@@ -82,14 +82,14 @@ class CAdminController extends Runner{
                     $sid=$f3->get('POST.searchID');
                     $stud=new CStudent($sid);
                     if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
-                    if ($stud->getID()=="") 
+                    if ($stud->getID()=="")
                         $msg="Schüler ID nicht gefunden $sid";
 
                     $results=$this->db->exec('SELECT studID, passID FROM passes WHERE studID="'.$stud->getID().'"');
                     if (empty($results)){
                         $msg="Ausweis in Datenbank nicht gefunden";
-                    } else {      
-                        $msg=$this->updatePasses($results);                  
+                    } else {
+                        $msg=$this->updatePasses($results);
                     }
                     $f3->set('message', $msg);
                     break;
@@ -125,21 +125,21 @@ class CAdminController extends Runner{
                     $msg='';
                     if (!isset($expunge)) { $expunge=0; $msg='';}
                     $this->startRun();
-                    $this->sendMessage("Hole gelöschte Passes...");                    
-                    
+                    $this->sendMessage("Hole deaktivierte Passes...");
+
                     $deleted=$this->getDeleted();
-                    $del=count($deleted['list']);
+                    $del=count($deleted);
                     $count=0;
-                    $this->sendMessage("Deleted in Kortpress: $del");                    
-                    foreach ($deleted['list'] as $pass) {
-                            if ($expunge) $this->deletePass($pass['thirdPartyId'], $pass['serialNumber']);
-                            if ($expunge) $this->sendMessage("deleted ($count/$del): $pass[serialNumber] ($pass[thirdPartyId])");
+                    $this->sendMessage("Deaktivierte Passes: $del");
+                    foreach ($deleted as $pass) {
+                            if ($expunge) $this->deletePass($pass['external_id'], $pass['id']);
+                            if ($expunge) $this->sendMessage("deleted ($count/$del): $pass[id] ($pass[external_id])");
                             else {
-                                $stud=new CStudent($pass['thirdPartyId']);
-                                if ($stud->getID()=="") $stud->lookupFormerStudent($pass['thirdPartyId']);
+                                $stud=new CStudent($pass['external_id']);
+                                if ($stud->getID()=="") $stud->lookupFormerStudent($pass['external_id']);
                                 if ($stud->getID()!="") $details=$stud->getLastname().", ".$stud->getFirstname().", ".$stud->getClass();
                                 else $details="nicht in Schülerdaten";
-                                $msg.="to delete ($count/$del): $pass[serialNumber] ($pass[thirdPartyId])(".$details.")\n";
+                                $msg.="to delete ($count/$del): $pass[id] ($pass[external_id])(".$details.")\n";
                             }
 
                             $count++;
@@ -151,34 +151,30 @@ class CAdminController extends Runner{
                 case 'checkDBstart':
                     $this->startRun();
                     $this->sendMessage("Starte Abgleich...");
-                    $IDs=$this->getIDs();
-                    $lines = explode(PHP_EOL, $IDs); $count=0;
-                    $linenum=count($lines);
-                    array_shift($lines); // remove header line
+                    $passes=$this->getIDs();
+                    $count=0;
+                    $total=count($passes);
                     $logger = new Log('admin.log');
 
-                    foreach ($lines as $pass) {
-                        $this->sendMessage("$count/$linenum");
+                    foreach ($passes as $passData) {
+                        $this->sendMessage("$count/$total");
                         $count++;
-                        if (empty($pass)) continue;
-                        $data = str_getcsv($pass, ";");
-                        if (count($data)<2) continue;
-                        $passID=$data[0];
-                        $studID=$data[1];
+                        $passID=$passData['id'];
+                        $studID=$passData['external_id'];
                         $stud=new CStudent($studID);
                         $p=$stud->getPassID();
                         if ($p!=$passID)
                             if (!empty($p)) {
-                                $logger->write($studID." hat PassID $p statt $passID. Datenbank wird korrigiert.");                                
+                                $logger->write($studID." hat PassID $p statt $passID. Datenbank wird korrigiert.");
                                 $pass=new CStudentPass($stud);
                                 $pass->setPassID($passID);
                             } else {
-                                $logger->write($studID." hat Kortpress-Pass, fehlt in DB, wird ergänzt mit $passID.");
+                                $logger->write($studID." hat API-Pass, fehlt in DB, wird ergänzt mit $passID.");
                                 $pass=new CStudentPass($stud);
                                 $pass->refetchPass($passID);
                             }
                     }
-                    $this->endRun("IDs upgedated: $linenum.");
+                    $this->endRun("IDs upgedated: $total.");
                     return;
                     break;
                 case 'reissue':
@@ -200,11 +196,11 @@ class CAdminController extends Runner{
                     foreach ($results as $pass) {
                         $stud=new CStudent($pass['studID']);
                         if ($stud->getID()!="") {
-                            if ($stud->reissuePass()) { 
-                                $msg.=$pass['studID'].PHP_EOL; 
+                            if ($stud->reissuePass()) {
+                                $msg.=$pass['studID'].PHP_EOL;
                                 $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
                             }
-                            else 
+                            else
                             {
                                 $msg.="Error: $pass[studID]".PHP_EOL;
                             }
@@ -239,172 +235,102 @@ class CAdminController extends Runner{
     function deletePass(String $stud, String $pass): bool
     {
         $logger = new Log('admin.log');
-        // erase third party ID from Kortpress to prevent problems with duplicate IDs
-        $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID.'&serialNumber='.$pass;
-        $this->f3->mset(array('id'=>'00000000-00000000-0000-00000000-0000',
-                        'pass_name'=>'Deleted',
-                        'short_id'=>'0000',
-                        'valid_short'=>'0/2000',
-                        'valid_long'=>'2000-01-01T12:00:00.118',
-                        'verify_base'=> 'https://www.example.com/v/',
-                        'school'=>'Deleted School',
-                        'school_url'=>'https://www.example.com',
-                        'img_base_url'=>IMG_BASE_URL,
-                        'birthday'=> '01.01.2000', 
-                        'firstname'=> 'Detlev', 
-                        'lastname'=> 'Deleted',
-                        'apple' => 0,
-                        'google' => 0,
-                        'pdf' => 0
-                    ));
-        $template=new Template;
-        $postdata=$template->render('templates/pass.txt', 'application/json');
-        $options = array(
-            'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
-            'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-            ]
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || !isset($result['body'])) {
-            $logger->write("ERROR overwriting ID result: $result, postdata: $postdata");            
-        }
-
-        // delete from Kortpress
-        $url='https://cloud.kortpress.io/rest/v1/pass/'.$pass;
-        $options = array( 'method' => 'DELETE', 'follow_redirects' => TRUE,
-                            'header' => [
-                            'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-                        ]
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        $result = $this->walletApiRequest(WALLET_API_BASE . '/passes/' . $pass, 'DELETE');
+        if ($result === null)
         {
-            $logger->write("ERROR deleting pass: ".print_r($result, true));
+            $logger->write("ERROR deleting pass: $pass");
             return false;
-        } else {
-            // delete from DB
-            $this->db->exec('DELETE FROM "passes" WHERE studID="'.$stud.'"');
-            $logger->write("Deleted pass: ".print_r($result, true));
         }
+        // delete from DB
+        $this->db->exec('DELETE FROM "passes" WHERE studID="'.$stud.'"');
+        $logger->write("Deleted pass: $pass (student: $stud)");
         return true;
     }
 
-    function getIDs(): String 
+    function getIDs(): array
     {
-        $url='https://cloud.kortpress.io/rest/v1/pass/csv?templateId='.KORTPRESS_TEMPLATE_ID.'&passItemCSV='.urlencode('"serialNumber";"thirdPartyIdentifier"'); 
-        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
-                            'timeout' => 12000, // change request timeout, takes loooOoOoonnng
-                            'header' => [
-                            'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-                        ]
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
-        {
-            $logger = new Log('update.log');
-            $logger->write("ERROR getting DB list: ".print_r($result, true));
-            return "";
-        }
+        // TODO: requires GET /v1/passes list endpoint in WalletStudentID
+        // For now, fetch all passes with pagination
+        $allPasses = [];
+        $offset = 0;
+        $limit = 100;
         $logger = new Log('update.log');
-        $logger->write("Read ID list");
-        return $result['body'];
+
+        do {
+            $data = $this->walletApiRequest(
+                WALLET_API_BASE . '/passes?limit=' . $limit . '&offset=' . $offset,
+                'GET', null, 12000
+            );
+            if ($data === null) {
+                $logger->write("ERROR getting pass list at offset $offset");
+                break;
+            }
+            $items = isset($data['items']) ? $data['items'] : $data;
+            $allPasses = array_merge($allPasses, $items);
+            $offset += $limit;
+            // stop if we got fewer items than the limit (last page)
+        } while (count($items) >= $limit);
+
+        $logger->write("Read ID list: " . count($allPasses) . " passes");
+        return $allPasses;
     }
 
     function getDeleted(): array
     {
-        $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID.'&isActive=false&includeVoided=false&onlyVoided=false';
-        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
-                    'header' => [
-                    'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-                ]
-        );
+        // TODO: requires GET /v1/passes?status=voided endpoint in WalletStudentID
         $logger = new Log('update.log');
-        $logger->write("Getting deleted list: ".print_r($url, true));
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        $logger->write("Getting voided passes list");
+        $data = $this->walletApiRequest(WALLET_API_BASE . '/passes?status=voided');
+        if ($data === null)
         {
-            $logger->write("ERROR getting deleted list: ".print_r($result, true));
+            $logger->write("ERROR getting voided passes list");
             return [];
         }
-        return json_decode($result['body'], true);
-
+        return isset($data['items']) ? $data['items'] : $data;
     }
 
-    function getExpiryDates(): String // deprecation warning: this method times out when retrieving a large amount of passes.
-    {
-        $url='https://cloud.kortpress.io/rest/v1/pass/csv?templateId='.KORTPRESS_TEMPLATE_ID.'&passItemCSV='.urlencode('"serialNumber";"thirdPartyIdentifier";"expirationDate";"object.balance-value";"backField2-value"');
-        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
-                            'header' => [
-                            'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-                        ]
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
-        {
-            $logger = new Log('update.log');
-            $logger->write("ERROR getting expiry date list: ".print_r($result, true));
-            return "";
-        }
-        $logger = new Log('update.log');
-        $logger->write("Update status: ".print_r($result, true));
-        return $result['body'];
-    }
-
-    function getExpiryDate($pass): String
-    {
-        $url='https://cloud.kortpress.io/rest/v1/pass/csv?templateId='.KORTPRESS_TEMPLATE_ID.'&serialNumber='.$pass['passID'].
-             '&passItemCSV='.urlencode('"serialNumber";"thirdPartyIdentifier";"expirationDate";"object.balance-value";"backField2-value"');
-        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
-                            'header' => [
-                            'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-                        ]
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
-        {
-            $logger = new Log('update.log');
-            $logger->write("ERROR getting expiry date for single pass: ".print_r($result, true));
-            return "";
-        }
-        $logger = new Log('update.log');
-        $logger->write("Update status: ".print_r($result, true));
-        return $result['body'];
-
-    }
     function updatePasses($passes): String
     {
         $msg="";
-        $csv='"thirdPartyIdentifier";"backField2-value";"object.balance-value";"expirationDate";"class.accountName-value";"class.accountId-value";"class.rewardsTier-value";"class.programName-value";"barcode1-message";"name"'.PHP_EOL;
+        $items = [];
         $renewed=0;
 
         foreach ($passes as $pass)
         {
             $stud=new CStudent($pass['studID']);
-            if ($stud->getID()=="") continue;                        
+            if ($stud->getID()=="") continue;
             $renewed++;
-            $csv.='"'.$pass['studID'].'";"'.$this->validShort().'";"'.$this->validShort().'";"'.$this->validLong().'";"'.
-            $stud->getFirstname().' '.$stud->getLastname().'";"'.$stud->getBirthday().'";"'.
-            substr($stud->getID(),-4).'";"'.$stud->getFirstname().' '.$stud->getLastname().'";"'.
-            VERIFY_BASE_URL.$stud->getID().'";"'.$stud->getLogin().'"'.PHP_EOL;
+            $items[] = [
+                'id' => $pass['passID'],
+                'student' => [
+                    'first_name' => $stud->getFirstname(),
+                    'last_name' => $stud->getLastname(),
+                    'student_shortcode' => substr($stud->getID(), -4),
+                    'birthdate' => $this->convertBirthdayToISO($stud->getBirthday()),
+                    'valid_from' => date('c'),
+                    'valid_until' => $this->validLong(),
+                    'school_name' => SCHOOL,
+                    'school_url' => SCHOOL_URL,
+                    'verification_url' => VERIFY_BASE_URL . $stud->getID()
+                ]
+            ];
             $msg.="erneuert: $pass[studID]".PHP_EOL;
             $this->db->exec('UPDATE passes SET valid="'.$this->validShort().'" WHERE studID="'.$pass['studID'].'"');
         }
 
-        $url='https://cloud.kortpress.io/rest/v1/pass/csv/upload?templateId='.KORTPRESS_TEMPLATE_ID;
-        $options = array( 'method' => 'POST', 'follow_redirects' => TRUE,
-                    'header' => [
-                    'Content-Type: text/csv', 'Authorization: Bearer '. KORTPRESS_TOKEN,
-                    ],
-                    'content' => $csv
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
-        $msg='- es sind Fehler aufgetreten, bitte das update.log prüfen.';
+        $postdata = json_encode(['items' => $items]);
+        $data = $this->walletApiRequest(WALLET_API_BASE . '/passes/bulk', 'PATCH', $postdata);
         $logger = new Log('update.log');
-        $logger->write("CSV: ".PHP_EOL.$csv);
-        $logger->write("Update status after POST: ".print_r($result, true));
+        if ($data === null) {
+            $msg='- es sind Fehler aufgetreten, bitte das update.log prüfen.';
+            $logger->write("ERROR bulk update failed");
+        } else {
+            $jobId = isset($data['jobId']) ? $data['jobId'] : 'unknown';
+            $logger->write("Bulk update submitted, jobId: $jobId");
+        }
+        $logger->write("Update: $renewed passes submitted");
         $msg="$renewed Ausweise verlängert ".PHP_EOL.PHP_EOL.$msg;
-        
+
         return $msg;
     }
 }

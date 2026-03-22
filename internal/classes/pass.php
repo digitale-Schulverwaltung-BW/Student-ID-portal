@@ -13,7 +13,6 @@ class CStudentPass extends Utility {
 
     protected String $appleURL;
     protected String $googleURL;
-    protected String $pdfURL;
 
     protected CStudent $student;
 
@@ -22,7 +21,6 @@ class CStudentPass extends Utility {
         $this->student=$student;
         $this->appleURL="";
         $this->googleURL="";
-        $this->pdfURL="";
 
         $this->db=new DB\SQL('sqlite:'.PASS_DB);
         $this->db->exec('CREATE TABLE IF NOT EXISTS "passes" (
@@ -37,7 +35,7 @@ class CStudentPass extends Utility {
             $logger->write("DEBUG: ".$results[0]['passID']);
 
             $this->passID=$results[0]['passID'];
-            if ($this->passID=="0000") 
+            if ($this->passID=="0000")
             {
                 $regdate=strtotime($results[0]['created']);
                 $delay=time()-$regdate;
@@ -45,20 +43,14 @@ class CStudentPass extends Utility {
                 {
                     $this->db->exec('UPDATE passes SET passID="0000", created="'.date(DATE_ATOM).'" WHERE studID="'.$student->getID().'"');
                     $logger->write("TIMEOUT getting pass info, resetting: ".print_r($result, true));
-                    $this->passID=""; 
-                } 
+                    $this->passID="";
+                }
             } else {
-                $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
-                $options = array( 
-                    'method' => 'GET', 'follow_redirects' => TRUE,
-                    'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN ]
-                );
-                $result = \Web::instance()->request($url, $options);
-                if (!isset($result) || empty($result) || (!isset($result['body'])))
+                $data = $this->walletApiRequest(WALLET_API_BASE . '/passes/' . $this->passID);
+                if ($data === null)
                 {
-                    $logger->write("ERROR getting pass info: ".print_r($result, true));
+                    $logger->write("ERROR getting pass info for passID: " . $this->passID);
                 } else {
-                    $data = json_decode($result['body'], true);
                     $this->extractURLs($data);
                 }
             }
@@ -67,9 +59,8 @@ class CStudentPass extends Utility {
 
     function extractURLs(array $data): void
     {
-        if (isset($data['urls']['platforms']['APPLE']))  $this->appleURL=$data['urls']['platforms']['APPLE'];
-        if (isset($data['urls']['platforms']['GOOGLE'])) $this->googleURL=$data['urls']['platforms']['GOOGLE']; 
-        if (isset($data['urls']['platforms']['PDF']))    $this->pdfURL=$data['urls']['platforms']['PDF'];
+        if (!empty($data['apple_pass_url']))  $this->appleURL=$data['apple_pass_url'];
+        if (!empty($data['google_save_url'])) $this->googleURL=$data['google_save_url'];
     }
 
     function setPassID(String $ID): String
@@ -81,36 +72,30 @@ class CStudentPass extends Utility {
     function refetchPass(String $passID): String
     {
         $this->passID=$passID;
-        $url='https://cloud.kortpress.io/rest/v1/pass/'.$this->passID;
-        $options = array( 'method' => 'GET', 'follow_redirects' => TRUE,
-            'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN ]
-        );
         $logger = new Log('update.log');
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || (!isset($result['body'])))
+        $data = $this->walletApiRequest(WALLET_API_BASE . '/passes/' . $this->passID);
+        if ($data === null)
         {
-            $logger->write("ERROR getting missing pass: ".print_r($result, true));
-            return [];
+            $logger->write("ERROR getting missing pass: " . $this->passID);
+            return "";
         }
-        $logger->write("Getting missing pass from Kortpress: ".print_r($result, true));
-        $data=json_decode($result['body'], true);
-        $cdate=$data['details']['createdDate'];
-        $vdate=$data['details']['balance'];
-        // last sanity check before DB update
-        if (($this->passID!=$data['details']['serialNumber']) || 
-            ($this->student->getID()!=$data['details']['thirdPartyId']) ||
-            (empty($this->passID)) || (empty($this->student->getID()))||
-            (empty($cdate)) || (empty($vdate))) 
+        $logger->write("Getting missing pass from API: " . $this->passID);
+        // sanity check before DB update
+        if (($this->passID != $data['id']) ||
+            ($this->student->getID() != $data['external_id']) ||
+            (empty($this->passID)) || (empty($this->student->getID())))
             {
-                $logger->write("ERROR sanity check failed getting missing pass: ".print_r($result, true));
+                $logger->write("ERROR sanity check failed getting missing pass: " . $this->passID);
                 return "";
         }
+        $cdate = date('Y-m-d');
+        $vdate = $this->validShort();
         $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.$cdate.'", "'.$vdate.'")');
         return $this->passID;
     }
 
     function getPassID(): String
-    {   
+    {
         // already registered, return stored passID
         if ($this->passID=="0000") return ""; // registration in progress
         if ($this->passID!="") return $this->passID;
@@ -118,53 +103,50 @@ class CStudentPass extends Utility {
         return $this->registerPass();
     }
 
-    function registerPass(): String 
-    {       
-        $logger = new Log('deploy.log');        
+    function registerPass(): String
+    {
+        $logger = new Log('deploy.log');
         if ($this->student->getID()=="") return "";
-        $template=new Template;
-        if (empty($this->passID))
-             $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID;
-        else $url='https://cloud.kortpress.io/rest/v1/pass?templateId='.KORTPRESS_TEMPLATE_ID.'&serialNumber='.$this->passID;
-        $this->f3->mset(array('id'=>$this->student->getID(),
-                        'pass_name'=>$this->student->getLogin(),
-                        'short_id'=>substr($this->student->getID(),-4),
-                        'valid_short'=>$this->validShort(),
-                        'valid_long'=>$this->validLong(),
-                        'verify_base'=> VERIFY_BASE_URL,
-                        'school'=>SCHOOL,
-                        'school_url'=>SCHOOL_URL,
-                        'img_base_url'=>IMG_BASE_URL,
-                        'birthday'=> $this->student->getBirthday(), 
-                        'firstname'=> $this->student->getFirstname(), 
-                        'lastname'=> $this->student->getLastname(),
-                        'apple' => KORTPRESS_USE_APPLE,
-                        'google' => KORTPRESS_USE_GOOGLE,
-                        'pdf' => KORTPRESS_USE_PDF
-                    ));
-        $postdata=$template->render('templates/pass.txt', 'application/json');
-        $options = array(
-            'method' => 'POST', 'follow_redirects' => TRUE, 'content' => $postdata,
-            'header' => [ 'Content-Type: application/json', 'Authorization: Bearer '. KORTPRESS_TOKEN
-            ]
-        );
-        $result = \Web::instance()->request($url, $options);
-        if (!isset($result) || empty($result) || !isset($result['body'])) {
-            $logger->write("ERROR deploy result: $result, postdata: $postdata");
+
+        $url = WALLET_API_BASE . '/passes';
+        $postdata = json_encode([
+            'theme_id' => WALLET_THEME_ID,
+            'external_id' => $this->student->getID(),
+            'student' => [
+                'first_name' => $this->student->getFirstname(),
+                'last_name' => $this->student->getLastname(),
+                'student_shortcode' => substr($this->student->getID(), -4),
+                'birthdate' => $this->convertBirthdayToISO($this->student->getBirthday()),
+                'valid_from' => date('c'),
+                'valid_until' => $this->validLong(),
+                'school_name' => SCHOOL,
+                'school_url' => SCHOOL_URL,
+                'verification_url' => VERIFY_BASE_URL . $this->student->getID()
+            ],
+            'logo_url' => IMG_BASE_URL . 'GoogleLogo-660x660.png',
+            'hero_url' => IMG_BASE_URL . 'Hero-1030x336.png',
+            'icon_url' => IMG_BASE_URL . 'AppleLogo-480x150.png'
+        ]);
+
+        $data = $this->walletApiRequest($url, 'POST', $postdata);
+        if ($data === null) {
+            $logger->write("ERROR deploy result, postdata: $postdata");
             return "";
         }
-        $data = json_decode($result['body'], true);
-        
-        if ((!isset($data['details']) || (!isset($data['details']['serialNumber']))) || empty($data['details']['serialNumber'])) {
+
+        if (!isset($data['id']) || empty($data['id'])) {
              $logger->write("ERROR extracting deploy data: ".$postdata);
-             $logger->write("...result body leading to ERROR: ".print_r($result, true));
+             $logger->write("...result body leading to ERROR: ".print_r($data, true));
              return "";
-        } else $logger->write("INFO: successful deploy: ".$this->student->getID().'=>'.$data['details']['serialNumber']);
+        } else $logger->write("INFO: successful deploy: ".$this->student->getID().'=>'.$data['id']);
+
+        if (!empty($data['apple_error'])) $logger->write("WARNING: Apple error: ".print_r($data['apple_error'], true));
+        if (!empty($data['google_error'])) $logger->write("WARNING: Google error: ".print_r($data['google_error'], true));
 
         $this->extractURLs($data);
         if (empty($this->passID))
         {
-            $this->passID=$data['details']['serialNumber'];
+            $this->passID=$data['id'];
             $this->db->exec('UPDATE passes SET passID="'.$this->passID.'", created="'.date('Y-m-d').'", valid="'.$this->validShort().'" WHERE studID="'.$this->student->getID().'"');
         }
         return $this->passID;
@@ -178,11 +160,6 @@ class CStudentPass extends Utility {
     function getGoogleURL(): String
     {
         return $this->googleURL;
-    }
-
-    function getPDFURL(): String
-    {
-        return $this->pdfURL;
     }
 }
 ?>

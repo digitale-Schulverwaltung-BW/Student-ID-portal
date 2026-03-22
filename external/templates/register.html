@@ -14,16 +14,16 @@
             <true>
                 <check if="{{ @deploy_error=='' }}">
                     <true>
-                        <p>Mit den folgenden Links können Sie den Schülerausweis zu einem Wallet 
-                        hinzufügen<check if="{{@pdf}}"> oder ein PDF des Ausweises auf Ihr mobiles Gerät herunterladen</check>.<br />
+                        <p>Mit den folgenden Links können Sie den Schülerausweis zu einem Wallet
+                        hinzufügen.<br />
                         <div class="datenschutz">Bitte beachten Sie, dass Sie mit dem Klicken auf einen der Links den der 
                             Übertragung Ihrer 
                             <span class="tooltip">Daten
                                 <span class="tooltiptext">
                                     Name, Vorname, Gültigkeitsdauer, Geburtsdatum, Zugehörigkeit zur Schule
                                 </span>
-                            </span> gemäß den <a href="https://kortpress.io/datenschutz">Datenschutzbestimmungen</a> 
-                            unseres Auftragsdatenverarbeiters <b>let's dev</b> in Karlsruhe zustimmen. Für die Nutzung des Google Wallet
+                            </span> gemäß den Datenschutzbestimmungen
+                            zustimmen. Für die Nutzung des Google Wallet
                             gelten weitere <a href="https://support.google.com/wallet/answer/12205617?hl=de">Bedingungen und Datenschutzerklärungen</a>.
                             Informationen zur Datensicherheit sind <a href="https://www.hhs.karlsruhe.de/registrierung-digitaler-schuelerausweis/">hier
                             zusammengestellt</a>.
@@ -35,9 +35,6 @@
                         <check if="{{ @google }}"><a href="{{@base}}/google"><img src="../templates/save_to_google_pay_dark_de.svg" alt="zur Google Wallet hinzufügen"
                             style="height: 48px;" /><br />
                             Hinzufügen zu Google Wallet</a><br /><br />
-                        </check>
-                        <check if="{{ @pdf }}"><a href="{{@base}}/pdf"><img src="../templates/pdf-icon.png" alt="als PDF herunterladen"
-                            style="height: 48px;" /><br />Download als PDF</a><br />
                         </check>
                     </true>
                     <false>

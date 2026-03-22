@@ -3,11 +3,11 @@
   /* local configuration */
   define('STUDENTS_CVS', '/path/to/your/student-csv.csv');
   define('PASS_DB', '<absolute path, writable for php>/passes.sqlite'); // outside web root!
-  define('KORTPRESS_TOKEN', '<your-API-token>');
-  define('KORTPRESS_TEMPLATE_ID', 0000);
-  define('KORTPRESS_USE_APPLE', 1);  // set to 1 to offer the respective pass type
-  define('KORTPRESS_USE_GOOGLE', 1);
-  define('KORTPRESS_USE_PDF', 1);
+  define('WALLET_API_BASE', 'https://verwaltung-wallet.hhs.karlsruhe.de/v1');
+  define('WALLET_API_KEY', '<your-tenant-API-key>');
+  define('WALLET_THEME_ID', '<your-theme-uuid>');
+  define('WALLET_USE_APPLE', 1);  // set to 1 to offer the respective pass type
+  define('WALLET_USE_GOOGLE', 1);
 
   define('VERIFY_BASE_URL', 'https://www.example.com/ID/v/'); // this points to your external-folder. Trailing / 
   define('SCHOOL', 'Musterschule Musterstadt');
