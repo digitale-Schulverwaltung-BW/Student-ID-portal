@@ -45,9 +45,19 @@ class Utility{
         if ($timeout !== 120) $options['timeout'] = $timeout;
         $result = \Web::instance()->request($url, $options);
         if (!isset($result) || empty($result)) return null;
+
+        // Log non-2xx responses for debugging
+        $statusLine = $result['headers'][0] ?? '';
+        if (!preg_match('/\b2\d{2}\b/', $statusLine)) {
+            $logger = new \Log('api-error.log');
+            $logger->write("$method $url => $statusLine");
+            $logger->write("Response body: " . ($result['body'] ?? '(empty)'));
+            if ($content !== null) $logger->write("Request body: $content");
+        }
+
         // DELETE returns 204 No Content
         if ($method === 'DELETE') {
-            return (strpos($result['headers'][0], '204') !== false) ? [] : null;
+            return (strpos($statusLine, '204') !== false) ? [] : null;
         }
         if (!isset($result['body'])) return null;
         return json_decode($result['body'], true);
