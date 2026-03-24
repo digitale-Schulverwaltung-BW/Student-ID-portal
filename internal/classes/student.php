@@ -38,7 +38,7 @@ class CStudent
 
     public function isBlacklisted()
     {
-        if ($this->getLineWithString(BLACKLIST, $this->ID)!="")
+        if ((!empty(BLACKLIST)) && $this->getLineWithString(BLACKLIST, $this->ID)!="")
             return true;
         return false;
     }

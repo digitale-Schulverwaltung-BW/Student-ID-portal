@@ -42,7 +42,7 @@ class CStudentPass extends Utility {
                 if ($delay>300) // more than 5 minutes ago, reset to allow registration
                 {
                     $this->db->exec('UPDATE passes SET passID="0000", created="'.date(DATE_ATOM).'" WHERE studID="'.$student->getID().'"');
-                    $logger->write("TIMEOUT getting pass info, resetting: ".print_r($result, true));
+                    $logger->write("TIMEOUT getting pass info, resetting."); // not working: .print_r($result, true)
                     $this->passID="";
                 }
             } else {

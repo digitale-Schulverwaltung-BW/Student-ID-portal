@@ -3,6 +3,7 @@
   /* local configuration */
   define('STUDENTS_CVS', '/path/to/your/student-csv.csv');
   define('PASS_DB', '<absolute path, writable for php>/passes.sqlite'); // outside web root!
+  define('BLACKLIST', ''); // these IDs are not allowed to register
   define('WALLET_API_BASE', 'https://verwaltung-wallet.hhs.karlsruhe.de/v1');
   define('WALLET_API_KEY', '<your-tenant-API-key>');
   define('WALLET_THEME_ID', '<your-theme-uuid>');
