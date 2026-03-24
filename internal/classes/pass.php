@@ -115,7 +115,7 @@ class CStudentPass extends Utility {
             'student' => [
                 'first_name' => $this->student->getFirstname(),
                 'last_name' => $this->student->getLastname(),
-                'student_shortcode' => substr($this->student->getID(), -4),
+                'short_id' => substr($this->student->getID(), -4),
                 'birthdate' => $this->convertBirthdayToISO($this->student->getBirthday()),
                 'valid_from' => date('c'),
                 'valid_until' => $this->validLong(),
