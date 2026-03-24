@@ -12,6 +12,7 @@ $f3->route('GET  /r/@id','ExternalController->r');
 $f3->route('POST /r/@id','ExternalController->authReg');
 $f3->route('GET  /r/@id/@deploy','ExternalController->deploy');
 $f3->route('GET  /r/@id/@hash/@deploy','ExternalController->deployAuth');
+$f3->route('GET  /apple/*','ExternalController->appleProxy');
 
 $f3->run();
 ?>

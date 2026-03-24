@@ -55,6 +55,47 @@ class InternalController
         }
     }
 
+    // route handler for Apple pass download proxy.
+    // Proxies .pkpass downloads from the WalletStudentID API.
+    // Accepts the wallet API path after /apple/, e.g.:
+    //   /apple/v1/passes/{id}/apple.pkpass?token=...
+    // Reconstructs the full wallet URL and fetches the binary.
+    function applePass($f3, $args): void
+    {
+        $path = $args['*'] ?? '';
+        if (empty($path)) return;
+
+        // Reconstruct the wallet API URL from the configured base host
+        $parsed = parse_url(WALLET_API_BASE);
+        $walletUrl = $parsed['scheme'] . '://' . $parsed['host'] . '/' . $path;
+        if (!empty($_SERVER['QUERY_STRING'])) {
+            $walletUrl .= '?' . $_SERVER['QUERY_STRING'];
+        }
+
+        // Fetch the .pkpass binary (token is in the URL, no auth header needed)
+        $result = \Web::instance()->request($walletUrl, [
+            'method' => 'GET',
+            'follow_redirects' => TRUE
+        ]);
+
+        if (!isset($result) || empty($result) || !isset($result['body']) || empty($result['body'])) {
+            http_response_code(502);
+            echo 'Fehler beim Abruf des Apple Passes.';
+            return;
+        }
+
+        $statusLine = $result['headers'][0] ?? '';
+        if (!preg_match('/\b2\d{2}\b/', $statusLine)) {
+            http_response_code(502);
+            echo 'Fehler beim Abruf des Apple Passes.';
+            return;
+        }
+
+        header('Content-Type: application/vnd.apple.pkpass');
+        header('Content-Disposition: attachment; filename="studentid.pkpass"');
+        echo $result['body'];
+    }
+
     // route handler for verify. Returns JSON array with student name+birthday
     function lookup($f3, $args): void
     {

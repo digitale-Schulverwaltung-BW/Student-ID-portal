@@ -20,5 +20,6 @@ define('logging', false);
 define('verify_url',      internal_server.'/ID/internal/verify/');
 define('register_url',    internal_server.'/ID/internal/register/');
 define('lookup_url',      internal_server.'/ID/internal/lookup/');
+define('apple_pass_url',  internal_server.'/ID/internal/apple/');
 
 ?>

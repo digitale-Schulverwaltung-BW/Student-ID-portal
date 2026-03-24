@@ -122,6 +122,31 @@ class ExternalController
         }
     }
 
+    // route handler for proxied Apple pass downloads.
+    // URL format: /apple/v1/passes/{id}/apple.pkpass?token=...
+    // Forwards the request through the internal server to the wallet API.
+    public function appleProxy(): void
+    {
+        $path = $this->f3->get('PARAMS.*') ?? '';
+        if (empty($path)) {
+            $this->exit_with_error('Ungültiger Download-Link.');
+        }
+
+        $url = apple_pass_url . $path;
+        $query = $_SERVER['QUERY_STRING'] ?? '';
+        if (!empty($query)) $url .= '?' . $query;
+
+        $pkpass = @file_get_contents($url);
+        if ($pkpass === false || empty($pkpass)) {
+            $this->exit_with_error('Fehler beim Abruf des Apple Passes.');
+        }
+
+        header('Content-Type: application/vnd.apple.pkpass');
+        header('Content-Disposition: attachment; filename="studentid.pkpass"');
+        echo $pkpass;
+        exit();
+    }
+
     // internal method to deploy download locations. Invoked from either deploy of deployAuth
     private function deploy_pass($id, $deploy): void
     {
@@ -140,10 +165,16 @@ class ExternalController
                     exit();
                 break;
             case 'apple':
-                if ($this->is_valid($data['apple']))
-                    header ('Location: '.$data['apple']);
-                else $this->exit_with_error('Fehler beim Abruf der externen Wallet-Daten.');
-                    exit();
+                if ($this->is_valid($data['apple'])) {
+                    // Rewrite wallet API URL to our proxy route
+                    $parsed = parse_url($data['apple']);
+                    $proxyUrl = $this->f3->get('BASE') . '/apple' . $parsed['path'];
+                    if (!empty($parsed['query'])) $proxyUrl .= '?' . $parsed['query'];
+                    header('Location: ' . $proxyUrl);
+                } else {
+                    $this->exit_with_error('Fehler beim Abruf der externen Wallet-Daten.');
+                }
+                exit();
                 break;
             default:
                 // unknown deploy type or deply error
