@@ -39,7 +39,8 @@ class InternalController
             return;
         }
         if ($stud->getID()=="") return;
-        $pass   = new CStudentPass($stud);
+        $isTeacher = ($_GET['type'] ?? '') === 'teacher';
+        $pass   = new CStudentPass($stud, $isTeacher);
         $passID = $pass->getPassID();
         if (!empty($passID))
         {

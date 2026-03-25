@@ -180,7 +180,8 @@ class ExternalController
         $stud = new CStudent($id);
         $this->f3->set('deploy_error', '');
         $this->exit_if_invalid($stud);
-        $pass=$stud->register_pass();
+        $isTeacher = str_contains($_SERVER['REQUEST_URI'], '/LID/');
+        $pass=$stud->register_pass($isTeacher);
         if (isset($pass) && !empty($pass)) $data=json_decode($pass, true);
         else $this->exit_with_error('Fehler beim Abruf der Ausweisdaten.');
         if (isset($data['error'])) $deploy="error";

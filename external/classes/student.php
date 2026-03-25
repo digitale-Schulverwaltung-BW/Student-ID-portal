@@ -66,8 +66,9 @@ class CStudent
     // if pass already issued, retrieve download URLs.
     // if not, register pass and retrieve download URLs.
     // returns JSON containing the fields id, apple, google and pdf.
-    public function register_pass(): String {
-        $response = @file_get_contents(register_url.$this->ID);
+    public function register_pass(bool $isTeacher = false): String {
+        $url = register_url . $this->ID . ($isTeacher ? '?type=teacher' : '');
+        $response = @file_get_contents($url);
         if (logging) {$logger = new Log('extdeploy.log');
             $logger->write("fetched: ".register_url.$this->ID);
             $logger->write("result: ".print_r($response, true));

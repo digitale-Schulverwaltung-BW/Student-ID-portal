@@ -15,10 +15,12 @@ class CStudentPass extends Utility {
     protected String $googleURL;
 
     protected CStudent $student;
+    protected bool $isTeacher;
 
-    function __construct(CStudent $student) {
+    function __construct(CStudent $student, bool $isTeacher = false) {
         $this->f3 = Base::instance();
         $this->student=$student;
+        $this->isTeacher=$isTeacher;
         $this->appleURL="";
         $this->googleURL="";
 
@@ -119,7 +121,9 @@ class CStudentPass extends Utility {
                 'student_shortcode' => substr($this->student->getID(), -4),
                 'birthdate' => $this->convertBirthdayToISO($this->student->getBirthday()),
                 'valid_from' => date('c'),
-                'valid_until' => $this->validLong(),
+                'valid_until' => $this->isTeacher
+                    ? $this->teacherValidLong($this->student->getBirthday())
+                    : $this->validLong(),
                 'school_name' => SCHOOL,
                 'school_url' => SCHOOL_URL,
                 'verification_url' => VERIFY_BASE_URL // walletStudentID adds . $this->student->getID()
@@ -145,7 +149,8 @@ class CStudentPass extends Utility {
         if (empty($this->passID))
         {
             $this->passID=$data['id'];
-            $this->db->exec('UPDATE passes SET passID="'.$this->passID.'", created="'.date('Y-m-d').'", valid="'.$this->validShort().'" WHERE studID="'.$this->student->getID().'"');
+            $vdate = $this->isTeacher ? $this->teacherValidShort($this->student->getBirthday()) : $this->validShort();
+            $this->db->exec('UPDATE passes SET passID="'.$this->passID.'", created="'.date('Y-m-d').'", valid="'.$vdate.'" WHERE studID="'.$this->student->getID().'"');
         }
         return $this->passID;
     }
