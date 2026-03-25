@@ -123,10 +123,7 @@ class CStudentPass extends Utility {
                 'school_name' => SCHOOL,
                 'school_url' => SCHOOL_URL,
                 'verification_url' => VERIFY_BASE_URL . $this->student->getID()
-            ],
-            'logo_url' => IMG_BASE_URL . 'GoogleLogo-660x660.png',
-            'hero_url' => IMG_BASE_URL . 'Hero-1030x336.png',
-            'icon_url' => IMG_BASE_URL . 'AppleLogo-480x150.png'
+            ]
         ]);
 
         $data = $this->walletApiRequest($url, 'POST', $postdata);
