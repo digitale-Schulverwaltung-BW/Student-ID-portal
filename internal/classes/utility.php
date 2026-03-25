@@ -55,9 +55,12 @@ class Utility{
         $options = [
             'method' => $method,
             'follow_redirects' => TRUE,
-            'header' => ['Content-Type: application/json', 'Authorization: Bearer ' . WALLET_API_KEY]
+            'header' => ['Authorization: Bearer ' . WALLET_API_KEY]
         ];
-        if ($content !== null) $options['content'] = $content;
+        if ($content !== null) {
+            $options['header'][] = 'Content-Type: application/json';
+            $options['content'] = $content;
+        }
         if ($timeout !== 120) $options['timeout'] = $timeout;
         $result = \Web::instance()->request($url, $options);
         if (!isset($result) || empty($result)) return null;
