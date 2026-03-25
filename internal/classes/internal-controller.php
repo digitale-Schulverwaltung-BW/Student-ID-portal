@@ -102,7 +102,7 @@ class InternalController
     {
         $login=(isset($args['login']))?$args['login']:"";
         $stud   = new CStudent("");
-        $stud.lookup($login);
+        $stud->lookupStudent($login);
         echo $stud->getID();
     }
 

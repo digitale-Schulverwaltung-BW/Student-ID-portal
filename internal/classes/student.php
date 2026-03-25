@@ -2,10 +2,9 @@
 require_once('config.php');
 require_once('pass.php');
 
-class CStudent
+class CStudent extends Utility
 {
     protected Base $f3;
-    protected $db;    
     protected String $ID;
     protected String $firstname;
     protected String $lastname;
@@ -20,7 +19,7 @@ class CStudent
         } else {
             $this->ID = $this->sanitizeUUID($id);
             $studentline=$this->getLineWithString(STUDENTS_CVS, $this->ID);
-            if ($studentline=="" && defined('DEMO_CVS')) 
+            if ($studentline=="" && defined('DEMO_CVS'))
                 $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
             if( $studentline !== "") {
                 // valid student ID
@@ -63,7 +62,7 @@ class CStudent
     private function intLookupStudent(String $username, bool $former)
     {
         $studentline=$this->getLineWithString(STUDENTS_CVS, $username);
-        if ($studentline=="" && defined('DEMO_CVS')) 
+        if ($studentline=="" && defined('DEMO_CVS'))
             $studentline=$this->getLineWithString(DEMO_CVS, $username);
         if( $studentline !== "") {
             // valid student ID
@@ -84,17 +83,7 @@ class CStudent
             $this->ID="";
         }
     }
-    
 
-    private function getLineWithString($fileName, $str): String {
-        $lines = file($fileName);
-        foreach ($lines as $lineNumber => $line) {
-            if (strpos($line, $str) !== false) {
-                return $line;
-            }
-        }
-        return "";
-    }
 
     public function getID(): String
     {
@@ -102,11 +91,11 @@ class CStudent
     }
     public function getPassID(): String
     {
-        $this->db=new DB\SQL('sqlite:'.PASS_DB);
-        $results = $this->db->exec('SELECT passID FROM passes WHERE studID="'.$this->ID.'"');
-        if (empty($results))
-            return "";
-        return $results[0]['passID'];
+        $data = $this->walletApiRequest(
+            WALLET_API_BASE . '/passes/by-external-id/' . $this->ID
+        );
+        if ($data === null || empty($data['id'])) return "";
+        return $data['id'];
     }
     public function getLogin(): String
     {
@@ -130,7 +119,7 @@ class CStudent
     }
     public function reissuePass(): bool
     {
-        $pass=new CStudentPass(Base::instance(), $this);        
+        $pass=new CStudentPass($this);
         return ($pass->registerPass()!="");
     }
 

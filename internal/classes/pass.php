@@ -1,5 +1,4 @@
 <?php
-// Ubuntu package: php-sqlite3
 
 require_once('config.php');
 require_once('student.php');
@@ -8,7 +7,6 @@ require_once('utility.php');
 class CStudentPass extends Utility {
 
     protected Base $f3;
-    protected $db;
     protected String $passID;
 
     protected String $appleURL;
@@ -23,38 +21,24 @@ class CStudentPass extends Utility {
         $this->isTeacher=$isTeacher;
         $this->appleURL="";
         $this->googleURL="";
+        $this->passID="";
 
-        $this->db=new DB\SQL('sqlite:'.PASS_DB);
-        $this->db->exec('CREATE TABLE IF NOT EXISTS "passes" (
-            "studID" VARCHAR PRIMARY KEY NOT NULL, "passID" VARCHAR, "created" DATE, "valid" VARCHAR
-        )');
+        // Lookup existing pass via API (replaces SQLite query)
         $logger = new Log('deploy.log');
-        $results = $this->db->exec('SELECT passID, created FROM passes WHERE studID="'.$student->getID().'"');
-        if (empty($results)) { // create transaction record to prevent double registrations from the impatient
-            $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "0000", "'.date(DATE_ATOM).'", "00/0000")');
-            $this->passID="";
-        } else {
-            $logger->write("DEBUG: ".$results[0]['passID']);
-
-            $this->passID=$results[0]['passID'];
-            if ($this->passID=="0000")
-            {
-                $regdate=strtotime($results[0]['created']);
-                $delay=time()-$regdate;
-                if ($delay>300) // more than 5 minutes ago, reset to allow registration
-                {
-                    $this->db->exec('UPDATE passes SET passID="0000", created="'.date(DATE_ATOM).'" WHERE studID="'.$student->getID().'"');
-                    $logger->write("TIMEOUT getting pass info, resetting."); // not working: .print_r($result, true)
-                    $this->passID="";
-                }
+        $data = $this->walletApiRequest(
+            WALLET_API_BASE . '/passes/by-external-id/' . $student->getID()
+        );
+        if ($data !== null && !empty($data['id'])) {
+            $this->passID = $data['id'];
+            $logger->write("DEBUG: ".$this->passID);
+            // Fetch full pass data with fresh download links
+            $fullData = $this->walletApiRequest(
+                WALLET_API_BASE . '/passes/' . $this->passID
+            );
+            if ($fullData !== null) {
+                $this->extractURLs($fullData);
             } else {
-                $data = $this->walletApiRequest(WALLET_API_BASE . '/passes/' . $this->passID);
-                if ($data === null)
-                {
-                    $logger->write("ERROR getting pass info for passID: " . $this->passID);
-                } else {
-                    $this->extractURLs($data);
-                }
+                $logger->write("ERROR getting pass info for passID: " . $this->passID);
             }
         }
     }
@@ -65,43 +49,9 @@ class CStudentPass extends Utility {
         if (!empty($data['google_save_url'])) $this->googleURL=$data['google_save_url'];
     }
 
-    function setPassID(String $ID): String
-    {
-        $this->db->exec('UPDATE passes SET passID="'.$ID.'" WHERE studID="'.$this->student->getID().'"');
-        $this->passID=$ID;
-        return $this->passID;
-    }
-    function refetchPass(String $passID): String
-    {
-        $this->passID=$passID;
-        $logger = new Log('update.log');
-        $data = $this->walletApiRequest(WALLET_API_BASE . '/passes/' . $this->passID);
-        if ($data === null)
-        {
-            $logger->write("ERROR getting missing pass: " . $this->passID);
-            return "";
-        }
-        $logger->write("Getting missing pass from API: " . $this->passID);
-        // sanity check before DB update
-        if (($this->passID != $data['id']) ||
-            ($this->student->getID() != $data['external_id']) ||
-            (empty($this->passID)) || (empty($this->student->getID())))
-            {
-                $logger->write("ERROR sanity check failed getting missing pass: " . $this->passID);
-                return "";
-        }
-        $cdate = date('Y-m-d');
-        $vdate = $this->validShort();
-        $this->db->exec('INSERT INTO passes VALUES ("'.$this->student->getID().'", "'.$this->passID.'", "'.$cdate.'", "'.$vdate.'")');
-        return $this->passID;
-    }
-
     function getPassID(): String
     {
-        // already registered, return stored passID
-        if ($this->passID=="0000") return ""; // registration in progress
         if ($this->passID!="") return $this->passID;
-        // not in DB: create pass
         return $this->registerPass();
     }
 
@@ -146,12 +96,7 @@ class CStudentPass extends Utility {
         if (!empty($data['google_error'])) $logger->write("WARNING: Google error: ".print_r($data['google_error'], true));
 
         $this->extractURLs($data);
-        if (empty($this->passID))
-        {
-            $this->passID=$data['id'];
-            $vdate = $this->isTeacher ? $this->teacherValidShort($this->student->getBirthday()) : $this->validShort();
-            $this->db->exec('UPDATE passes SET passID="'.$this->passID.'", created="'.date('Y-m-d').'", valid="'.$vdate.'" WHERE studID="'.$this->student->getID().'"');
-        }
+        $this->passID=$data['id'];
         return $this->passID;
     }
 
