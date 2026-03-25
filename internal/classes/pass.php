@@ -122,7 +122,7 @@ class CStudentPass extends Utility {
                 'valid_until' => $this->validLong(),
                 'school_name' => SCHOOL,
                 'school_url' => SCHOOL_URL,
-                'verification_url' => VERIFY_BASE_URL . $this->student->getID()
+                'verification_url' => VERIFY_BASE_URL // walletStudentID adds . $this->student->getID()
             ]
         ]);
 
