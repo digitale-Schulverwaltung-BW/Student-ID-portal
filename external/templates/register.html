@@ -4,7 +4,7 @@
 <div class="header-post-title-container clearfix">
     <div class="inner-wrap">
         <div class="post-title-wrapper">
-            <h1 class="header-post-title-class entry-title">Digitaler HHS-Ausweis</h1>
+            <h1 class="header-post-title-class entry-title">Digitaler {{ @card_type }}</h1>
         </div>
     </div>
 </div>
@@ -14,7 +14,7 @@
             <true>
                 <check if="{{ @deploy_error=='' }}">
                     <true>
-                        <p>Mit den folgenden Links können Sie den HHS-Ausweis zu einem Wallet
+                        <p>Mit den folgenden Links können Sie den {{ @card_type }} zu einem Wallet
                         hinzufügen.<br />
                         <div class="datenschutz">Bitte beachten Sie, dass Sie mit dem Klicken auf einen der Links den der 
                             Übertragung Ihrer 

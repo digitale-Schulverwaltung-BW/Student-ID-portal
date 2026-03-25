@@ -13,6 +13,7 @@ class ExternalController
         $f3 = Base::instance();
         $this->f3 = $f3;
         $this->template=new Template;
+        $this->setCardTypeVars();
     } 
 
     // set template variables for card type based on URL prefix (/ID vs /LID)
@@ -45,7 +46,6 @@ class ExternalController
     private function exit_if_invalid($stud): void
     {
         if (!$stud->is_valid()) {
-            $this->setCardTypeVars();
             $this->f3->mset(array('valid'=>false, 'card_ID'=>$stud->get_short_id()));
             $this->f3->set('title', 'Ungültiger ' . $this->f3->get('card_type'));
             echo $this->template->render('templates/verify.html');
@@ -74,7 +74,6 @@ class ExternalController
     {
         $stud = new CStudent($this->f3->get('PARAMS.id'));
         $this->exit_if_invalid($stud);
-        $this->setCardTypeVars();
         $this->f3->set('title', 'Gültiger ' . $this->f3->get('card_type'));
         $this->f3->mset(array('valid'=>true, 'card_ID'=>$stud->get_short_id(), 'school'=>'Heinrich-Hertz-Schule Karlsruhe',
                         'birthday'=>$stud->get_birthday(), 'fn'=>$stud->get_firstname(),'sn'=>$stud->get_lastname()));
