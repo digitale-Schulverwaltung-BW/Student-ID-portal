@@ -15,12 +15,39 @@ class ExternalController
         $this->template=new Template;
     } 
 
+    // set template variables for card type based on URL prefix (/ID vs /LID)
+    private function setCardTypeVars(): void
+    {
+        if (str_contains($_SERVER['REQUEST_URI'], '/LID/')) {
+            $this->f3->mset([
+                'card_type'       => 'Lehrerausweis',
+                'card_type_fr'    => "carte d'enseignant valide",
+                'card_type_en'    => 'teacher ID',
+                'person_label'    => 'Lehrkraft',
+                'person_desc'     => 'Die Lehrkraft',
+                'role_desc'       => 'ist im aktuellen Schuljahr an der',
+                'person_invalid'  => 'keine Lehrkraft',
+            ]);
+        } else {
+            $this->f3->mset([
+                'card_type'       => 'Schülerausweis',
+                'card_type_fr'    => "carte d'étudiant valide",
+                'card_type_en'    => 'student ID',
+                'person_label'    => 'Schüler/in',
+                'person_desc'     => 'Die Schülerin bzw. der Schüler',
+                'role_desc'       => 'besucht im aktuellen Schuljahr die',
+                'person_invalid'  => 'keine Schülerin bzw. Schüler',
+            ]);
+        }
+    }
+
     // exit with error page if invalid student ID
     private function exit_if_invalid($stud): void
     {
         if (!$stud->is_valid()) {
+            $this->setCardTypeVars();
             $this->f3->mset(array('valid'=>false, 'card_ID'=>$stud->get_short_id()));
-            $this->f3->set('title', 'Ungültiger Schülerausweis');
+            $this->f3->set('title', 'Ungültiger ' . $this->f3->get('card_type'));
             echo $this->template->render('templates/verify.html');
             exit ();
         }
@@ -47,7 +74,8 @@ class ExternalController
     {
         $stud = new CStudent($this->f3->get('PARAMS.id'));
         $this->exit_if_invalid($stud);
-        $this->f3->set('title', 'Gültiger Schülerausweis');
+        $this->setCardTypeVars();
+        $this->f3->set('title', 'Gültiger ' . $this->f3->get('card_type'));
         $this->f3->mset(array('valid'=>true, 'card_ID'=>$stud->get_short_id(), 'school'=>'Heinrich-Hertz-Schule Karlsruhe',
                         'birthday'=>$stud->get_birthday(), 'fn'=>$stud->get_firstname(),'sn'=>$stud->get_lastname()));
         echo $this->template->render('templates/verify.html');

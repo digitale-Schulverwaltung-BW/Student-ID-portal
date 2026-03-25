@@ -5,8 +5,8 @@
                 <table><tr><td style="text-align: right; border-right: 2px solid">
                     <check if="{{ @valid=='true' }}">
                         <true>
-                            <h2 class="header-post-title-class entry-title green"> 
-                                gültiger Schülerausweis<br />carte d'étudiant valide<br />valid student ID
+                            <h2 class="header-post-title-class entry-title green">
+                                gültiger {{ @card_type }}<br />{{ @card_type_fr }}<br />valid {{ @card_type_en }}
                             </h2>
                             </div>
                         </true>
@@ -21,7 +21,7 @@
                         <h1 class="{{ @valid?'green':'red' }}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b><br /></h1>
                         <check if="{{ @valid=='true' }}">
                             <b>Geburtsdatum:</b> {{ @birthday }}<br />
-                            <b>Initialen Schüler/in:</b> {{ @fn }}.&nbsp;{{ @sn }}.
+                            <b>Initialen {{ @person_label }}:</b> {{ @fn }}.&nbsp;{{ @sn }}.
                         </check>
                     </div>
                 </td></tr></table>
@@ -32,12 +32,12 @@
         <article class="post type-post status-publish format-standard">
             <check if="{{ @valid=='true' }}">
                 <true>
-                    Die Schülerin bzw. der Schüler mit der Ausweis ID <b>{{@card_ID}}</b> 
-                    besucht im aktuellen Schuljahr die {{ @school }}.
+                    {{ @person_desc }} mit der Ausweis ID <b>{{@card_ID}}</b>
+                    {{ @role_desc }} {{ @school }}.
                 </true>
                 <false>
                     Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
-                    der Inhaber ist aktuell keine Schülerin bzw. Schüler unserer Schule.
+                    der Inhaber ist aktuell {{ @person_invalid }} unserer Schule.
                 </false>
             </check>
     </article>
