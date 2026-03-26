@@ -64,7 +64,8 @@ class InternalController
     function applePass($f3, $args): void
     {
         $path = $args['*'] ?? '';
-        if (empty($path)) return;
+        // Validate path matches expected pattern to prevent SSRF/path traversal
+        if (!preg_match('#^v1/passes/[0-9a-f\-]+/apple\.pkpass$#i', $path)) return;
 
         // Reconstruct the wallet API URL from the configured base host
         $parsed = parse_url(WALLET_API_BASE);

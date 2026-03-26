@@ -31,7 +31,7 @@ class CAdminController extends Utility{
                 $stud=new CStudent($sid);
                 if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
                 if ($stud->getID()=="") {
-                    $f3->set('message', "Schüler ID nicht gefunden $sid");
+                    $f3->set('message', "Schüler ID nicht gefunden");
                 } else {
                     $passData = $this->walletApiRequest(
                         WALLET_API_BASE . '/passes/by-external-id/' . $stud->getID()
@@ -44,6 +44,7 @@ class CAdminController extends Utility{
                         $f3->set('message', $msg);
                     }
                 }
+                header ('Location: '.$f3->get('BASE').'/admin/');
                 break;
             case 'reissue':
                 $sid=$f3->get('POST.searchID');
@@ -75,6 +76,7 @@ class CAdminController extends Utility{
                          $f3->set('message', "Ausweis gelöscht.");
                     else $f3->set('message', "Fehler beim Pass-Update. Log-Dateien überprüfen!");
                 }
+                header ('Location: '.$f3->get('BASE').'/admin/');
                 break;
         }
         echo $template->render('templates/admin.html');

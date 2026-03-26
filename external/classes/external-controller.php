@@ -116,7 +116,7 @@ class ExternalController
             if ($stud->get_bday()!=$bday){
                 $this->exit_with_error('Geburtsdatum nicht korrekt. Korrigieren Sie Ihre Eingabe und wenden Sie sich ggf. an unser Sekretariat.');
             }
-            $bday_hash='/'.hash_hmac('sha256', $bday, 'bday-transfer');
+            $bday_hash='/'.hash_hmac('sha256', $bday, BDAY_HMAC_SECRET);
         }
         $this->f3->mset(array('valid'=>true,
                               'base'=>$_SERVER['REQUEST_URI'].$bday_hash,
@@ -132,8 +132,10 @@ class ExternalController
     public function deployAuth(): void
     {
         $stud = new CStudent($this->f3->get('PARAMS.id'));
+        $this->exit_if_invalid($stud);
         // passing this hash as GET param is not the prettiest solution, but we want to keep this process session-less
-        if ($this->f3->get('PARAMS.hash')==hash_hmac('sha256', $stud->get_bday(), 'bday-transfer'))
+        $expected = hash_hmac('sha256', $stud->get_bday(), BDAY_HMAC_SECRET);
+        if (hash_equals($expected, $this->f3->get('PARAMS.hash')))
             $this->deploy_pass( $this->f3->get('PARAMS.id'), $this->f3->get('PARAMS.deploy'));
         else
             $this->exit_with_error('Fehlende Authentifizierung. Bitte scannen Sie den QR-Code erneut.');
@@ -155,7 +157,8 @@ class ExternalController
     public function appleProxy(): void
     {
         $path = $this->f3->get('PARAMS.*') ?? '';
-        if (empty($path)) {
+        // Validate path matches expected pattern to prevent SSRF/path traversal
+        if (!preg_match('#^v1/passes/[0-9a-f\-]+/apple\.pkpass$#i', $path)) {
             $this->exit_with_error('Ungültiger Download-Link.');
         }
 
@@ -187,10 +190,10 @@ class ExternalController
         if (isset($data['error'])) $deploy="error";
         switch ($deploy) {
             case 'google':
-                if ($this->is_valid($data['google']))
+                if ($this->is_valid($data['google']) && str_starts_with($data['google'], 'https://pay.google.com/'))
                     header ('Location: '.$data['google']);
                 else $this->exit_with_error('Fehler beim Abruf der externen Wallet-Daten.');
-                    exit();
+                exit();
                 break;
             case 'apple':
                 if ($this->is_valid($data['apple'])) {

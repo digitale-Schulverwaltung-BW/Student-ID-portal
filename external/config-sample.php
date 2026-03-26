@@ -13,8 +13,11 @@ define('WALLET_USE_GOOGLE', 1);
 // internal URLs to request
 define('internal_server', '<your internal server URL>');
 
+// HMAC secret for birthday verification (use a long random string, e.g. openssl rand -hex 32)
+define('BDAY_HMAC_SECRET', '<replace-with-random-secret>');
+
 // set to false on production
-define('logging', false); 
+define('logging', false);
 
 // no configuration needed below
 define('verify_url',      internal_server.'/ID/internal/verify/');
