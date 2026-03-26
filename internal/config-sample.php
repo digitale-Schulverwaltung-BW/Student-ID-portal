@@ -26,5 +26,10 @@
   define('CSV_CLASS', 6);
   define('CSV_BIRTHDAY', 7);
   
+  // Email-to-ID lookup (GET /ID/@email)
+  define('CSV_PATH', '/path/to/your/csv.csv');  // CSV file for email lookup
+  define('CSV_EMAIL_COL', 5);  // column index of email address
+  define('CSV_ID_COL', 2);     // column index of student ID
+
   define('invalid_wait', 3); //seconds to wait after an invalid UUID request for rate limiting
   ?>

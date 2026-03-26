@@ -106,4 +106,49 @@ class InternalController
         echo $stud->getID();
     }
 
+    // route handler for email-based ID lookup. Returns plain text student ID.
+    function emailLookup($f3, $args): void
+    {
+        $email=(isset($args['email']))?$args['email']:"";
+        if (empty($email)) return;
+
+        $id = $this->lookup_csv($email);
+        if ($id === null) {
+            http_response_code(404);
+            return;
+        }
+        header('Content-Type: text/plain');
+        echo $id;
+    }
+
+    private function lookup_csv($email) {
+        $csv_path  = CSV_PATH;
+        $email_col = (int) CSV_EMAIL_COL;
+        $id_col    = (int) CSV_ID_COL;
+
+        if (empty($csv_path) || !file_exists($csv_path) || !is_readable($csv_path)) {
+            return null;
+        }
+
+        $handle = fopen($csv_path, 'r');
+        if ($handle === false) {
+            return null;
+        }
+
+        $email = strtolower(trim($email));
+
+        while (($row = fgetcsv($handle, 0, ';', '"')) !== false) {
+            if (!isset($row[$email_col]) || !isset($row[$id_col])) {
+                continue;
+            }
+            if (strtolower(trim($row[$email_col])) === $email) {
+                fclose($handle);
+                return trim($row[$id_col]);
+            }
+        }
+
+        fclose($handle);
+        return null;
+    }
+
 }
