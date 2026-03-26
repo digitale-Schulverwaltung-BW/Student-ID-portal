@@ -53,16 +53,48 @@
         </div>
     </div>
 
-    <!-- Status -->
+    <!-- Wallet-Status -->
+    <div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">
+            <i class="bi bi-wallet2"></i> Wallet-System
+        </h5>
+        <div class="row g-3 text-center">
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <div class="fs-2 fw-bold text-success">{{@stats.active}}</div>
+                    <small class="text-muted">Aktive Ausweise</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <div class="fs-2 fw-bold text-secondary">{{@stats.voided}}</div>
+                    <small class="text-muted">Gelöschte Ausweise</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <div class="fs-2 fw-bold text-primary">{{@stats.themes}}</div>
+                    <small class="text-muted">Themes</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Meldungen -->
+    <check if="{{@message}}">
+    <true>
     <div class="card shadow-sm">
     <div class="card-body">
         <h5 class="card-title mb-0">
-            <i class="bi bi-info-circle"></i> Status
+            <i class="bi bi-info-circle"></i> Ergebnis
         </h5>
-
         <p class="text-muted mt-2" style="white-space: pre-line;">{{@message | nl2br, raw}}</p>
     </div>
     </div>
+    </true>
+    </check>
 
 
 </div>
