@@ -21,9 +21,9 @@ class ExternalController
     {
         if (str_contains($_SERVER['REQUEST_URI'], '/LID/')) {
             $this->f3->mset([
-                'card_type'       => 'Lehrerausweis',
+                'card_type'       => 'gültige Lehrkraft-Bescheinigung',
                 'card_type_fr'    => "carte d'enseignant valide",
-                'card_type_en'    => 'teacher ID',
+                'card_type_en'    => 'valid teacher ID',
                 'person_label'    => 'Lehrkraft',
                 'person_desc'     => 'Die Lehrkraft',
                 'role_desc'       => 'ist im aktuellen Schuljahr an der',
