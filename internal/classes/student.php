@@ -12,8 +12,10 @@ class CStudent extends Utility
     protected String $birthday;
     protected String $login;
     protected String $class;
+    protected String $exitDate;
 
     function __construct($id) {
+        $this->exitDate="";
         if (!isset($id) || empty($id) || strlen($id)!=36)
         {
             $this->ID="";
@@ -30,6 +32,7 @@ class CStudent extends Utility
                 $this->birthday=$data[CSV_BIRTHDAY];
                 $this->class=$data[CSV_CLASS];
                 $this->login=$data[CSV_LOGIN];
+                $this->exitDate=isset($data[CSV_EXITD]) ? trim($data[CSV_EXITD], " \t\n\r\0\x0B\"") : "";
             } else {
                 $this->ID="";
             }
@@ -79,6 +82,7 @@ class CStudent extends Utility
                 $this->birthday=$data[CSV_BIRTHDAY];
                 $this->ID=$data[CSV_ID];
                 $this->login=$data[CSV_LOGIN];
+                $this->exitDate=isset($data[CSV_EXITD]) ? trim($data[CSV_EXITD], " \t\n\r\0\x0B\"") : "";
             }
         } else {
             $this->ID="";
@@ -117,6 +121,17 @@ class CStudent extends Utility
     public function getClass(): String
     {
         return $this->class;
+    }
+    public function getExitDate(): String
+    {
+        return $this->exitDate;
+    }
+    public function hasExited(): bool
+    {
+        if (empty($this->exitDate)) return false;
+        $today=new DateTime();
+        $exitd=new DateTime($this->exitDate);
+        return $today > $exitd;
     }
     public function reissuePass(): bool
     {

@@ -9,12 +9,12 @@
   define('WALLET_USE_APPLE', 1);  // set to 1 to offer the respective pass type
   define('WALLET_USE_GOOGLE', 1);
 
-  define('VERIFY_BASE_URL', 'https://www.example.com/ID/v/'); // this points to your external-folder. Trailing / 
+  define('VERIFY_BASE_URL', 'https://www.example.com/ID/v/'); // this points to your external-folder. Trailing /
   define('SCHOOL', 'Musterschule Musterstadt');
   define('SCHOOLYEAR_START', 9); // last month of validity
   define('IMG_BASE_URL', 'https://www.example.com/ID/templates/');
   define('SCHOOL_URL', 'https://www.example.com/');
-  
+
   // CSV structure. Specify the positions of the relevant fields here.
   // Example: we have
   // login;shortname;idnumber;lastname;firstname;email;Klasse;birthday;Austrittsdatum;Eintrittsdatum
@@ -25,7 +25,8 @@
   define('CSV_FIRST', 4);
   define('CSV_CLASS', 6);
   define('CSV_BIRTHDAY', 7);
-  
+  define('CSV_EXITD', 8);
+
   // Email-to-ID lookup (GET /ID/@email)
   define('CSV_PATH', '/path/to/your/csv.csv');  // CSV file for email lookup
   define('CSV_EMAIL_COL', 5);  // column index of email address
