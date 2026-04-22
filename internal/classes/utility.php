@@ -25,20 +25,26 @@ class Utility{
         return "$year-$m-30T12:00:00.000Z";
     }
     
-    // generate teacher validity date (human readable): 07/<retirement year>
+    // generate teacher validity date (human readable): 3 years (09/YYYY), capped at retirement (07/<retirement year>)
     function teacherValidShort(String $birthday): String
     {
         $birthYear = (int)substr($birthday, -4);
         if ($birthYear < 1900) return $this->validShort(); // fallback
-        return '07/' . ($birthYear + 66);
+        $defaultYear = (int)date("Y") + 3;
+        $retirementYear = $birthYear + 66;
+        if ($retirementYear <= $defaultYear) return '07/' . $retirementYear;
+        return '09/' . $defaultYear;
     }
 
-    // generate teacher validity date (machine readable): 31.07.<year they turn 66>
+    // generate teacher validity date (machine readable): 3 years (30.09.), capped at retirement (31.07.<retirement year>)
     function teacherValidLong(String $birthday): String
     {
         $birthYear = (int)substr($birthday, -4);
         if ($birthYear < 1900) return $this->validLong(); // fallback
-        return ($birthYear + 66) . '-07-31T12:00:00.000Z';
+        $defaultYear = (int)date("Y") + 3;
+        $retirementYear = $birthYear + 66;
+        if ($retirementYear <= $defaultYear) return $retirementYear . '-07-31T12:00:00.000Z';
+        return $defaultYear . '-09-30T12:00:00.000Z';
     }
 
     // convert DD.MM.YYYY to YYYY-MM-DD for WalletStudentID API
