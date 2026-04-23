@@ -21,7 +21,7 @@ class ExternalController
     {
         if (str_contains($_SERVER['REQUEST_URI'], '/LID/')) {
             $this->f3->mset([
-                'card_type'       => 'gültige Lehrkraft-Bescheinigung',
+                'card_type'       => 'Lehrkraft-Nachweis',
                 'card_type_fr'    => "carte d'enseignant valide",
                 'card_type_en'    => 'valid teacher ID',
                 'person_label'    => 'Lehrkraft',
@@ -114,7 +114,7 @@ class ExternalController
                     str_pad($this->f3->get('POST.month'), 2, "0", STR_PAD_LEFT).".".
                     $this->f3->get('POST.year');
             if ($stud->get_bday()!=$bday){
-                $this->exit_with_error('Geburtsdatum nicht korrekt. Korrigieren Sie Ihre Eingabe und wenden Sie sich ggf. an unser Sekretariat.');
+                $this->exit_with_error('Geburtsdatum nicht korrekt. Korrigieren Sie Ihre Eingabe oder wenden Sie sich ggf. an unser Sekretariat.');
             }
             $bday_hash='/'.hash_hmac('sha256', $bday, BDAY_HMAC_SECRET);
         }
