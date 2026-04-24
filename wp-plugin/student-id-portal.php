@@ -62,6 +62,21 @@ function sid_register_rewrite_rules(): void {
     );
 }
 
+// --- Suppress theme page title on plugin pages ---
+// Without this, WP falls back to the blog-posts page query and the theme
+// renders that page's title (e.g. "Aktuelles") above our content.
+add_action('wp', function (): void {
+    if (!get_query_var('sid_action')) return;
+    global $wp_query;
+    $wp_query->queried_object    = null;
+    $wp_query->queried_object_id = 0;
+    $wp_query->is_home           = false;
+    $wp_query->is_front_page     = false;
+    $wp_query->is_posts_page     = false;
+    $wp_query->is_singular       = false;
+    $wp_query->is_page           = false;
+}, 1);
+
 // --- Query vars ---
 
 add_filter('query_vars', function (array $vars): array {
@@ -149,7 +164,7 @@ add_action('admin_menu', function (): void {
 add_action('admin_init', 'sid_register_settings');
 function sid_register_settings(): void {
     $fields = [
-        'sid_internal_server'   => ['Interner Server URL',           'url',      ''],
+        'sid_internal_server'   => ['Interner Server (inkl. Pfad, z. B. http://internal.local/ID)', 'url', ''],
         'sid_bday_hmac_secret'  => ['HMAC-Secret (Geburtsdatum)',    'password', ''],
         'sid_require_birthday'  => ['Geburtstag erforderlich',       'checkbox', ''],
         'sid_wallet_apple'      => ['Apple Wallet anbieten',         'checkbox', '1'],

@@ -18,7 +18,7 @@ class WPController extends ControllerBase {
             'wallet_google'    => (bool) get_option('sid_wallet_google', '1'),
             'bday_hmac_secret' => (string) get_option('sid_bday_hmac_secret', ''),
             'school'           => (string) get_option('sid_school', ''),
-            'apple_pass_url'   => rtrim(get_option('sid_internal_server', ''), '/') . '/ID/internal/apple/',
+            'apple_pass_url'   => rtrim(get_option('sid_internal_server', ''), '/') . '/internal/apple/',
             default            => null,
         };
     }

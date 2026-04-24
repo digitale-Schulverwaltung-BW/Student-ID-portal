@@ -10,9 +10,9 @@ class CStudent extends CStudentBase {
         error_log('[StudentID] ' . $msg);
     }
     protected function verify_url(): string {
-        return rtrim(get_option('sid_internal_server', ''), '/') . '/ID/internal/verify/';
+        return rtrim(get_option('sid_internal_server', ''), '/') . '/internal/verify/';
     }
     protected function register_url(): string {
-        return rtrim(get_option('sid_internal_server', ''), '/') . '/ID/internal/register/';
+        return rtrim(get_option('sid_internal_server', ''), '/') . '/internal/register/';
     }
 }
