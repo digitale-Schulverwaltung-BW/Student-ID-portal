@@ -156,12 +156,18 @@ abstract class ControllerBase {
             $this->exit_with_error('Fehlende Authentifizierung. Bitte scannen Sie den QR-Code erneut.');
     }
 
+    // Returns query string to forward to the internal apple proxy.
+    // Override in subclasses that add their own query vars (e.g. WordPress).
+    protected function getProxyQueryString(): string {
+        return $_SERVER['QUERY_STRING'] ?? '';
+    }
+
     public function appleProxy(): void {
         $path = $this->getParam('*');
         if (!preg_match('#^v1/passes/[0-9a-f\-]+/apple\.pkpass$#i', $path))
             $this->exit_with_error('Ungültiger Download-Link.');
         $url   = $this->getConfig('apple_pass_url') . $path;
-        $query = $_SERVER['QUERY_STRING'] ?? '';
+        $query = $this->getProxyQueryString();
         if (!empty($query)) $url .= '?' . $query;
         $pkpass = $this->controller_http_get($url);
         if ($pkpass === false || empty($pkpass))

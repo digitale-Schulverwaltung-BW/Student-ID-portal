@@ -44,6 +44,13 @@ class WPController extends ControllerBase {
     protected function isTeacher(): bool {
         return get_query_var('sid_cardtype', '') === get_option('sid_prefix_teacher', 'LID');
     }
+    // WP adds its own query vars (sid_action, sid_path, …) to QUERY_STRING after rewrite.
+    // Only forward the token that Apple Wallet actually needs.
+    protected function getProxyQueryString(): string {
+        $token = sanitize_text_field(wp_unslash($_GET['token'] ?? ''));
+        return $token !== '' ? 'token=' . rawurlencode($token) : '';
+    }
+
     protected function controller_http_get(string $url): string|false {
         $result = wp_remote_get($url, ['timeout' => 30]);
         return is_wp_error($result) ? false : wp_remote_retrieve_body($result);

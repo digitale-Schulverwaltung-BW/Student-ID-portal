@@ -54,10 +54,11 @@ function sid_register_rewrite_rules(): void {
         'index.php?sid_action=register&sid_cardtype=$matches[1]&sid_id=$matches[2]',
         'top'
     );
-    // Apple pass proxy: /apple/v1/passes/{uuid}/apple.pkpass
+    // Apple pass proxy: /{prefix}/apple/v1/passes/{uuid}/apple.pkpass
+    // The prefix must match what the wallet API was configured with (VERIFY_BASE_URL).
     add_rewrite_rule(
-        '^apple/(.+)$',
-        'index.php?sid_action=apple_proxy&sid_path=$matches[1]',
+        "^$pfx/apple/(.+)$",
+        'index.php?sid_action=apple_proxy&sid_path=$matches[2]',
         'top'
     );
 }
