@@ -54,8 +54,11 @@ Geeignet, wenn das Frontend auf einem eigenen (Sub-)Pfad oder Subdomain betriebe
    - `internal_server` — interne URL des Backend-Servers (nicht öffentlich zugänglich)
    - `BDAY_HMAC_SECRET` — zufälliges 32-Byte-Geheimnis, z. B. `openssl rand -hex 32`
    - `require_birthday`, `WALLET_USE_APPLE`, `WALLET_USE_GOOGLE` — Feature-Flags
-3. Webserver so konfigurieren, dass alle Anfragen auf `external/index.php` umgeleitet werden (`.htaccess` liegt bei).
-4. Das Frontend ist unter den konfigurierten Pfaden erreichbar, z. B.:
+3. `external/templates/head.html` und `foot.html` so anpassen, dass die Registerierungs- und Validierungs-Seiten
+   nahtlos in die Schulhomepage passen. Dies ist insofern besonders empfehlenswert, als die Verifizierungs-Aufrufe
+   auf der Schulehomepage erscheinen und klar machen sollen, dass die Überprüfung *schulseitig* erfolgt ist.
+4. Webserver so konfigurieren, dass alle Anfragen auf `external/index.php` umgeleitet werden (`.htaccess` liegt bei).
+5. Das Frontend ist unter den konfigurierten Pfaden erreichbar, z. B.:
    - Verifikation: `https://schule.de/ID/v/{UUID}`
    - Registrierung: `https://schule.de/ID/r/{UUID}`
 

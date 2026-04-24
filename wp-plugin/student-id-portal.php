@@ -172,6 +172,7 @@ function sid_render_field(array $args): void {
     $type  = $args['type'];
     $value = get_option($key, '');
     if ($type === 'checkbox') {
+        printf('<input type="hidden" name="%s" value="0" />', esc_attr($key));
         printf('<input type="checkbox" name="%s" value="1"%s />', esc_attr($key), checked('1', $value, false));
     } else {
         printf('<input type="%s" name="%s" value="%s" class="regular-text" autocomplete="off" />',
