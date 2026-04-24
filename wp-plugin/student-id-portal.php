@@ -70,6 +70,7 @@ add_action('wp', function (): void {
     global $wp_query;
     $wp_query->queried_object    = null;
     $wp_query->queried_object_id = 0;
+    $wp_query->is_404            = false;
     $wp_query->is_home           = false;
     $wp_query->is_front_page     = false;
     $wp_query->is_posts_page     = false;
