@@ -5,8 +5,42 @@ require_once('utility.php');
 class CAdminController extends Utility{
     protected Base $f3;
 
+    private function ipInCidr(string $ip, string $cidr): bool {
+        if (!str_contains($cidr, '/')) $cidr .= '/32';
+        [$subnet, $bits] = explode('/', $cidr, 2);
+        $bits       = (int)$bits;
+        $ipLong     = ip2long($ip);
+        $subnetLong = ip2long($subnet);
+        if ($ipLong === false || $subnetLong === false) return false;
+        if ($bits === 0) return true;
+        $mask = -1 << (32 - $bits);
+        return ($ipLong & $mask) === ($subnetLong & $mask);
+    }
+
+    private function checkAdminAccess(): void {
+        $remote = $_SERVER['REMOTE_ADDR'] ?? '';
+
+        $blockList = defined('ADMIN_BLOCK_IP') ? array_filter(array_map('trim', explode(',', ADMIN_BLOCK_IP))) : [];
+        foreach ($blockList as $cidr) {
+            if ($this->ipInCidr($remote, $cidr)) {
+                http_response_code(403);
+                exit('Zugriff verweigert.');
+            }
+        }
+
+        $allowList = defined('ADMIN_CIDR') ? array_filter(array_map('trim', explode(',', ADMIN_CIDR))) : [];
+        if (!empty($allowList)) {
+            foreach ($allowList as $cidr) {
+                if ($this->ipInCidr($remote, $cidr)) return;
+            }
+            http_response_code(403);
+            exit('Zugriff verweigert.');
+        }
+    }
+
     function main($f3, $args): void
     {
+        $this->checkAdminAccess();
         if (!isset($this->f3)) $this->f3=$f3;
 
         $template=new Template;
@@ -27,7 +61,7 @@ class CAdminController extends Utility{
                 $f3->set('message', $msg);
                 break;
             case 'update':
-                $sid=$f3->get('POST.searchID');
+                $sid=substr($f3->get('POST.searchID'), 0, 256);
                 $stud=new CStudent($sid);
                 if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
                 if ($stud->getID()=="") {
@@ -47,7 +81,7 @@ class CAdminController extends Utility{
                 header ('Location: '.$f3->get('BASE').'/admin/');
                 break;
             case 'reissue':
-                $sid=$f3->get('POST.searchID');
+                $sid=substr($f3->get('POST.searchID'), 0, 256);
                 $stud=new CStudent($sid);
                 if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
                 if ($stud->getID()=="") {
@@ -60,7 +94,7 @@ class CAdminController extends Utility{
                 header ('Location: '.$f3->get('BASE').'/admin/');
                 break;
             case 'delete':
-                $sid=$f3->get('POST.dsearchID');
+                $sid=substr($f3->get('POST.dsearchID'), 0, 256);
                 if (!isset($sid) || empty($sid))
                 {
                     $f3->set('message', 'ID darf nicht leer sein.');

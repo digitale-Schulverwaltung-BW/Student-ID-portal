@@ -129,6 +129,11 @@ function sid_handle_request(): void {
     $action = get_query_var('sid_action');
     if (!$action) return;
 
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: DENY');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'");
+
     require_once SID_PLUGIN_DIR . 'classes/controller.php';
     $controller = new WPController();
 

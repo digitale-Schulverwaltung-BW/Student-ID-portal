@@ -82,13 +82,13 @@ class CStudentPass extends Utility {
 
         $data = $this->walletApiRequest($url, 'POST', $postdata);
         if ($data === null) {
-            $logger->write("ERROR deploy result, postdata: $postdata");
+            $logger->write("ERROR deploy failed (null response) for student: " . $this->student->getID());
             return "";
         }
 
         if (!isset($data['id']) || empty($data['id'])) {
-             $logger->write("ERROR extracting deploy data: ".$postdata);
-             $logger->write("...result body leading to ERROR: ".print_r($data, true));
+             $logger->write("ERROR extracting deploy data for student: " . $this->student->getID());
+             $logger->write("...response body: ".print_r($data, true));
              return "";
         } else $logger->write("INFO: successful deploy: ".$this->student->getID().'=>'.$data['id']);
 

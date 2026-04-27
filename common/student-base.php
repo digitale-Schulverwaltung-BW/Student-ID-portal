@@ -26,9 +26,10 @@ abstract class CStudentBase {
         $this->birthday = $data['birthday'];
     }
 
-    private function sanitizeUUID($string): string {
-        $sanitized = preg_replace('/[^-0-9A-F]/i', '', $string);
-        return substr($sanitized, 0, 36);
+    private function sanitizeUUID(string $string): string {
+        if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $string))
+            return $string;
+        return '';
     }
 
     public function get_bday(): string {

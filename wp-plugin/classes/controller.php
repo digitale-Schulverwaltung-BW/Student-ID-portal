@@ -9,7 +9,7 @@ class WPController extends ControllerBase {
         return (string)(get_query_var("sid_$name", ''));
     }
     protected function getPost(string $name): string {
-        return sanitize_text_field(wp_unslash($_POST[$name] ?? ''));
+        return substr(sanitize_text_field(wp_unslash($_POST[$name] ?? '')), 0, 256);
     }
     protected function getConfig(string $key): mixed {
         return match ($key) {
@@ -54,5 +54,13 @@ class WPController extends ControllerBase {
     protected function controller_http_get(string $url): string|false {
         $result = wp_remote_get($url, ['timeout' => 30]);
         return is_wp_error($result) ? false : wp_remote_retrieve_body($result);
+    }
+    protected function generateCsrfToken(): string {
+        return wp_create_nonce('sid_bday_auth');
+    }
+    protected function validateCsrfToken(): void {
+        if (!wp_verify_nonce($this->getPost('_csrf'), 'sid_bday_auth')) {
+            $this->exit_with_error('Ungültige Anfrage. Bitte laden Sie die Seite neu und versuchen Sie es erneut.');
+        }
     }
 }

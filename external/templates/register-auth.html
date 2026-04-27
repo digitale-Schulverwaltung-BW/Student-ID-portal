@@ -4,13 +4,14 @@
 <div class="header-post-title-container clearfix">
     <div class="inner-wrap">
         <div class="post-title-wrapper">
-            <h1 class="header-post-title-class entry-title">Digitaler {{ @card_type }} <br />Nr. {{@shortid}}</h1>
+            <h1 class="header-post-title-class entry-title">Digitaler {{ @card_type | esc }} <br />Nr. {{ @shortid | esc }}</h1>
         </div>
     </div>
 </div>
 <div id="main"><div class="inner-wrap"><div id="content">
     <article class="post type-post status-publish format-standard">
-        <form class="form-signin" method="post" action="{{@auth}}">
+        <form class="form-signin" method="post" action="{{ @auth | esc }}">
+            <input type="hidden" name="_csrf" value="{{ @csrf_token | esc }}" />
             <h2 class="form-signin-heading">Abruf Ausweis</h2>
             <p>Bitte authentifizieren Sie sich mit Ihrem Geburtsdatum:</p>
             <div>

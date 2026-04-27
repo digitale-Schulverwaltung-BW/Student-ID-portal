@@ -4,6 +4,11 @@ require_once 'classes/external-controller.php';
 
 $f3 = require('lib/base.php');
 
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header("Content-Security-Policy: default-src 'self'; style-src 'self' " . SCHOOL_HOMEPAGE . "; img-src 'self' " . SCHOOL_HOMEPAGE . " data:; frame-ancestors 'none'");
+
 // change this only temporarily for debugging. Leave at 0 for production!
 $f3->set('DEBUG', 0);
 

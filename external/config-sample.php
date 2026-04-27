@@ -4,6 +4,7 @@
 */
 
 define('school',          'Musterschule Musterstadt');
+define('SCHOOL_HOMEPAGE', 'https://www.example.com'); // used in CSP header for theme assets
 // set this to TRUE if you want the students to authenticate themselves with their birthday:
 define('require_birthday', TRUE);
 

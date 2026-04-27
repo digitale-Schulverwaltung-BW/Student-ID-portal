@@ -14,6 +14,7 @@
 <div id="main"><div class="inner-wrap"><div id="content">
     <article class="post type-post status-publish format-standard">
         <form class="form-signin" method="post" action="<?= esc_url($auth) ?>">
+            <input type="hidden" name="_csrf" value="<?= esc_attr($csrf_token) ?>" />
             <h2 class="form-signin-heading">Abruf Ausweis</h2>
             <p>Bitte authentifizieren Sie sich mit Ihrem Geburtsdatum:</p>
             <div>

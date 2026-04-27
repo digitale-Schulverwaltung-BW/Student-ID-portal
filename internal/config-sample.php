@@ -33,4 +33,10 @@
   define('CSV_ID_COL', 2);     // column index of student ID
 
   define('invalid_wait', 3); //seconds to wait after an invalid UUID request for rate limiting
+
+  // Admin access control (both are optional; leave empty to disable the respective check)
+  // ADMIN_CIDR: comma-separated IPv4 CIDRs allowed to reach /admin, e.g. '10.0.0.0/8,192.168.1.0/24'
+  // ADMIN_BLOCK_IP: comma-separated IPv4 IPs/CIDRs always denied (e.g. the external server's IP)
+  define('ADMIN_CIDR', '');
+  define('ADMIN_BLOCK_IP', '');
   ?>

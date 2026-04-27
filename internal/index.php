@@ -3,6 +3,11 @@
 require_once 'classes/internal-controller.php';
 require_once 'classes/admin-controller.php';
 
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'");
+
 ini_set('output_buffering', 'off');
 ini_set('zlib.output_compression', 0);
 

@@ -6,7 +6,7 @@
                     <check if="{{ @valid=='true' }}">
                         <true>
                             <h2 class="header-post-title-class entry-title green">
-                                {{ @card_type }}<br />{{ @card_type_fr }}<br />{{ @card_type_en }}
+                                {{ @card_type | esc }}<br />{{ @card_type_fr | esc }}<br />{{ @card_type_en | esc }}
                             </h2>
                             </div>
                         </true>
@@ -18,10 +18,10 @@
                     </check>
                 </td><td>
                     <div class="green">
-                        <h1 class="{{ @valid?'green':'red' }}" style="padding-bottom: 0"><b>Nr. {{@card_ID}}</b><br /></h1>
+                        <h1 class="{{ @valid?'green':'red' }}" style="padding-bottom: 0"><b>Nr. {{ @card_ID | esc }}</b><br /></h1>
                         <check if="{{ @valid=='true' }}">
-                            <b>Geburtsdatum:</b> {{ @birthday }}<br />
-                            <b>Initialen {{ @person_label }}:</b> {{ @fn }}.&nbsp;{{ @sn }}.
+                            <b>Geburtsdatum:</b> {{ @birthday | esc }}<br />
+                            <b>Initialen {{ @person_label | esc }}:</b> {{ @fn | esc }}.&nbsp;{{ @sn | esc }}.
                         </check>
                     </div>
                 </td></tr></table>
@@ -32,12 +32,12 @@
         <article class="post type-post status-publish format-standard">
             <check if="{{ @valid=='true' }}">
                 <true>
-                    {{ @person_desc }} mit der Ausweis ID <b>{{@card_ID}}</b>
-                    {{ @role_desc }} {{ @school }}.
+                    {{ @person_desc | esc }} mit der Ausweis ID <b>{{ @card_ID | esc }}</b>
+                    {{ @role_desc | esc }} {{ @school | esc }}.
                 </true>
                 <false>
                     Der vorgelegte Ausweis ist im aktuellen Schuljahr nicht (mehr) gültig und
-                    der Inhaber ist aktuell {{ @person_invalid }} unserer Schule.
+                    der Inhaber ist aktuell {{ @person_invalid | esc }} unserer Schule.
                 </false>
             </check>
     </article>

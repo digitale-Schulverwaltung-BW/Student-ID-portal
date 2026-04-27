@@ -4,7 +4,7 @@
 <div class="header-post-title-container clearfix">
     <div class="inner-wrap">
         <div class="post-title-wrapper">
-            <h1 class="header-post-title-class entry-title">Digitaler {{ @card_type }}</h1>
+            <h1 class="header-post-title-class entry-title">Digitaler {{ @card_type | esc }}</h1>
         </div>
     </div>
 </div>
@@ -14,7 +14,7 @@
             <true>
                 <check if="{{ @deploy_error=='' }}">
                     <true>
-                        <p>Mit den folgenden Links können Sie den {{ @card_type }} zu einem Wallet
+                        <p>Mit den folgenden Links können Sie den {{ @card_type | esc }} zu einem Wallet
                         hinzufügen.<br />
                         <div class="datenschutz">Bitte beachten Sie, dass Sie mit dem Klicken auf einen der Links den der 
                             Übertragung Ihrer 
@@ -28,11 +28,11 @@
                             Informationen zur Datensicherheit sind <a href="https://www.hhs.karlsruhe.de/registrierung-digitaler-schuelerausweis/">hier
                             zusammengestellt</a>.
                         </div></p>
-                        <check if="{{ @apple }}"><a class="wallet-link" href="{{@base}}/apple"><img src="../templates/add-to-apple-wallet-logo.png" alt="zur Apple Wallet hinzufügen"
+                        <check if="{{ @apple }}"><a class="wallet-link" href="{{ @base | esc }}/apple"><img src="../templates/add-to-apple-wallet-logo.png" alt="zur Apple Wallet hinzufügen"
                             style="height: 48px;" /><br />
                             Hinzufügen zu Apple Wallet</a><br /><br />
                         </check>
-                        <check if="{{ @google }}"><a class="wallet-link" href="{{@base}}/google"><img src="../templates/save_to_google_pay_dark_de.svg" alt="zur Google Wallet hinzufügen"
+                        <check if="{{ @google }}"><a class="wallet-link" href="{{ @base | esc }}/google"><img src="../templates/save_to_google_pay_dark_de.svg" alt="zur Google Wallet hinzufügen"
                             style="height: 48px;" /><br />
                             Hinzufügen zu Google Wallet</a><br /><br />
                         </check>
@@ -51,7 +51,7 @@
                         <p id="wallet-loading" style="display:none;">Ausweis wird erstellt, bitte warten...</p>
                     </true>
                     <false>
-                        {{@deploy_error}}
+                        {{ @deploy_error | esc }}
                     </false>
                 </check>
             </true>

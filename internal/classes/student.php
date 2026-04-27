@@ -46,10 +46,10 @@ class CStudent extends Utility
         return false;
     }
 
-    private function sanitizeUUID($string) {
-        // Remove any characters that are not hex digits or slashes
-        $sanitizedString = preg_replace('/[^-0-9A-F]/i', '', $string);
-        return substr($sanitizedString, 0, 36);
+    private function sanitizeUUID(string $string): string {
+        if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $string))
+            return $string;
+        return '';
     }
 
     // try to look up a student from backend DB with a human-readable login name

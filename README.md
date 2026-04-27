@@ -42,6 +42,8 @@ Der Backend-Server (`internal/`) verwaltet die Schülerliste und stellt eine int
    - `WALLET_API_BASE`, `WALLET_API_KEY`, `WALLET_THEME_ID` — Zugangsdaten der WalletStudentID-Instanz
    - `VERIFY_BASE_URL` — öffentliche URL des Frontends (wird in die QR-Codes eingebettet)
    - `SCHOOL`, `SCHOOLYEAR_START`, `IMG_BASE_URL` — schulspezifische Einstellungen
+   - `ADMIN_CIDR` *(empfohlen)* — kommagetrennte IPv4-CIDRs mit Zugriff auf `/admin`, z. B. `10.0.0.0/8` — leer lässt alle Adressen zu
+   - `ADMIN_BLOCK_IP` *(optional)* — kommagetrennte IPs/CIDRs, die `/admin` explizit verweigert werden (z. B. IP des externen Servers)
 3. Webserver so konfigurieren, dass alle Anfragen auf `internal/index.php` umgeleitet werden (`.htaccess` liegt bei).
 4. PHP ≥ 8.1 mit `allow_url_fopen = On` erforderlich (für Upstream-Requests zur WalletStudentID-API).
 
@@ -53,6 +55,7 @@ Geeignet, wenn das Frontend auf einem eigenen (Sub-)Pfad oder Subdomain betriebe
 2. `external/config-sample.php` nach `external/config.php` kopieren und anpassen:
    - `internal_server` — interne URL des Backend-Servers (nicht öffentlich zugänglich)
    - `BDAY_HMAC_SECRET` — zufälliges 32-Byte-Geheimnis, z. B. `openssl rand -hex 32`
+   - `SCHOOL_HOMEPAGE` — öffentliche URL der Schulhomepage, z. B. `https://www.schule.de` (wird für den Content-Security-Policy-Header benötigt)
    - `require_birthday`, `WALLET_USE_APPLE`, `WALLET_USE_GOOGLE` — Feature-Flags
 3. `external/templates/head.html` und `foot.html` so anpassen, dass die Registerierungs- und Validierungs-Seiten
    nahtlos in die Schulhomepage passen. Dies ist insofern besonders empfehlenswert, als die Verifizierungs-Aufrufe
@@ -87,3 +90,9 @@ Geeignet, wenn die Schulhomepage bereits auf WordPress läuft. Das Plugin integr
    - Verifikation: `https://schule.de/ID/v/{UUID}`
    - Registrierung: `https://schule.de/ID/r/{UUID}`
    - Lehrkraft: `https://schule.de/LID/v/{UUID}`
+
+---
+
+## Sicherheitshinweise
+
+Für den sicheren Produktivbetrieb — insbesondere zur Absicherung des Admin-Interfaces, der HTTPS-Konfiguration und der Protokollierung — siehe [SECURITY.md](SECURITY.md).

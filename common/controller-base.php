@@ -25,6 +25,10 @@ abstract class ControllerBase {
     abstract protected function isTeacher(): bool;
     // HTTP GET for apple proxy forwarding
     abstract protected function controller_http_get(string $url): string|false;
+    // Generate a CSRF token for the birthday auth form and store it for later validation
+    abstract protected function generateCsrfToken(): string;
+    // Validate the CSRF token from POST; must call exit_with_error() on failure
+    abstract protected function validateCsrfToken(): void;
 
     // --- Shared helpers ---
 
@@ -107,8 +111,9 @@ abstract class ControllerBase {
         }
         if ($this->getConfig('require_birthday')) {
             $this->renderTemplate('register-auth', array_merge($cardVars, [
-                'auth'    => $_SERVER['REQUEST_URI'],
-                'shortid' => $stud->get_short_id(),
+                'auth'       => $_SERVER['REQUEST_URI'],
+                'shortid'    => $stud->get_short_id(),
+                'csrf_token' => $this->generateCsrfToken(),
             ]));
             exit();
         }
@@ -124,6 +129,7 @@ abstract class ControllerBase {
             exit();
         }
         if ($this->getConfig('require_birthday')) {
+            $this->validateCsrfToken();
             $bday = str_pad($this->getPost('day'),   2, '0', STR_PAD_LEFT) . '.' .
                     str_pad($this->getPost('month'), 2, '0', STR_PAD_LEFT) . '.' .
                     $this->getPost('year');
@@ -166,9 +172,12 @@ abstract class ControllerBase {
         $path = $this->getParam('*');
         if (!preg_match('#^v1/passes/[0-9a-f\-]+/apple\.pkpass$#i', $path))
             $this->exit_with_error('Ungültiger Download-Link.');
-        $url   = $this->getConfig('apple_pass_url') . $path;
-        $query = $this->getProxyQueryString();
-        if (!empty($query)) $url .= '?' . $query;
+        $base = parse_url($this->getConfig('apple_pass_url'));
+        $host = $base['host'] . (isset($base['port']) ? ':' . $base['port'] : '');
+        $url  = $base['scheme'] . '://' . $host . '/' . $path;
+        $params = [];
+        parse_str($this->getProxyQueryString(), $params);
+        if (isset($params['token'])) $url .= '?token=' . urlencode($params['token']);
         $pkpass = $this->controller_http_get($url);
         if ($pkpass === false || empty($pkpass))
             $this->exit_with_error('Fehler beim Abruf des Apple Passes.');

@@ -33,6 +33,8 @@ class InternalController
         $id=(isset($args['id']))?$args['id']:"";
         $stud = new CStudent($id);
         if ($stud->isBlacklisted()) {
+            // Note: this error string is displayed verbatim to the end user via exit_with_error().
+            // Keep it user-friendly and free of any sensitive system details.
             $data = array("error" => "Fehler: bereits Papierausweis ausgestellt, kein digitaler Ausweis möglich.");
             header("Content-Type: application/json");
             echo json_encode($data);
@@ -69,10 +71,11 @@ class InternalController
 
         // Reconstruct the wallet API URL from the configured base host
         $parsed = parse_url(WALLET_API_BASE);
-        $walletUrl = $parsed['scheme'] . '://' . $parsed['host'] . '/' . $path;
-        if (!empty($_SERVER['QUERY_STRING'])) {
-            $walletUrl .= '?' . $_SERVER['QUERY_STRING'];
-        }
+        $host   = $parsed['host'] . (isset($parsed['port']) ? ':' . $parsed['port'] : '');
+        $walletUrl = $parsed['scheme'] . '://' . $host . '/' . $path;
+        $params = [];
+        parse_str($_SERVER['QUERY_STRING'] ?? '', $params);
+        if (isset($params['token'])) $walletUrl .= '?token=' . urlencode($params['token']);
 
         // Fetch the .pkpass binary (token is in the URL, no auth header needed)
         $result = \Web::instance()->request($walletUrl, [

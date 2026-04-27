@@ -12,10 +12,10 @@ class ExternalController extends ControllerBase {
     }
 
     protected function getParam(string $name): string {
-        return (string)($this->f3->get("PARAMS.$name") ?? '');
+        return substr((string)($this->f3->get("PARAMS.$name") ?? ''), 0, 256);
     }
     protected function getPost(string $name): string {
-        return (string)($this->f3->get("POST.$name") ?? '');
+        return substr((string)($this->f3->get("POST.$name") ?? ''), 0, 256);
     }
     protected function getConfig(string $key): mixed {
         return match ($key) {
@@ -50,5 +50,20 @@ class ExternalController extends ControllerBase {
     }
     protected function controller_http_get(string $url): string|false {
         return @file_get_contents($url);
+    }
+    protected function generateCsrfToken(): string {
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+    protected function validateCsrfToken(): void {
+        if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+        $posted = $this->getPost('_csrf');
+        $stored = $_SESSION['csrf_token'] ?? '';
+        if (empty($stored) || !hash_equals($stored, $posted)) {
+            $this->exit_with_error('Ungültige Anfrage. Bitte laden Sie die Seite neu und versuchen Sie es erneut.');
+        }
     }
 }

@@ -77,7 +77,6 @@ class Utility{
             $logger = new \Log('api-error.log');
             $logger->write("$method $url => $statusLine");
             $logger->write("Response body: " . ($result['body'] ?? '(empty)'));
-            if ($content !== null) $logger->write("Request body: $content");
         }
 
         // DELETE returns 204 No Content
