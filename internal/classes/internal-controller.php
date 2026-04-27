@@ -126,9 +126,9 @@ class InternalController
     }
 
     private function lookup_csv($email) {
-        $csv_path  = CSV_PATH;
+        $csv_path  = STUDENTS_CSV;
         $email_col = (int) CSV_EMAIL_COL;
-        $id_col    = (int) CSV_ID_COL;
+        $id_col    = (int) CSV_ID;
 
         if (empty($csv_path) || !file_exists($csv_path) || !is_readable($csv_path)) {
             return null;

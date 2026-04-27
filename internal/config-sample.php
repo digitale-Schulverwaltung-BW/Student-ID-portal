@@ -1,7 +1,7 @@
 <?php
   /* Edit this file and save it as config.php to your internal server directory */
   /* local configuration */
-  define('STUDENTS_CVS', '/path/to/your/student-csv.csv');
+  define('STUDENTS_CSV', '/path/to/your/student-csv.csv');
   define('BLACKLIST', ''); // these IDs are not allowed to register
   define('WALLET_API_BASE', 'https://verwaltung-wallet.hhs.karlsruhe.de/v1');
   define('WALLET_API_KEY', '<your-tenant-API-key>');
@@ -27,10 +27,8 @@
   define('CSV_BIRTHDAY', 7);
   define('CSV_EXITD', 8);
 
-  // Email-to-ID lookup (GET /ID/@email)
-  define('CSV_PATH', '/path/to/your/csv.csv');  // CSV file for email lookup
-  define('CSV_EMAIL_COL', 5);  // column index of email address
-  define('CSV_ID_COL', 2);     // column index of student ID
+  // Email-to-ID lookup (GET /ID/@email) — uses STUDENTS_CSV and CSV_ID defined above
+  define('CSV_EMAIL_COL', 5);  // column index of email address in the student CSV
 
   define('invalid_wait', 3); //seconds to wait after an invalid UUID request for rate limiting
 

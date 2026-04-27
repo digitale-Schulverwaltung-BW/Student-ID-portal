@@ -21,7 +21,7 @@ class CStudent extends Utility
             $this->ID="";
         } else {
             $this->ID = $this->sanitizeUUID($id);
-            $studentline=$this->getLineWithString(STUDENTS_CVS, $this->ID);
+            $studentline=$this->getLineWithString(STUDENTS_CSV, $this->ID);
             if ($studentline=="" && defined('DEMO_CVS'))
                 $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
             if( $studentline !== "") {
@@ -65,7 +65,7 @@ class CStudent extends Utility
     // try to look up a student from backend DB with a human-readable login name
     private function intLookupStudent(String $username, bool $former)
     {
-        $studentline=$this->getLineWithString(STUDENTS_CVS, $username);
+        $studentline=$this->getLineWithString(STUDENTS_CSV, $username);
         if ($studentline=="" && defined('DEMO_CVS'))
             $studentline=$this->getLineWithString(DEMO_CVS, $username);
         if( $studentline !== "") {

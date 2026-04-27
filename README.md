@@ -38,7 +38,7 @@ Der Backend-Server (`internal/`) verwaltet die Schülerliste und stellt eine int
 
 1. Verzeichnis `internal/` auf dem Backend-Server ablegen (z. B. unter `/var/www/html/ID/internal/`).
 2. `internal/config-sample.php` nach `internal/config.php` kopieren und anpassen:
-   - `STUDENTS_CVS` — Pfad zur Schüler-CSV-Datei aus dem Schulverwaltungsprogramm
+   - `STUDENTS_CSV` — Pfad zur Schüler-CSV-Datei aus dem Schulverwaltungsprogramm
    - `WALLET_API_BASE`, `WALLET_API_KEY`, `WALLET_THEME_ID` — Zugangsdaten der WalletStudentID-Instanz
    - `VERIFY_BASE_URL` — öffentliche URL des Frontends (wird in die QR-Codes eingebettet)
    - `SCHOOL`, `SCHOOLYEAR_START`, `IMG_BASE_URL` — schulspezifische Einstellungen
