@@ -27,7 +27,7 @@ abstract class CStudentBase {
     }
 
     private function sanitizeUUID(string $string): string {
-        if (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $string))
+        if (strlen($string) === 36 && preg_match('/^[0-9a-f\-]+$/i', $string))
             return $string;
         return '';
     }

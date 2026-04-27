@@ -172,9 +172,7 @@ abstract class ControllerBase {
         $path = $this->getParam('*');
         if (!preg_match('#^v1/passes/[0-9a-f\-]+/apple\.pkpass$#i', $path))
             $this->exit_with_error('Ungültiger Download-Link.');
-        $base = parse_url($this->getConfig('apple_pass_url'));
-        $host = $base['host'] . (isset($base['port']) ? ':' . $base['port'] : '');
-        $url  = $base['scheme'] . '://' . $host . '/' . $path;
+        $url = $this->getConfig('apple_pass_url') . $path;
         $params = [];
         parse_str($this->getProxyQueryString(), $params);
         if (isset($params['token'])) $url .= '?token=' . urlencode($params['token']);
