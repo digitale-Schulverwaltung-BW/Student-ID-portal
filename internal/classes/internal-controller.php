@@ -9,7 +9,8 @@ class InternalController
     function verify($f3, $args): void
     {
         $id=(isset($args['id']))?$args['id']:"";
-        $stud=new CStudent($id);
+        $isTeacher = ($_GET['type'] ?? '') === 'teacher';
+        $stud=new CStudent($id, $isTeacher);
         if (($stud->getID() !== "")/* && (!$stud->isBlacklisted())*/){
             // valid student ID
             $resp = array("id" => $stud->getID(), 
@@ -31,7 +32,8 @@ class InternalController
     function deploy($f3, $args): void
     {
         $id=(isset($args['id']))?$args['id']:"";
-        $stud = new CStudent($id);
+        $isTeacher = ($_GET['type'] ?? '') === 'teacher';
+        $stud = new CStudent($id, $isTeacher);
         if ($stud->isBlacklisted()) {
             // Note: this error string is displayed verbatim to the end user via exit_with_error().
             // Keep it user-friendly and free of any sensitive system details.

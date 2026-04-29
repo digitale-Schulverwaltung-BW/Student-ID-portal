@@ -2,6 +2,7 @@
   /* Edit this file and save it as config.php to your internal server directory */
   /* local configuration */
   define('STUDENTS_CSV', '/path/to/your/student-csv.csv');
+  define('TEACHERS_CSV', '/path/to/your/teacher-csv.csv'); // same column structure as STUDENTS_CSV; omit if no teacher IDs needed
   define('BLACKLIST', ''); // these IDs are not allowed to register
   define('WALLET_API_BASE', 'https://verwaltung-wallet.hhs.karlsruhe.de/v1');
   define('WALLET_API_KEY', '<your-tenant-API-key>');

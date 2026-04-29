@@ -43,7 +43,7 @@ class ExternalController extends ControllerBase {
         exit();
     }
     protected function makeStudent(string $id): CStudent {
-        return new CStudent($id);
+        return new CStudent($id, $this->isTeacher());
     }
     protected function isTeacher(): bool {
         return str_contains($_SERVER['REQUEST_URI'], '/LID/');

@@ -39,7 +39,7 @@ class WPController extends ControllerBase {
         exit();
     }
     protected function makeStudent(string $id): CStudent {
-        return new CStudent($id);
+        return new CStudent($id, $this->isTeacher());
     }
     protected function isTeacher(): bool {
         return get_query_var('sid_cardtype', '') === get_option('sid_prefix_teacher', 'LID');

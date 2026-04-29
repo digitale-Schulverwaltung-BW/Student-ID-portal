@@ -185,7 +185,7 @@ abstract class ControllerBase {
     private function deploy_pass(string $id, string $deploy): void {
         $stud = $this->makeStudent($id);
         $this->exit_if_invalid($stud);
-        $pass = $stud->register_pass($this->isTeacher());
+        $pass = $stud->register_pass();
         if (!isset($pass) || empty($pass))
             $this->exit_with_error('Fehler beim Abruf der Ausweisdaten.');
         $data = json_decode($pass, true);

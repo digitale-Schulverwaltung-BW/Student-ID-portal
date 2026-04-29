@@ -14,14 +14,15 @@ class CStudent extends Utility
     protected String $class;
     protected String $exitDate;
 
-    function __construct($id) {
+    function __construct($id, bool $isTeacher = false) {
         $this->exitDate="";
         if (!isset($id) || empty($id) || strlen($id)!=36)
         {
             $this->ID="";
         } else {
             $this->ID = $this->sanitizeUUID($id);
-            $studentline=$this->getLineWithString(STUDENTS_CSV, $this->ID);
+            $csv = ($isTeacher && defined('TEACHERS_CSV')) ? TEACHERS_CSV : STUDENTS_CSV;
+            $studentline=$this->getLineWithString($csv, $this->ID);
             if ($studentline=="" && defined('DEMO_CVS'))
                 $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
             if( $studentline !== "") {
