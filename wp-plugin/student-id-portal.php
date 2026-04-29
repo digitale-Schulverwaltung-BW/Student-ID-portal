@@ -104,6 +104,7 @@ function sid_inline_css(): string {
         input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         table, tr, td { border: none; }
+        table.vtable { border: none; }
         td { vertical-align: middle; }
         div.datenschutz { font-size: 0.75em; background-color: #ddd; margin: 15px 5px; padding: 5px 10px; }
         .tooltip { position: relative; display: inline-block; text-decoration: underline; }

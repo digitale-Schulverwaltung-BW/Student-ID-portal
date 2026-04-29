@@ -4,7 +4,7 @@
 <div class="header-post-title-container clearfix">
     <div class="inner-wrap">
         <div class="post-title-wrapper">
-            <table><tr><td style="text-align: right; border-right: 2px solid">
+            <table class="vtable"><tr><td style="text-align: right; border-right: 2px solid">
                 <?php if ($valid): ?>
                     <h2 class="header-post-title-class entry-title sid-valid">
                         <?= esc_html($card_type) ?><br />
