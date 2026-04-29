@@ -26,14 +26,22 @@ class CStudent extends Utility
             if ($studentline=="" && defined('DEMO_CVS'))
                 $studentline=$this->getLineWithString(DEMO_CVS, $this->ID);
             if( $studentline !== "") {
-                // valid student ID
                 $data = str_getcsv($studentline, ";");
-                $this->lastname=$data[CSV_LAST];
-                $this->firstname=$data[CSV_FIRST];
-                $this->birthday=$data[CSV_BIRTHDAY];
-                $this->class=$data[CSV_CLASS];
-                $this->login=$data[CSV_LOGIN];
-                $this->exitDate=isset($data[CSV_EXITD]) ? trim($data[CSV_EXITD], " \t\n\r\0\x0B\"") : "";
+                if ($isTeacher) {
+                    $this->lastname  = $data[CSV_T_LAST];
+                    $this->firstname = $data[CSV_T_FIRST];
+                    $this->birthday  = $data[CSV_T_BIRTHDAY];
+                    $this->class     = '';
+                    $this->login     = $data[CSV_T_EMAIL] ?? '';
+                    $this->exitDate  = '';
+                } else {
+                    $this->lastname  = $data[CSV_LAST];
+                    $this->firstname = $data[CSV_FIRST];
+                    $this->birthday  = $data[CSV_BIRTHDAY];
+                    $this->class     = $data[CSV_CLASS];
+                    $this->login     = $data[CSV_LOGIN];
+                    $this->exitDate  = isset($data[CSV_EXITD]) ? trim($data[CSV_EXITD], " \t\n\r\0\x0B\"") : '';
+                }
             } else {
                 $this->ID="";
             }
