@@ -29,7 +29,7 @@
                 <button type="submit" class="btn btn-lg btn-primary btn-block">Absenden</button>
             </div>
         </form>
-        <script>
+        <script nonce="<?= esc_attr($GLOBALS['sid_script_nonce']) ?>">
         var elts = document.getElementsByClassName('autoinput');
         Array.from(elts).forEach(function(elt) {
             elt.addEventListener('keyup', function(event) {

@@ -134,7 +134,15 @@ function sid_handle_request(): void {
     header('X-Content-Type-Options: nosniff');
     header('X-Frame-Options: DENY');
     header('Referrer-Policy: strict-origin-when-cross-origin');
-    header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'");
+
+    $nonce = base64_encode(random_bytes(16));
+    $GLOBALS['sid_script_nonce'] = $nonce;
+    // Let WordPress add the nonce to its own inline script tags (WP 6.3+)
+    add_filter('wp_inline_script_attributes', function (array $attrs) use ($nonce): array {
+        $attrs['nonce'] = $nonce;
+        return $attrs;
+    });
+    header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'nonce-$nonce'; img-src 'self' data:; frame-ancestors 'none'");
 
     require_once SID_PLUGIN_DIR . 'classes/controller.php';
     $controller = new WPController();

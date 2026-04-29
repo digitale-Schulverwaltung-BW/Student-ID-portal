@@ -41,7 +41,7 @@
                         Hinzufügen zu Google Wallet
                     </a><br /><br />
                 <?php endif; ?>
-                <script>
+                <script nonce="<?= esc_attr($GLOBALS['sid_script_nonce']) ?>">
                 document.querySelectorAll('.wallet-link').forEach(function(link) {
                     link.addEventListener('click', function() {
                         document.querySelectorAll('.wallet-link').forEach(function(l) {
