@@ -22,7 +22,8 @@ class Utility{
         $year=date("Y");
         $m=(SCHOOLYEAR_START<10)?"0".SCHOOLYEAR_START:SCHOOLYEAR_START;
         if ($month>SCHOOLYEAR_START-1) return ($year+1)."-$m-30T12:00:00.000Z";
-        return "$year-$m-30T12:00:00.000Z";
+	return "2026-04-30T12:00:00.000Z";
+//        return "$year-$m-30T12:00:00.000Z";
     }
     
     // generate teacher validity date (human readable): 3 years (09/YYYY), capped at retirement (07/<retirement year>)
