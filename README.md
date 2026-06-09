@@ -1,6 +1,6 @@
 # Digitaler Schülerausweis (Google, Apple) mit WalletStudentID
 
-Dieses Projekt stellt eine Schnittstelle zwischen der Schule/dem Schulverwaltungsprogramm und dem [WalletStudentID](https://gitlab.hhs.karlsruhe.de/digitale-schulverwaltung/walletstudentid) zur Ausgabe von Apple/Google-Wallet-Schülerausweisen dar.
+Dieses Projekt stellt eine Schnittstelle zwischen der Schule/dem Schulverwaltungsprogramm und dem [WalletStudentID](https://dsv-bw.hhs.karlsruhe.de/walletstudentid.html) zur Ausgabe von Apple/Google-Wallet-Schülerausweisen dar.
 
 Installation und Benutzeranleitung finden sich im [docs-Ordner](docs/INSTALL.md).
 
@@ -9,12 +9,12 @@ Die folgenden Schaubilder stellen die unterstützten Vorgänge schematisch dar:
 ## Registrierung
 Die Schülerausweise können über eine ID, welche etwa aus dem Schulverwaltungsprogramm automatisch erzeugt wird, registriert werden. Es sind keine vorbereitenden Import- und Re-Import-Läufe erforderlich:
 
-![Registierung: 1. Abscannen QR-Code, 2. Auswahl Wallet-Typ, 3. Ausweis in Wallet](https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress/-/wikis/uploads/4ae4d830696a7067f01ae05e869696f7/Registrierung.png)
+![Registierung: 1. Abscannen QR-Code, 2. Auswahl Wallet-Typ, 3. Ausweis in Wallet](docs/Registrierung.png)
 
 ## Verifizierung
 Eine Überprüfung des Ausweises erfolgt über die Schulhomepage durch einen nachgelagerten Server, auf dem eine aktuelle Schülerliste aus dem Schulverwaltungsprogramm hinterlegt ist. Es werden hierbei keinerlei Schülerdaten über das Internet übertragen.
 
-![Verifizierung: 1. Abscannen QR-Code Ausweis, 2. Bestätigungsseite auf Schul-Homepage](https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress/-/wikis/uploads/a14fa7a27770a0d1e8d014108b9a3585/Verifizierung.png)
+![Verifizierung: 1. Abscannen QR-Code Ausweis, 2. Bestätigungsseite auf Schul-Homepage](docs/Verifizierung.png)
 
 ## Vorteile
 Der Vorteil des Systems ist, dass nicht der ganze Datenbestand aller Schülerinnen und Schüler in WalletStudentID, Apple und Google importiert werden muss, sondern nur die Datensätze in abgerufen werden gelangen, deren Nutzer diesem ausdrücklich zugestimmt haben und die den digitalen Schülerausweis auch nutzen wollen.
