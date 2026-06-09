@@ -1,7 +1,8 @@
-Die Benutzeranleitung finden Sie [hier](Benutzeranleitung).
+Die Benutzeranleitung finden Sie [hier](USERDOCS.md).
 
 # Installation
 Zum Verständnis ist es wichtig, die zweigeteilte Architektur des Systems zu kennen (interne Zone mit sensiblen Schülerdaten und DMZ):
+
 ![Architektur.svg](Architektur.svg)
 
 ## Voraussetzungen
