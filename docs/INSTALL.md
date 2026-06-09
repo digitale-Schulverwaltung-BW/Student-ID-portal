@@ -1,7 +1,7 @@
 Die Benutzeranleitung finden Sie [hier](USERDOCS.md).
 
 # Installation
-Zum Verständnis ist es wichtig, die zweigeteilte Architektur des Systems zu kennen (interne Zone mit sensiblen Schülerdaten und DMZ):
+Zum Verständnis ist es wichtig, die zweigeteilte Architektur des Systems zu kennen (**interne Zone** mit sensiblen Schülerdaten und **DMZ**, welche die Zugriffe auf das Wallet-System regelt):
 
 ![Architektur.svg](Architektur.svg)
 
@@ -16,18 +16,18 @@ _Es besteht die Möglichkeit, beide Serverteile auch auf einem einzelnen Webserv
 ## Installation auf beiden Webservern
 Das Paket sollte auf beiden beteiligten Servern in einem geeigneten Ordner im Webroot heruntergeladen werden:
 
-```
+```shell
 cd /var/www/html/ID # Beispiel-Verzeichnis, anpassen!
 git clone https://gitlab.hhs.karlsruhe.de/Seyfried/student-id-kortpress.git .
 ```
 
 Die beiden Ordner ```internal```und ```external``` enthalten die Dateistrukturen für den internen bzw. externen Server. Um möglichst einfache Updates zu ermöglichen, besteht die Möglichkeit, die Dateien über Softlinks zugänglich zu machen:
-```
+```shell
 ln -s external/* .
 ```
-(und für ```internal``` analog). Den Ordner "internal" kann man im Webroot liegen lassen, dieser stellt kein Sicherheitsrisiko dar, solange keine Schülerdaten im Verzeichnis liegen. 
+(und für ```internal``` auf dem internen Server analog). Den Ordner "internal" kann man im Webroot liegen lassen, dieser stellt kein Sicherheitsrisiko dar, solange keine Schülerdaten im Verzeichnis liegen. 
 
-Alternativ kann man die Dateien auch per ```mv```aus den beiden Unterordnern herausschieben und den jeweils nicht benötigten Ordner löschen. Dabei ist darauf zu achten, dass auf beiden Servern der lib-Ordner mit dem benötigten PHP-Framework vorliegt.
+Alternativ kann man die Dateien auch per ```mv``` aus den beiden Unterordnern herausschieben und den jeweils nicht benötigten Ordner löschen. Dabei ist darauf zu achten, dass auf beiden Servern der lib-Ordner mit dem benötigten PHP-Framework vorliegt.
 
 ## Konfiguration
 ### externer Webserver
