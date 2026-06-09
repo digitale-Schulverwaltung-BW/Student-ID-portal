@@ -2,7 +2,7 @@
 
 Dieses Projekt stellt eine Schnittstelle zwischen der Schule/dem Schulverwaltungsprogramm und dem [WalletStudentID](https://gitlab.hhs.karlsruhe.de/digitale-schulverwaltung/walletstudentid) zur Ausgabe von Apple/Google-Wallet-Schülerausweisen dar.
 
-Installation und Benutzeranleitung finden sich im [Wiki](https://gitlab.hhs.karlsruhe.de/digitale-schulverwaltung/student-id-portal/-/wikis/home).
+Installation und Benutzeranleitung finden sich im [docs-Ordner](docs/INSTALL.md).
 
 Die folgenden Schaubilder stellen die unterstützten Vorgänge schematisch dar:
 
