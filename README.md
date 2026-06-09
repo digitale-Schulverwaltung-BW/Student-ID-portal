@@ -27,3 +27,6 @@ Um möglichst keine Schülerdaten auf exponierten Servern lagern zu müssen, ist
 ![Systemarchitektur](docs/Architektur.svg)
 
 *Performance:* ein erfolgreicher Verify-Aufruf benötigt 22ms ohne Webserver-Overhead. Verify-Aufrufe auf nicht existierende IDs werden per rate limit gedrosselt. Neue Registrierungs-Aufrufe sind durch den nachgelagerten Web-Request auf die WalletStudentID- und Google/Apple-Server langsamer. Registierungs-Aufrufe auf bereits ausgestellte Passes werden durch den Datenbank-Abruf auch innerhalb von 22ms bereit gestellt. Der Abruf der Download-URLs beinhaltet dann wieder einen nachgelagerten Web-Request.
+
+## Installationsanleitung
+Findet sich [hier im docs-Ordner](docs/INSTALL.md).

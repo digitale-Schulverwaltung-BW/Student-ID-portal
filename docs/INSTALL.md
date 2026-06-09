@@ -15,9 +15,6 @@ _Es besteht die Möglichkeit, beide Serverteile auch auf einem einzelnen Webserv
 
 ---
 
-
-## Installation
-
 ## Installation auf beiden Webservern
 Das Paket sollte auf beiden beteiligten Servern in einem geeigneten Ordner im Webroot heruntergeladen werden:
 
@@ -50,7 +47,7 @@ Der Backend-Server (`internal/`) verwaltet die Schülerliste und stellt eine int
 4. PHP ≥ 8.1 mit `allow_url_fopen = On` erforderlich (für Upstream-Requests zur WalletStudentID-API).
 
 ### Frontend
-Für die Installation des Frontends (user-facing parts, also die Registrierungs- und Verifizierungs-Seiten) gibt es zwei Varianten. Für eine Wordpress-basierte Schulhomepage gibt es ein komfortables Plugin, siehe Variante B. Weitere Plugins für andere CMS-Systeme können noch folgen, ansonsten hier ist eine Standalone-Variante:
+Für die Installation des Frontends (user-facing parts, also die Registrierungs- und Verifizierungs-Seiten) gibt es zwei Varianten. Für eine Wordpress-basierte Schulhomepage gibt es ein komfortables Plugin, siehe [Variante B](#frontend--variante-b-wordpress-plugin). Weitere Plugins für andere CMS-Systeme können noch folgen, ansonsten hier ist eine Standalone-Variante:
 
 #### Frontend – Variante A: Standalone (Fat-Free Framework)
 
@@ -100,4 +97,4 @@ Geeignet, wenn die Schulhomepage bereits auf WordPress läuft. Das Plugin integr
 
 ## Sicherheitshinweise
 
-Für den sicheren Produktivbetrieb — insbesondere zur Absicherung des Admin-Interfaces, der HTTPS-Konfiguration und der Protokollierung — siehe [SECURITY.md](SECURITY.md).
+Für den sicheren Produktivbetrieb — insbesondere zur Absicherung des Admin-Interfaces, der HTTPS-Konfiguration und der Protokollierung — siehe [SECURITY.md](../SECURITY.md).
