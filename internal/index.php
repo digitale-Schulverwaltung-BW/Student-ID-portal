@@ -6,7 +6,7 @@ require_once 'classes/admin-controller.php';
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: strict-origin-when-cross-origin');
-header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'");
+header("Content-Security-Policy: default-src 'none'; style-src 'self'; script-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'");
 
 ini_set('output_buffering', 'off');
 ini_set('zlib.output_compression', 0);
