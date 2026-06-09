@@ -13,6 +13,11 @@ Zum Verständnis ist es wichtig, die zweigeteilte Architektur des Systems zu ken
 
 _Es besteht die Möglichkeit, beide Serverteile auch auf einem einzelnen Webserver zu deployen. Dabei muss besonderes Augenmerk auf die Absicherung des internen Teils gelegt werden (z.B. Zugriff und Zugang nur über localhost) und insbesondere sichergestellt werden, dass die Schülerdatei keinesfalls im Zugriffsbereich des Webservers liegt. Diese Vorgehensweise wird hier nicht näher beschrieben, da sie nur gewählt werden sollte, wenn man genau weiß, was man tut (und dann benötigt man hierfür auch keine Anleitung...)_
 
+---
+
+
+## Installation
+
 ## Installation auf beiden Webservern
 Das Paket sollte auf beiden beteiligten Servern in einem geeigneten Ordner im Webroot heruntergeladen werden:
 
@@ -25,79 +30,74 @@ Die beiden Ordner ```internal```und ```external``` enthalten die Dateistrukturen
 ```shell
 ln -s external/* .
 ```
-(und für ```internal``` auf dem internen Server analog). Den Ordner "internal" kann man im Webroot liegen lassen, dieser stellt kein Sicherheitsrisiko dar, solange keine Schülerdaten im Verzeichnis liegen. 
+(und für `internal` auf dem internen Server analog). Den Ordner "internal" kann man im Webroot liegen lassen, dieser stellt kein Sicherheitsrisiko dar, solange keine Schülerdaten im Verzeichnis liegen. 
 
-Alternativ kann man die Dateien auch per ```mv``` aus den beiden Unterordnern herausschieben und den jeweils nicht benötigten Ordner löschen. Dabei ist darauf zu achten, dass auf beiden Servern der lib-Ordner mit dem benötigten PHP-Framework vorliegt.
+Alternativ kann man die Dateien auch per `mv` aus den beiden Unterordnern herausschieben und den jeweils nicht benötigten Ordner löschen. Dabei ist darauf zu achten, dass auf beiden Servern der lib-Ordner mit dem benötigten PHP-Framework vorliegt.
 
-## Konfiguration
-### externer Webserver
-Die folgende config-sample.php wird für den öffentlichen Webserver mitgeliefert:
-```php
-<?php
- /* Edit this file and save it as config.php to your external server directory 
-    External server configuration
-*/
+### Backend
 
-define('school',          'Musterschule Musterstadt');
-define('SCHOOL_HOMEPAGE', 'https://www.example.com'); // used in CSP header for theme assets
-// set this to TRUE if you want the students to authenticate themselves with their birthday:
-define('require_birthday', TRUE);
+Der Backend-Server (`internal/`) verwaltet die Schülerliste und stellt eine interne JSON-API für das Frontend bereit. Er sollte **nicht** öffentlich erreichbar sein.
 
-define('WALLET_USE_APPLE', 1);  // set to 1 to offer the respective pass type
-define('WALLET_USE_GOOGLE', 1);
+1. Verzeichnis `internal/` auf dem Backend-Server ablegen (z. B. unter `/var/www/html/ID/internal/`).
+2. [`internal/config-sample.php`](../internal/config-sample.php) nach `internal/config.php` kopieren und anpassen:
+   - `STUDENTS_CSV` — Pfad zur Schüler-CSV-Datei aus dem Schulverwaltungsprogramm
+   - `WALLET_API_BASE`, `WALLET_API_KEY`, `WALLET_THEME_ID` — Zugangsdaten der WalletStudentID-Instanz
+   - `VERIFY_BASE_URL` — öffentliche URL des Frontends (wird in die QR-Codes eingebettet)
+   - `SCHOOL`, `SCHOOLYEAR_START`, `IMG_BASE_URL` — schulspezifische Einstellungen
+   - `ADMIN_CIDR` *(empfohlen)* — kommagetrennte IPv4-CIDRs mit Zugriff auf `/admin`, z. B. `10.0.0.0/8` — leer lässt alle Adressen zu
+   - `ADMIN_BLOCK_IP` *(optional)* — kommagetrennte IPs/CIDRs, die `/admin` explizit verweigert werden (z. B. IP des externen Servers)
+3. Webserver so konfigurieren, dass alle Anfragen auf `internal/index.php` umgeleitet werden (`.htaccess` liegt bei).
+4. PHP ≥ 8.1 mit `allow_url_fopen = On` erforderlich (für Upstream-Requests zur WalletStudentID-API).
 
-// internal URLs to request
-define('internal_server', '<your internal server URL>');
+### Frontend
+Für die Installation des Frontends (user-facing parts, also die Registrierungs- und Verifizierungs-Seiten) gibt es zwei Varianten. Für eine Wordpress-basierte Schulhomepage gibt es ein komfortables Plugin, siehe Variante B. Weitere Plugins für andere CMS-Systeme können noch folgen, ansonsten hier ist eine Standalone-Variante:
 
-// HMAC secret for birthday verification (use a long random string, e.g. openssl rand -hex 32)
-define('BDAY_HMAC_SECRET', '<replace-with-random-secret>');
+#### Frontend – Variante A: Standalone (Fat-Free Framework)
 
-// set to false on production
-define('logging', false);
+Geeignet, wenn das Frontend auf einem eigenen (Sub-)Pfad oder Subdomain betrieben wird, unabhängig von einem CMS.
 
-// no configuration needed below
-define('verify_url',      internal_server.'/ID/internal/verify/');
-define('register_url',    internal_server.'/ID/internal/register/');
-define('lookup_url',      internal_server.'/ID/internal/lookup/');
-define('apple_pass_url',  internal_server.'/ID/internal/apple/');
+1. Verzeichnis `external/` auf dem Webserver ablegen (z. B. unter `/var/www/html/ID/`).
+2. [`external/config-sample.php`](../external/config-sample.php) nach `external/config.php` kopieren und anpassen:
+   - `internal_server` — interne URL des Backend-Servers (nicht öffentlich zugänglich)
+   - `BDAY_HMAC_SECRET` — zufälliges 32-Byte-Geheimnis, z. B. `openssl rand -hex 32`
+   - `SCHOOL_HOMEPAGE` — öffentliche URL der Schulhomepage, z. B. `https://www.schule.de` (wird für den Content-Security-Policy-Header benötigt)
+   - `require_birthday`, `WALLET_USE_APPLE`, `WALLET_USE_GOOGLE` — Feature-Flags
+3. `external/templates/head.html` und `foot.html` so anpassen, dass die Registerierungs- und Validierungs-Seiten
+   nahtlos in die Schulhomepage passen. Dies ist insofern besonders empfehlenswert, als die Verifizierungs-Aufrufe
+   auf der Schulehomepage erscheinen und klar machen sollen, dass die Überprüfung *schulseitig* erfolgt ist.
+4. Webserver so konfigurieren, dass alle Anfragen auf `external/index.php` umgeleitet werden (`.htaccess` liegt bei).
+5. Das Frontend ist unter den konfigurierten Pfaden erreichbar, z. B.:
+   - Verifikation: `https://schule.de/ID/v/{UUID}`
+   - Registrierung: `https://schule.de/ID/r/{UUID}`
 
-?>
-```
-Man kopiert diese Datei in ```config.php``` und editiert die entsprechenden ```defines```.
+#### Frontend – Variante B: WordPress-Plugin
 
-### interner Webserver
-Die [config-sample.php](config-sample.php) wird für den internen Webservice mitgeliefert. Wichtige Zeilen, die man anpassen muss, sind ```STUDENTS_CSV``` (Datei, in welcher die Schülerdaten aus dem ASV-Export zu finden sind) und die ```CSV_...``` Zeilen, die angeben, in welchen Spalten der Schüler-CSV-Datei die entsprechenden Daten stehen. Hier sind exemplarisch die wichtigsten Zeilen der Datei:
-```php
-<?php
-  /* Edit this file and save it as config.php to your internal server directory */
-  /* local configuration */
-  define('STUDENTS_CSV', '/path/to/your/student-csv.csv');
-  define('WALLET_API_BASE', 'https://verwaltung-wallet.hhs.karlsruhe.de/v1');
-  define('WALLET_API_KEY', '<your-tenant-API-key>');
-  define('WALLET_THEME_ID', '<your-theme-uuid>');
-  define('WALLET_USE_APPLE', 1);  // set to 1 to offer the respective pass type
-  define('WALLET_USE_GOOGLE', 1);
+Geeignet, wenn die Schulhomepage bereits auf WordPress läuft. Das Plugin integriert sich vollständig in das aktive WP-Theme.
 
-  define('SCHOOL', 'Musterschule Musterstadt');
-  define('SCHOOLYEAR_START', 9); // last month of validity
-  define('IMG_BASE_URL', 'https://www.example.com/ID/templates/');
-  define('SCHOOL_URL', 'https://www.example.com/');
+1. **Symlink** aus dem WP-Plugin-Verzeichnis auf `wp-plugin/` im Repository setzen:
+   ```bash
+   ln -s /pfad/zum/repo/wp-plugin \
+       /var/www/html/wordpress/wp-content/plugins/student-id-portal
+   ```
+   > Der Symlink `wp-plugin/common → ../common` muss im Repository vorhanden sein (wird beim Klonen automatisch miterstellt, sofern das Dateisystem Symlinks unterstützt).
 
-  // CSV structure. Specify the positions of the relevant fields here.
-  // Example: we have
-  // login;shortname;idnumber;lastname;firstname;email;Klasse;birthday;Austrittsdatum;Eintrittsdatum
-  //
-  define('CSV_ID', 2);
-  define('CSV_LOGIN', 0);  // unique login identifier used to identify passes in backend
-  define('CSV_LAST', 3);
-  define('CSV_FIRST', 4);
-  define('CSV_CLASS', 6);
-  define('CSV_BIRTHDAY', 7);
-  define('CSV_EXITD', 8);
+2. Plugin in WordPress aktivieren: *wp-admin → Plugins → Student ID Portal → Aktivieren*.
 
-  // Email-to-ID lookup (GET /ID/@email) — uses STUDENTS_CSV and CSV_ID defined above
-  define('CSV_EMAIL_COL', 5);  // column index of email address in the student CSV
+3. Einstellungen unter *wp-admin → Einstellungen → Student ID Portal* vornehmen:
+   - **Interner Server URL** — interne URL des Backend-Servers
+   - **HMAC-Secret** — zufälliges 32-Byte-Geheimnis (wie oben)
+   - **Schulname**, Feature-Flags (Apple/Google Wallet, Geburtsdatum erforderlich)
+   - **URL-Prefixe** — Pfadsegmente für Schülerausweis (`ID`) und Lehrkraft-Nachweis (`LID`); nach Änderung einmal unter *Einstellungen → Permalinks* speichern.
 
-  ?>
-```
-Das Vorgehen ist hier das gleiche wie beim externen Webserver: ```cp config-sample.php config.php``` und editieren der erforderlichen Felder. 
+4. Permalinks einmalig neu speichern (*Einstellungen → Permalinks → Speichern*), damit die Rewrite-Regeln registriert werden.
+
+5. Das Frontend ist direkt auf der WordPress-Domain erreichbar, z. B.:
+   - Verifikation: `https://schule.de/ID/v/{UUID}`
+   - Registrierung: `https://schule.de/ID/r/{UUID}`
+   - Lehrkraft: `https://schule.de/LID/v/{UUID}`
+
+---
+
+## Sicherheitshinweise
+
+Für den sicheren Produktivbetrieb — insbesondere zur Absicherung des Admin-Interfaces, der HTTPS-Konfiguration und der Protokollierung — siehe [SECURITY.md](SECURITY.md).
