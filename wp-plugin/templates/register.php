@@ -10,6 +10,7 @@
     background: rgba(255,255,255,0.92);
     backdrop-filter: blur(2px);
     border-radius: 4px;
+    z-index: 10;
     flex-direction: column;
     align-items: center;
     justify-content: center;
