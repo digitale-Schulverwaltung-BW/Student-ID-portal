@@ -142,7 +142,7 @@ function sid_handle_request(): void {
         $attrs['nonce'] = $nonce;
         return $attrs;
     });
-    header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'nonce-$nonce'; img-src 'self' data:; frame-ancestors 'none'");
+    header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'nonce-$nonce'; img-src 'self' data:; frame-ancestors 'none'");
 
     require_once SID_PLUGIN_DIR . 'classes/controller.php';
     $controller = new WPController();
