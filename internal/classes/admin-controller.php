@@ -17,6 +17,17 @@ class CAdminController extends Utility{
         return ($ipLong & $mask) === ($subnetLong & $mask);
     }
 
+    // Looks up an ID as a (current or former) student first, then as a teacher.
+    private function findStudent(string $sid): CStudent {
+        $stud = new CStudent($sid);
+        if ($stud->getID() === "") $stud->lookupFormerStudent($sid);
+        if ($stud->getID() === "" && defined('TEACHERS_CSV')) {
+            $teacher = new CStudent($sid, true);
+            if ($teacher->getID() !== "") return $teacher;
+        }
+        return $stud;
+    }
+
     private function checkAdminAccess(): void {
         $remote = $_SERVER['REMOTE_ADDR'] ?? '';
 
@@ -62,8 +73,7 @@ class CAdminController extends Utility{
                 break;
             case 'update':
                 $sid=substr($f3->get('POST.searchID'), 0, 256);
-                $stud=new CStudent($sid);
-                if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
+                $stud=$this->findStudent($sid);
                 if ($stud->getID()=="") {
                     $f3->set('message', "Schüler ID nicht gefunden");
                 } else {
@@ -82,8 +92,7 @@ class CAdminController extends Utility{
                 break;
             case 'reissue':
                 $sid=substr($f3->get('POST.searchID'), 0, 256);
-                $stud=new CStudent($sid);
-                if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
+                $stud=$this->findStudent($sid);
                 if ($stud->getID()=="") {
                     $f3->set('message', "Schüler ID nicht gefunden $sid");
                 } else {
@@ -100,12 +109,11 @@ class CAdminController extends Utility{
                     $f3->set('message', 'ID darf nicht leer sein.');
                     break;
                 }
-                $stud=new CStudent($sid);
-                if ($stud->getID()=="") $stud->lookupFormerStudent($sid);
+                $stud=$this->findStudent($sid);
                 if ($stud->getID()=="") {
                     $f3->set('message', "Schüler ID $sid nicht gefunden");
                 } else {
-                    $pass=new CStudentPass($stud);
+                    $pass=new CStudentPass($stud, $stud->isTeacher());
                     if ($this->deletePass($stud->getID(), $pass->getPassID()))
                          $f3->set('message', "Ausweis gelöscht.");
                     else $f3->set('message', "Fehler beim Pass-Update. Log-Dateien überprüfen!");
@@ -211,7 +219,7 @@ class CAdminController extends Utility{
         {
             $studID = $pass['studID'] ?? $pass['external_id'] ?? '';
             $passID = $pass['passID'] ?? $pass['id'] ?? '';
-            $stud=new CStudent($studID);
+            $stud=$this->findStudent($studID);
             if ($stud->getID()=="") continue;
             $renewed++;
             $items[] = [
@@ -222,7 +230,9 @@ class CAdminController extends Utility{
                     'student_shortcode' => substr($stud->getID(), -4),
                     'birthdate' => $this->convertBirthdayToISO($stud->getBirthday()),
                     'valid_from' => date('c'),
-                    'valid_until' => $this->validLong(),
+                    'valid_until' => $stud->isTeacher()
+                        ? $this->teacherValidLong($stud->getBirthday())
+                        : $this->validLong(),
                     'school_name' => SCHOOL,
                     'school_url' => SCHOOL_URL,
                     'verification_url' => VERIFY_BASE_URL . $stud->getID()

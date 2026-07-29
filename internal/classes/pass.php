@@ -62,7 +62,9 @@ class CStudentPass extends Utility {
 
         $url = WALLET_API_BASE . '/passes';
         $postdata = json_encode([
-            'theme_id' => WALLET_THEME_ID,
+            'theme_id' => ($this->isTeacher && defined('WALLET_THEME_ID_TEACHER'))
+                ? WALLET_THEME_ID_TEACHER
+                : WALLET_THEME_ID,
             'external_id' => $this->student->getID(),
             'student' => [
                 'first_name' => $this->student->getFirstname(),

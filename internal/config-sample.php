@@ -7,6 +7,7 @@
   define('WALLET_API_BASE', 'https://verwaltung-wallet.hhs.karlsruhe.de/v1');
   define('WALLET_API_KEY', '<your-tenant-API-key>');
   define('WALLET_THEME_ID', '<your-theme-uuid>');
+  define('WALLET_THEME_ID_TEACHER', '<your-teacher-theme-uuid>'); // omit if no teacher IDs needed; falls back to WALLET_THEME_ID
   define('WALLET_USE_APPLE', 1);  // set to 1 to offer the respective pass type
   define('WALLET_USE_GOOGLE', 1);
 

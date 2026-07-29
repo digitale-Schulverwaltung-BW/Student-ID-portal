@@ -13,8 +13,10 @@ class CStudent extends Utility
     protected String $login;
     protected String $class;
     protected String $exitDate;
+    protected bool $isTeacher;
 
     function __construct($id, bool $isTeacher = false) {
+        $this->isTeacher = $isTeacher;
         $this->exitDate="";
         if (!isset($id) || empty($id) || strlen($id)!=36)
         {
@@ -103,6 +105,10 @@ class CStudent extends Utility
     {
         return $this->ID;
     }
+    public function isTeacher(): bool
+    {
+        return $this->isTeacher;
+    }
     public function getPassID(): String
     {
         $data = $this->walletApiRequest(
@@ -144,7 +150,7 @@ class CStudent extends Utility
     }
     public function reissuePass(): bool
     {
-        $pass=new CStudentPass($this);
+        $pass=new CStudentPass($this, $this->isTeacher);
         return ($pass->registerPass()!="");
     }
 
